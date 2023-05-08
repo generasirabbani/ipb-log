@@ -1,30 +1,58 @@
 import React, {Component} from 'react';
+import './Login.scss';
 import { connect } from 'react-redux';
-import { actionUserName } from '../../../config/redux/action';
+import Button from '../../../components/atoms/Button';
+import { loginUserAPI } from '../../../config/redux/action';
+import { useNavigate } from 'react-router-dom';
 
 class Login extends Component {
-    changeUser = () => {
-        this.props.changeUserName()
+    state = {
+        email:'',
+        password:''
+    }
+
+    handleChangeText = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
+    }
+
+    handleLoginSubmit = async () => {
+        const {email, password} = this.state;
+        const history = useNavigate();
+        const res = await this.props.loginAPI({email, password}).catch(err => err);
+        if(res){
+            console.log('Login Success!', res);
+            this.setState({
+                email: '',
+                password: ''
+            })
+            history('/'); // error here 
+        } else {
+            console.log('Login Failed!')
+        }
     }
 
     render(){
         return(
-            <div>
-                <p>Login Page {this.props.userName}</p>
-                <button onClick={this.changeUser}>Change User Name</button>
-                <button>Go to Dashboard</button>
+            <div className="auth-container">
+                <div className="auth-card">
+                    <p className="auth-title">Login Page</p>
+                    <input className="input" id="email" placeholder="Email" type="text" onChange={this.handleChangeText} value={this.state.email} />
+                    <input className="input" id="password" placeholder="Password" type="password" onChange={this.handleChangeText} value={this.state.password} />
+                    <Button onClick={this.handleLoginSubmit} title="Login" loading={this.props.isLoading}/>
+                </div>
             </div>
         )
     }
 }
 
 const reduxState = (state) => ({
-    popupProps: state.popup,
-    userName: state.user
+    isLoading: state.isLoading
 })
 
 const reduxDispatch = (dispatch) => ({
-    changeUserName: () => dispatch(actionUserName())
+    loginAPI: (data) => dispatch(loginUserAPI(data))
 })
 
 export default connect(reduxState, reduxDispatch)(Login);

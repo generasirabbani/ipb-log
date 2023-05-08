@@ -4,7 +4,13 @@ class Dashboard extends Component {
     render(){
         return(
             <div>
-                <p>Dashboard Page</p>
+                <div>
+                    <input placeholder='title'/>
+                    <textarea placeholder='content'>
+
+                    </textarea>
+                    <button></button>
+                </div>
                 <button>Go to Register</button>
                 <button>Go to Dashboard</button>
             </div>
