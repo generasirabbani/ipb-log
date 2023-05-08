@@ -1,0 +1,167 @@
+/* NavBar */
+
+position: absolute;
+width: 1920px;
+height: 78px;
+left: 0px;
+top: 1px;
+
+
+
+/* Rectangle 1 */
+
+position: absolute;
+width: 1920px;
+height: 78px;
+left: 0px;
+top: 1px;
+
+background: #FFFFFF;
+
+
+/* IPBlog */
+
+position: absolute;
+width: 128px;
+height: 60px;
+left: 70px;
+top: 9px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 700;
+font-size: 40px;
+line-height: 60px;
+/* identical to box height */
+
+color: #263C92;
+
+
+
+/* User */
+
+position: absolute;
+width: 194px;
+height: 64px;
+left: 1626px;
+top: 8px;
+
+
+
+/* User */
+
+position: absolute;
+width: 70px;
+height: 44px;
+left: 1714px;
+top: 18px;
+
+font-family: 'Noto Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 32px;
+line-height: 44px;
+/* identical to box height */
+
+color: #000000;
+
+
+
+/* Arrow 1 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 0px;
+height: 2px;
+left: 1820px;
+top: 46px;
+
+border: 3px solid #000000;
+
+
+/* ph:user */
+
+position: absolute;
+width: 64px;
+height: 64px;
+left: 1626px;
+top: 8px;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 9.34%;
+right: 9.34%;
+top: 9.36%;
+bottom: 12.43%;
+
+background: #000000;
+
+
+/* Search */
+
+position: absolute;
+width: 579px;
+height: 63px;
+left: 670px;
+top: 10px;
+
+
+
+/* Rectangle 2 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 579px;
+height: 63px;
+left: 670px;
+top: 10px;
+
+background: #F6F7F8;
+border: 1px solid rgba(0, 0, 0, 0.12);
+border-radius: 31.5px;
+
+
+/* Search */
+
+position: absolute;
+width: 114px;
+height: 49px;
+left: 752px;
+top: 15px;
+
+font-family: 'Noto Sans';
+font-style: normal;
+font-weight: 400;
+font-size: 36px;
+line-height: 49px;
+/* identical to box height */
+
+color: rgba(0, 0, 0, 0.32);
+
+
+
+/* vaadin:search */
+
+position: absolute;
+width: 32px;
+height: 32px;
+left: 698px;
+top: 25px;
+
+opacity: 0.3;
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0.63%;
+
+background: #000000;
