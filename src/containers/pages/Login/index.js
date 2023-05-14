@@ -22,6 +22,7 @@ const LoginForm = ({ isLoading, loginAPI }) => {
     const res = await loginAPI({ email, password }).catch((err) => err);
     if (res) {
       console.log('Login Success!', res);
+      localStorage.setItem('userData', JSON.stringify(res));
       setEmail('');
       setPassword('');
       navigate('/');
@@ -56,14 +57,14 @@ const LoginForm = ({ isLoading, loginAPI }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const reduxState = (state) => ({
   isLoading: state.isLoading
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const reduxDispatch = (dispatch) => ({
   loginAPI: (data) => dispatch(loginUserAPI(data))
 });
 
-const Login = connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+const Login = connect(reduxState, reduxDispatch)(LoginForm);
 
 export default Login;
