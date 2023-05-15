@@ -21,7 +21,7 @@ const Title = styled.h1`
     top: 9px;
 `;
 
-const Search = styled.h1`
+const Search = styled.div`
 
 `;
 

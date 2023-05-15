@@ -5,7 +5,7 @@ const Button = ({title, onClick, loading}) => {
         return <button className="btn disable">Loading...</button>
     }
     return (
-        <button className="btn" onClick={onClick} >{title}</button>
+        <button className="btn" onClick={onClick}>{title}</button>
     )
 }
 

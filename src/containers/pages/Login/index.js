@@ -31,10 +31,14 @@ const LoginForm = ({ isLoading, loginAPI }) => {
     }
   };
 
+  const toRegister = () => {
+    navigate('/register');
+  }
+
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <p className="auth-title">Login Page</p>
+        <p className="auth-title">IPBLog Login Page</p>
         <input
           className="input"
           id="email"
@@ -51,7 +55,9 @@ const LoginForm = ({ isLoading, loginAPI }) => {
           onChange={handleChangeText}
           value={password}
         />
-        <Button onClick={handleLoginSubmit} title="Login" loading={isLoading} />
+        <div className='reg-btn' onClick={toRegister}>Daftar akun baru</div>
+        <div className='reg-btn' >Lupa email atau password?</div>
+        <Button onClick={handleLoginSubmit} title="Log in" loading={isLoading} />
       </div>
     </div>
   );

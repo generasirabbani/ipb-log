@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link,  } from 'react-router-dom
 import { Provider } from 'react-redux';
 import { store } from '../../../config/redux'
 
-// import Header from '../../../components/header/header';
+import Header from '../../../components/molecules/header';
 import Dashboard from '../Dashboard';
 import Login from '../Login';
 import Register from '../Register';
@@ -12,6 +12,7 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
+        <Header />
         <div>
           <Routes>
             <Route path="/" exact element={<Dashboard />}></Route>
