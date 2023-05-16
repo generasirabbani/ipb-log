@@ -51,7 +51,7 @@ const Register = (props) => {
             onChange={handleChangeText}
             value={password}
           />
-          <div className='reg-btn' onClick={toLogin}>Login</div>
+          <div className='reg-btn' onClick={toLogin}>Sudah Punya Akun</div>
           <Button onClick={handleRegisterSubmit} title="Register" loading={props.isLoading} />
         </div>
       </div>

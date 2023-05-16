@@ -103,3 +103,21 @@ export const deleteDataAPI = (data) => (dispatch) => {
     urlNotes.remove();
   })
 }
+
+export const resetPasswordByEmail = (data) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    dispatch({type: 'CHANGE_LOADING', value: true})
+    firebase.auth().sendPasswordResetEmail(data.email)
+      .then(res => {
+        dispatch({type: 'CHANGE_LOADING', value: false})
+        resolve(true)
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage)
+        dispatch({type: 'CHANGE_LOADING', value: false})
+        reject(false)
+      })
+  })
+}
