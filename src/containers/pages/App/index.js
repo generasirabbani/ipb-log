@@ -7,19 +7,22 @@ import Header from '../../../components/molecules/header';
 import Dashboard from '../Dashboard';
 import Login from '../Login';
 import Register from '../Register';
+import { ChakraProvider } from '@chakra-ui/react';
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Header />
-        <div>
-          <Routes>
-            <Route path="/" exact element={<Dashboard />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/register" element={<Register />}></Route>
-          </Routes>
-        </div>
+        <ChakraProvider>
+          <Header />
+          <div>
+            <Routes>
+              <Route path="/" exact element={<Dashboard />}></Route>
+              <Route path="/login" element={<Login />}></Route>
+              <Route path="/register" element={<Register />}></Route>
+            </Routes>
+          </div>
+        </ChakraProvider>
       </Router>
     </Provider>
   );
