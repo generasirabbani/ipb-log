@@ -3,7 +3,7 @@ import './Login.scss';
 import { connect } from 'react-redux';
 import { loginUserAPI } from '../../../config/redux/action';
 import { useNavigate } from 'react-router-dom';
-import { FormControl, FormErrorMessage, Input, Button, useToast, Container } from '@chakra-ui/react';
+import { FormControl, FormErrorMessage, Input, Button, useToast, Box, Flex, Spacer } from '@chakra-ui/react';
 
 const LoginForm = ({ isLoading, loginAPI }) => {
   const [email, setEmail] = useState('');
@@ -29,7 +29,7 @@ const LoginForm = ({ isLoading, loginAPI }) => {
       setPassword('');
       setInvalid(false);
       toast({
-        title: "You are Logged in",
+        title: "Anda sudah masuk!",
         status: "success",
         isClosable: true,
         position: "top",
@@ -51,7 +51,7 @@ const LoginForm = ({ isLoading, loginAPI }) => {
   }
 
   return (
-    <Container w="100%" h="100vh">
+    <Box w="100%" h="100vh">
       <div className="auth-container">
           <div className="auth-card">
             <p className="auth-title">IPBLog Login Page</p>
@@ -64,14 +64,17 @@ const LoginForm = ({ isLoading, loginAPI }) => {
                 <FormErrorMessage>Email atau password anda salah</FormErrorMessage>
               </FormControl>
             </form>
-            <div className='reg-btn' onClick={toRegister}>Daftar akun baru</div>
-            <div className='reg-btn' onClick={toForgotPassword} >Lupa password?</div>
+            <Flex>
+              <div className='reg-btn' onClick={toRegister}>Daftar akun baru</div>
+              <Spacer />
+              <div className='reg-btn' onClick={toForgotPassword} >Lupa password?</div>
+            </Flex>
             <Button onClick={handleLoginSubmit} type="submit" isLoading={isLoading} 
               variant="solid" colorScheme="blue" mt="4" size="lg" w="full" loadingText="Logging in" >
                 Log in</Button>
           </div>
       </div>
-    </Container>
+    </Box>
   );
 };
 

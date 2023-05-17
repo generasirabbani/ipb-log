@@ -3,7 +3,7 @@ import './Login.scss';
 import { connect } from 'react-redux';
 import { resetPasswordByEmail } from '../../../config/redux/action';
 import { useNavigate } from 'react-router-dom';
-import { FormControl, Input, Button, useToast } from '@chakra-ui/react';
+import { FormControl, Input, Button, useToast, Box, Flex, Spacer } from '@chakra-ui/react';
 
 const LoginForm = ({ isLoading, resetPassword }) => {
   const [email, setEmail] = useState('');
@@ -44,22 +44,27 @@ const LoginForm = ({ isLoading, resetPassword }) => {
   }
 
   return (
-    <div className="auth-container">
-        <div className="auth-card">
-          <p className="auth-title">Forgot Password Page</p>
-          <form onSubmit={handleSubmit}>
-            <FormControl isInvalid={isInvalid} >
-              <Input className="input" id="email" placeholder="user@email.com" type="email"
-                onChange={handleChangeText} value={email} />
-            </FormControl>
-          </form>
-          <div className='reg-btn' onClick={toRegister}>Daftar akun baru</div>
-          <div className='reg-btn' onClick={toLogin} >Sudah punya akun</div>
-          <Button onClick={handleSubmit} type="submit" isLoading={isLoading} 
-            variant="solid" colorScheme="blue" mt="4" size="lg" w="full" loadingText="Logging in" >
-              Kirim Email Reset Password</Button>
-        </div>
-    </div>
+    <Box w="100%" h="100vh">
+      <div className="auth-container">
+          <div className="auth-card">
+            <p className="auth-title">Forgot Password Page</p>
+            <form onSubmit={handleSubmit}>
+              <FormControl isInvalid={isInvalid} >
+                <Input className="input" id="email" placeholder="user@email.com" type="email"
+                  onChange={handleChangeText} value={email} />
+              </FormControl>
+            </form>
+            <Flex>
+              <div className='reg-btn' onClick={toRegister}>Daftar akun baru</div>
+              <Spacer />
+              <div className='reg-btn' onClick={toLogin} >Sudah punya akun</div>
+            </Flex>
+            <Button onClick={handleSubmit} type="submit" isLoading={isLoading} 
+              variant="solid" colorScheme="blue" mt="4" size="lg" w="full" loadingText="Logging in" >
+                Kirim Email Reset Password</Button>
+          </div>
+      </div>
+    </Box>
   );
 };
 

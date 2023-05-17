@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './Dashboard.scss';
 import {addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI} from '../../../config/redux/action';
 import { connect } from 'react-redux';
+import NavBar from '../../organisms/NavBar';
 
 const Dashboard = (props) => {
     const [title, setTitle] = useState('');
@@ -68,6 +69,7 @@ const Dashboard = (props) => {
   
     return (
       <div className='container'>
+        <NavBar />
         <div className='input-form'>
           <input
             placeholder='title'
