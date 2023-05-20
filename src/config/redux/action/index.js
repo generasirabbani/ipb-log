@@ -121,3 +121,30 @@ export const resetPasswordByEmail = (data) => (dispatch) => {
       })
   })
 }
+
+export const logoutUserAPI = () => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    dispatch({type: 'CHANGE_LOADING', value: true})
+    firebase.auth().signOut()
+      .then(() => {
+      //   console.log('success: ', res);
+        const dataUser = {
+          email: '',
+          uid: '',
+          emailVerified: '',
+          refreshToken: ''
+        }
+        dispatch({type: 'CHANGE_LOADING', value: false})
+        dispatch({type: 'CHANGE_ISLOGIN', value: false})
+        dispatch({type: 'CHANGE_USER', value: dataUser})
+        resolve(true)
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage)
+        dispatch({type: 'CHANGE_LOADING', value: false})
+        reject(false)
+      })
+  })
+}

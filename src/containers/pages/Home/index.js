@@ -1,111 +1,108 @@
-import React, {Component, Fragment} from 'react';
-import './Dashboard.scss';
-import {addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI} from '../../../config/redux/action';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action';
+import { useNavigate } from 'react-router-dom';
+import { Box, useToast } from '@chakra-ui/react';
+import NavBar from '../../organisms/NavBar';
 
-class Dashboard extends Component {
-    state = {
-        title: '',
-        content: '',
-        date: '',
-        textButton: 'SIMPAN',
-        noteId: ''
+const Home = (props) => {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [textButton, setTextButton] = useState('SIMPAN');
+  const [noteId, setNoteId] = useState('');
+  const navigate = useNavigate();
+  const toast = useToast();
+  const { notes } = props;
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    props.getNotes(userData.uid);
+  }, []);
+
+  const handleSaveNotes = () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    const data = {
+      title,
+      content,
+      date: new Date().getTime(),
+      userId: userData.uid,
+    };
+
+    if (textButton === 'SIMPAN') {
+      props.saveNotes(data);
+    } else {
+      data.noteId = noteId;
+      props.updateNotes(data);
     }
+  };
 
-    componentDidMount(){
-        const userData = JSON.parse(localStorage.getItem('userData'));
-        this.props.getNotes(userData.uid);
+  const onInputChange = (e, type) => {
+    if (type === 'title') {
+      setTitle(e.target.value);
+    } else if (type === 'content') {
+      setContent(e.target.value);
     }
+  };
 
-    handleSaveNotes = () => {
-        const {title, content, textButton, noteId} = this.state;
-        const {saveNotes, updateNotes} = this.props;
-        const userData = JSON.parse(localStorage.getItem('userData'));
+  const updateNote = (note) => {
+    setTitle(note.data.title);
+    setContent(note.data.content);
+    setTextButton('UPDATE');
+    setNoteId(note.id);
+  };
 
-        const data = {
-            title: title,
-            content: content,
-            date: new Date().getTime(),
-            userId: userData.uid
-        }
+  const cancelUpdate = () => {
+    setTitle('');
+    setContent('');
+    setTextButton('SIMPAN');
+    setNoteId('');
+  };
 
-        if(textButton === 'SIMPAN'){
-            saveNotes(data)
-        } else {
-            data.noteId = noteId;
-            updateNotes(data)
-        }
-        console.log(data)
-    }
+  const deleteNote = (e, note) => {
+    e.stopPropagation();
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const data = {
+      userId: userData.uid,
+      noteId: note.id,
+    };
+    props.deleteNote(data);
+  };
 
-    onInputChange = (e, type) => {
-        this.setState({
-            [type] : e.target.value
-        })
-    }
-
-    updateNotes = (note) => {
-        console.log(note)
-        this.setState({
-            title: note.data.title,
-            content: note.data.content,
-            textButton: 'UPDATE',
-            noteId: note.id
-        })
-    }
-
-    cancelUpdate = () => {
-        this.setState({
-            title: '',
-            content: '',
-            textButton: 'SIMPAN'
-        })
-    }
-
-    deleteNote = (e, note) => {
-        e.stopPropagation();
-        const {deleteNote} = this.props;
-        const userData = JSON.parse(localStorage.getItem('userData'));
-        const data = {
-            userId: userData.uid,
-            noteId: note.id
-        }
-        deleteNote(data)
-    }
-
-    render(){
-        const {title, content, textButton, noteId} = this.state;
-        const {notes} = this.props;
-        const {onInputChange, handleSaveNotes, updateNotes, cancelUpdate, deleteNote} = this;
-        console.log('notes: ', notes);
-        return(
-            <div className='container'>
-                <hr/>
-                {
-                    notes.length > 0 ? (
-                        <Fragment>
-                            {
-                                notes.map(note => {
-                                    return (
-                                        <div className='card-content' key={note.id} >
-                                            <p className='title'>{note.data.title}</p>
-                                            <p className='date'>{note.data.date}</p>
-                                            <p className='content'>{note.data.content}</p>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </Fragment>
-                    ) : null
-                }
-            </div>
-        )
-    }
-}
+  return (
+    <Box>
+      <NavBar />
+      <div className="container">
+        <div className="input-form">
+          <input placeholder="title" className="input-title" value={title} onChange={(e) => onInputChange(e, 'title')} />
+          <textarea placeholder="content" className="input-content" value={content} onChange={(e) => onInputChange(e, 'content')}></textarea>
+          <div className="action-wrapper">
+            {textButton === 'UPDATE' ? (<button className="save-btn cancel" onClick={cancelUpdate}>Cancel</button>) : null}
+            <button className="save-btn" onClick={handleSaveNotes}>{textButton}</button>
+          </div>
+        </div>
+        <hr />
+        {notes.length > 0 ? (
+          <React.Fragment>
+            {notes.map((note) => (
+              <div className="card-content" key={note.id} onClick={() => updateNote(note)}>
+                <p className="title">{note.data.title}</p>
+                <p className="date">{note.data.date}</p>
+                <p className="content">{note.data.content}</p>
+                <div className="delete-btn" onClick={(e) => deleteNote(e, note)}>X</div>
+              </div>
+            ))}
+          </React.Fragment>
+        ) : null}
+      </div>
+    </Box>
+  );
+};
 
 const reduxState = (state) => ({
     userData: state.user,
-    notes: state.notes
+    notes: state.notes,
+    isLogin: state.isLogin
 });
 
 const reduxDispatch = (dispatch) => ({
@@ -115,4 +112,4 @@ const reduxDispatch = (dispatch) => ({
     deleteNote: (data) => dispatch(deleteDataAPI(data))
 })
 
-export default connect(reduxState, reduxDispatch)(Dashboard);
+export default connect(reduxState, reduxDispatch)(Home);
