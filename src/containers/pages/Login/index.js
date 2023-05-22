@@ -3,9 +3,10 @@ import './Login.scss';
 import { connect } from 'react-redux';
 import { loginUserAPI } from '../../../config/redux/action';
 import { useNavigate } from 'react-router-dom';
-import { FormControl, FormErrorMessage, Input, Button, useToast, Box, Flex, Spacer } from '@chakra-ui/react';
+import { FormControl, FormErrorMessage, Input, Button, useToast, Box, Flex, Spacer, FormLabel } from '@chakra-ui/react';
 
-const LoginForm = ({ isLoading, loginAPI }) => {
+const LoginForm = (props) => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isInvalid, setInvalid] = useState(false);
@@ -13,7 +14,9 @@ const LoginForm = ({ isLoading, loginAPI }) => {
   const toast = useToast();
 
   const handleChangeText = (e) => {
-    if (e.target.id === 'email') {
+    if (e.target.id === 'username') {
+      setUsername(e.target.value);
+    } else if (e.target.id === 'email') {
       setEmail(e.target.value);
     } else if (e.target.id === 'password') {
       setPassword(e.target.value);
@@ -21,7 +24,7 @@ const LoginForm = ({ isLoading, loginAPI }) => {
   };
 
   const handleLoginSubmit = async () => {
-    const res = await loginAPI({ email, password }).catch((err) => err);
+    const res = await props.loginAPI({ email, password }).catch((err) => err);
     if (res) {
       console.log('Login Success!', res);
       localStorage.setItem('userData', JSON.stringify(res));
@@ -56,12 +59,14 @@ const LoginForm = ({ isLoading, loginAPI }) => {
           <div className="auth-card">
             <p className="auth-title">IPBLog Login Page</p>
             <form onSubmit={handleLoginSubmit}>
-              <FormControl isInvalid={isInvalid} >
+              <FormControl isInvalid={isInvalid} isRequired>
+                <FormLabel>Email</FormLabel>
                 <Input className="input" id="email" placeholder="user@email.com" type="email"
                   onChange={handleChangeText} value={email} />
+                <FormLabel>Password</FormLabel>
                 <Input className="input" id="password" placeholder="password" type="password"
                   onChange={handleChangeText} value={password} />
-                <FormErrorMessage>Email atau password anda salah</FormErrorMessage>
+                  <FormErrorMessage>{props.error}</FormErrorMessage>
               </FormControl>
             </form>
             <Flex>
@@ -69,8 +74,8 @@ const LoginForm = ({ isLoading, loginAPI }) => {
               <Spacer />
               <div className='reg-btn' onClick={toForgotPassword} >Lupa password?</div>
             </Flex>
-            <Button onClick={handleLoginSubmit} type="submit" isLoading={isLoading} 
-              variant="solid" colorScheme="blue" mt="4" size="lg" w="full" loadingText="Logging in" >
+            <Button onClick={handleLoginSubmit} type="submit" isLoading={props.isLoading} 
+              variant="solid" colorScheme="blue" mt="4" size="lg" w="full" loadingText="Logging in..." >
                 Log in</Button>
           </div>
       </div>
@@ -79,7 +84,8 @@ const LoginForm = ({ isLoading, loginAPI }) => {
 };
 
 const reduxState = (state) => ({
-  isLoading: state.isLoading
+  isLoading: state.isLoading,
+  error: state.error
 });
 
 const reduxDispatch = (dispatch) => ({

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import './Login.scss';
 import { connect } from 'react-redux';
 import { resetPasswordByEmail } from '../../../config/redux/action';
 import { useNavigate } from 'react-router-dom';
-import { FormControl, Input, Button, useToast, Box, Flex, Spacer } from '@chakra-ui/react';
+import { FormControl, Input, Button, useToast, Box, Flex, Spacer, FormLabel } from '@chakra-ui/react';
 
 const LoginForm = ({ isLoading, resetPassword }) => {
   const [email, setEmail] = useState('');
@@ -30,7 +29,6 @@ const LoginForm = ({ isLoading, resetPassword }) => {
         duration: 5000
       });
     } else {
-      console.log('Login Failed!');
       setInvalid(true);
     }
   };
@@ -50,6 +48,7 @@ const LoginForm = ({ isLoading, resetPassword }) => {
             <p className="auth-title">Forgot Password Page</p>
             <form onSubmit={handleSubmit}>
               <FormControl isInvalid={isInvalid} >
+                <FormLabel>Email</FormLabel>
                 <Input className="input" id="email" placeholder="user@email.com" type="email"
                   onChange={handleChangeText} value={email} />
               </FormControl>

@@ -3,7 +3,8 @@ const initialState = {
     isLogin: false,
     isLoading: false,
     user: {},
-    notes: []
+    notes: [],
+    error: ''
   }
   
   const reducer = (state=initialState, action) => {
@@ -35,6 +36,12 @@ const initialState = {
       return {
         ...state,
         notes: action.value
+      }
+    }
+    if(action.type === 'CHANGE_ERROR'){
+      return {
+        ...state,
+        error: action.value
       }
     }
     return state

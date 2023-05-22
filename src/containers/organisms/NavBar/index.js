@@ -8,10 +8,11 @@ import { useNavigate } from "react-router-dom";
 const NavBar = (props) => {
   const toast = useToast();
   const navigate = useNavigate();
+  const userData = JSON.parse(localStorage.getItem('userData'));
   const handleSignOut = async () => {
     const res = await props.logoutUser().catch((err) => err);
     if (res) {
-      localStorage.removeItem('userData');
+      localStorage.setItem('userData', null);
       console.log("Sign Out Success!")
       toast({
         title: "Sign Out Success!",
@@ -20,19 +21,26 @@ const NavBar = (props) => {
         position: "top",
         duration: 5000
       });
-      navigate('/login');
+      navigate('/home');
     } else {
       console.log('Sign Out Failed!');
     }
   };
+  const toLogin = () => {
+    navigate('/login');
+  }
+  const toHome = () => {
+    navigate('/home');
+  }
     return(
         <Box>
             <HStack w="100%" h="80px" bg="gray.200">
-                <Heading fontFamily="Poppins" fontWeight="700" ml="50px"
-                fontSize="30px" lineHeight="60px">IPBLog</Heading>
+                <Heading ml='50px' onClick={toHome}>IPBLog</Heading>
                 <Spacer />
-                <Button onClick={handleSignOut} type="submit" variant="solid" 
-                  colorScheme="red" right="20px" size="lg" >Sign Out</Button>
+                {userData === null ? <Button onClick={toLogin} type="submit" variant="solid" 
+                  colorScheme="blue" right="20px" size="lg" >Log In</Button> :
+                  (<Button onClick={handleSignOut} type="submit" variant="solid" 
+                  colorScheme="red" right="20px" size="lg" >Sign Out</Button>)}
             </HStack>
         </Box>
     )
@@ -40,6 +48,7 @@ const NavBar = (props) => {
 
 const reduxState = (state) => ({
     userData: state.user,
+    isLogin: state.isLogin,
 });
 
 const reduxDispatch = (dispatch) => ({

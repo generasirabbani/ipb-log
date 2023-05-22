@@ -10,11 +10,14 @@ export const logoutUserAPI = () => (dispatch) => {
   return new Promise((resolve, reject) => {
     firebase.auth().signOut()
       .then(() => {
-        dispatch({ type: 'LOGOUT_USER' });
+        dispatch({type: 'CHANGE_ISLOGIN', value: false})
         resolve(true);
       })
       .catch((error) => {
-        console.log('Logout error:', error);
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage)
+        dispatch({type: 'CHANGE_ERROR', value: errorMessage})
         reject(false);
       });
   });
@@ -26,13 +29,20 @@ export const registerUserAPI = (data) => (dispatch) => {
     firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
       .then(res => {
         console.log('success: ', res);
+        const dataUser = {
+          uid: res.user.uid,
+          username: data.username,
+          email: res.user.email,
+          lastLogin: Date.now()
+        }
         dispatch({type: 'CHANGE_LOADING', value: false})
-        resolve(true)
+        resolve(dataUser)
       })
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage)
+        dispatch({type: 'CHANGE_ERROR', value: errorMessage})
         dispatch({type: 'CHANGE_LOADING', value: false})
         reject(false)
       })
@@ -44,12 +54,12 @@ export const loginUserAPI = (data) => (dispatch) => {
     dispatch({type: 'CHANGE_LOADING', value: true})
     firebase.auth().signInWithEmailAndPassword(data.email, data.password)
       .then(res => {
-      //   console.log('success: ', res);
         const dataUser = {
           email: res.user.email,
           uid: res.user.uid,
           emailVerified: res.user.emailVerified,
-          refreshToken: res.user.refreshToken
+          refreshToken: res.user.refreshToken,
+          lastLogin: Date.now()
         }
         dispatch({type: 'CHANGE_LOADING', value: false})
         dispatch({type: 'CHANGE_ISLOGIN', value: true})
@@ -60,6 +70,7 @@ export const loginUserAPI = (data) => (dispatch) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage)
+        dispatch({type: 'CHANGE_ERROR', value: errorMessage})
         dispatch({type: 'CHANGE_LOADING', value: false})
         dispatch({type: 'CHANGE_ISLOGIN', value: false})
         reject(false)
@@ -76,7 +87,7 @@ export const addDataToAPI = (data) => (dispatch) => {
 }
 
 export const getDataFromAPI = (userId) => (dispatch) => {
-  const urlNotes = userId ? database.ref('posts/' + userId) : database.ref('posts');
+  const urlNotes = database.ref('posts/' + userId);
   return new Promise((resolve, reject) => {
     urlNotes.on('value', (snapshot) => {
       console.log('get Data: ', snapshot.val());
@@ -89,11 +100,7 @@ export const getDataFromAPI = (userId) => (dispatch) => {
           });
         });
       }
-      if (userId) {
-        dispatch({ type: 'SET_NOTES', value: data });
-      } else {
-        dispatch({ type: 'SET_OTHER_USER_NOTES', value: data });
-      }
+      dispatch({ type: 'SET_NOTES', value: data });
       resolve(snapshot.val());
     });
   });
@@ -113,7 +120,6 @@ export const getAllNotesFromAPI = () => (dispatch) => {
           });
         });
       });
-
       dispatch({ type: 'SET_NOTES', value: data });
       resolve(snapshot.val());
     });
@@ -157,6 +163,7 @@ export const resetPasswordByEmail = (data) => (dispatch) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage)
+        dispatch({type: 'CHANGE_ERROR', value: errorMessage})
         dispatch({type: 'CHANGE_LOADING', value: false})
         reject(false)
       })

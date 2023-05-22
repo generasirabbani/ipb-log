@@ -3,7 +3,7 @@ import './Dashboard.scss';
 import { connect } from 'react-redux';
 import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action';
 import { useNavigate } from 'react-router-dom';
-import { Box, useToast } from '@chakra-ui/react';
+import { Box, Button, Container, Flex, FormControl, HStack, Input, Spacer, Textarea, VStack, useToast } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 
 const Dashboard = (props) => {
@@ -29,9 +29,18 @@ const Dashboard = (props) => {
       date: new Date().getTime(),
       userId: userData.uid,
     };
-
     if (textButton === 'SIMPAN') {
       props.saveNotes(data);
+      toast({
+        title: "Post sudah dibuat!",
+        status: "success",
+        isClosable: true,
+        position: "top",
+        duration: 3000
+      });
+      setTitle('');
+      setContent('');
+      setNoteId('');
     } else {
       data.noteId = noteId;
       props.updateNotes(data);
@@ -73,29 +82,44 @@ const Dashboard = (props) => {
   return (
     <Box>
       <NavBar />
-      <div className="container">
-        <div className="input-form">
-          <input placeholder="title" className="input-title" value={title} onChange={(e) => onInputChange(e, 'title')} />
-          <textarea placeholder="content" className="input-content" value={content} onChange={(e) => onInputChange(e, 'content')}></textarea>
-          <div className="action-wrapper">
-            {textButton === 'UPDATE' ? (<button className="save-btn cancel" onClick={cancelUpdate}>Cancel</button>) : null}
-            <button className="save-btn" onClick={handleSaveNotes}>{textButton}</button>
-          </div>
-        </div>
-        <hr />
-        {notes.length > 0 ? (
-          <React.Fragment>
-            {notes.map((note) => (
-              <div className="card-content" key={note.id} onClick={() => updateNote(note)}>
-                <p className="title">{note.data.title}</p>
-                <p className="date">{note.data.date}</p>
-                <p className="content">{note.data.content}</p>
-                <div className="delete-btn" onClick={(e) => deleteNote(e, note)}>X</div>
-              </div>
-            ))}
-          </React.Fragment>
-        ) : null}
-      </div>
+      <HStack width='100%' bg='gray.50'>
+        {/* <FormControl isInvalid={isInvalid} isRequired>
+          <FormLabel>Email</FormLabel>
+          <Input className="input" id="email" placeholder="user@email.com" type="email"
+            onChange={handleChangeText} value={email} />
+          <FormLabel>Password</FormLabel>
+          <Input className="input" id="password" placeholder="password" type="password"
+            onChange={handleChangeText} value={password} />
+            <FormErrorMessage>{props.error}</FormErrorMessage>
+        </FormControl> */}
+          <VStack ml='50px' mr='200px'>
+            <FormControl mb='10px'>
+              <Input placeholder="title" className="input-title" value={title} onChange={(e) => onInputChange(e, 'title')} />
+              <Textarea mt='20px' placeholder="content" className="input-content" value={content} onChange={(e) => onInputChange(e, 'content')}></Textarea>
+            </FormControl>
+            <div className="action-wrapper">
+              <HStack>
+                {textButton === 'UPDATE' ? (<Button className="save-btn cancel" onClick={cancelUpdate}>Cancel</Button>) : null}
+                <Spacer />
+                <Button className="save-btn" onClick={handleSaveNotes}>{textButton}</Button>
+              </HStack>
+            </div>
+          </VStack>
+          <VStack>
+            {notes.length > 0 ? (
+              <React.Fragment>
+                {notes.map((note) => (
+                    <Container w='500px' className='card-content notes' key={note.id} onClick={() => updateNote(note)}>
+                      <p className="title">{note.data.title}</p>
+                      <p className="date">{note.data.date}</p>
+                      <p className="content">{note.data.content}</p>
+                      <div className="delete-btn" onClick={(e) => deleteNote(e, note)}>X</div>
+                    </Container>
+                ))}
+              </React.Fragment>
+            ) : null}
+          </VStack>
+      </HStack>
     </Box>
   );
 };

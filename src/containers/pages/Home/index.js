@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import './Home.scss';
 import { connect } from 'react-redux';
 import { getAllNotesFromAPI } from '../../../config/redux/action';
 import { Box } from '@chakra-ui/react';
@@ -21,7 +22,7 @@ const Home = (props) => {
         {notes.length > 0 ? (
           <React.Fragment>
             {notes.map((note) => (
-              <div className="card-content" key={note.id}>
+              <div className="card-content notes" key={note.id}>
                 <p className="title">{note.data.title}</p>
                 <p className="date">{note.data.date}</p>
                 <p className="content">{note.data.content}</p>
