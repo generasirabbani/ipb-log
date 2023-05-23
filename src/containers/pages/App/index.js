@@ -17,11 +17,12 @@ function App() {
         <ChakraProvider>
           <div>
             <Routes>
-              <Route path="/" exact element={<Dashboard />} />
+              <Route path="/dashboard" exact element={<Dashboard />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/home" element={<Home />} />
+              <Route path="/" element={<Home />} />
             </Routes>
           </div>
         </ChakraProvider>

@@ -3,7 +3,7 @@ import './Dashboard.scss';
 import { connect } from 'react-redux';
 import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, Flex, FormControl, HStack, Input, Spacer, Textarea, VStack, useToast } from '@chakra-ui/react';
+import { Box, Button, Container, Flex, FormControl, FormLabel, HStack, Input, Spacer, Textarea, VStack, useToast } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 
 const Dashboard = (props) => {
@@ -82,20 +82,14 @@ const Dashboard = (props) => {
   return (
     <Box>
       <NavBar />
-      <HStack width='100%' bg='gray.50'>
-        {/* <FormControl isInvalid={isInvalid} isRequired>
-          <FormLabel>Email</FormLabel>
-          <Input className="input" id="email" placeholder="user@email.com" type="email"
-            onChange={handleChangeText} value={email} />
-          <FormLabel>Password</FormLabel>
-          <Input className="input" id="password" placeholder="password" type="password"
-            onChange={handleChangeText} value={password} />
-            <FormErrorMessage>{props.error}</FormErrorMessage>
-        </FormControl> */}
-          <VStack ml='50px' mr='200px'>
+      <Flex width='100%' bg='gray.50' minH='570px' paddingTop='50px'>
+          <VStack ml='50px' mr='100px'>
             <FormControl mb='10px'>
-              <Input placeholder="title" className="input-title" value={title} onChange={(e) => onInputChange(e, 'title')} />
-              <Textarea mt='20px' placeholder="content" className="input-content" value={content} onChange={(e) => onInputChange(e, 'content')}></Textarea>
+              <FormLabel fontSize='30px'>{textButton === 'SIMPAN' ? 'Tambahkan Post Baru' : 'Update Post'}</FormLabel>
+              <Input placeholder="title" className="input-title" value={title} border='1px'
+              onChange={(e) => onInputChange(e, 'title')} />
+              <Textarea mt='20px' placeholder="content" className="input-content" minH='300px'
+              value={content} border='1px' onChange={(e) => onInputChange(e, 'content')}></Textarea>
             </FormControl>
             <div className="action-wrapper">
               <HStack>
@@ -105,13 +99,14 @@ const Dashboard = (props) => {
               </HStack>
             </div>
           </VStack>
-          <VStack>
+          <Spacer />
+          <VStack spacing='15px'>
             {notes.length > 0 ? (
               <React.Fragment>
                 {notes.map((note) => (
-                    <Container w='500px' className='card-content notes' key={note.id} onClick={() => updateNote(note)}>
+                    <Container w='600px' bg='gray.100' className='card-content notes' key={note.id} onClick={() => updateNote(note)}>
                       <p className="title">{note.data.title}</p>
-                      <p className="date">{note.data.date}</p>
+                      <p className="date">{new Date(note.data.date).toDateString()}</p>
                       <p className="content">{note.data.content}</p>
                       <div className="delete-btn" onClick={(e) => deleteNote(e, note)}>X</div>
                     </Container>
@@ -119,7 +114,9 @@ const Dashboard = (props) => {
               </React.Fragment>
             ) : null}
           </VStack>
-      </HStack>
+          <Spacer />
+          <Spacer />
+      </Flex>
     </Box>
   );
 };

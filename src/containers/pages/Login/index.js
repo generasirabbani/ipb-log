@@ -38,7 +38,7 @@ const LoginForm = (props) => {
         position: "top",
         duration: 5000
       });
-      navigate('/');
+      navigate('/home');
     } else {
       console.log('Login Failed!');
       setInvalid(true);

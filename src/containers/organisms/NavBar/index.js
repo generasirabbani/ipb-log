@@ -26,6 +26,9 @@ const NavBar = (props) => {
       console.log('Sign Out Failed!');
     }
   };
+  const toDashboard = () => {
+    navigate('/dashboard');
+  }
   const toLogin = () => {
     navigate('/login');
   }
@@ -36,11 +39,14 @@ const NavBar = (props) => {
         <Box>
             <HStack w="100%" h="80px" bg="gray.200">
                 <Heading ml='50px' onClick={toHome}>IPBLog</Heading>
+
                 <Spacer />
                 {userData === null ? <Button onClick={toLogin} type="submit" variant="solid" 
                   colorScheme="blue" right="20px" size="lg" >Log In</Button> :
-                  (<Button onClick={handleSignOut} type="submit" variant="solid" 
-                  colorScheme="red" right="20px" size="lg" >Sign Out</Button>)}
+                  (<><Button onClick={toDashboard} type="submit" variant="solid" 
+                  colorScheme="teal" right="20px" size="lg" >Dashboard</Button>
+                  <Button onClick={handleSignOut} type="submit" variant="solid" 
+                  colorScheme="red" right="20px" size="lg" >Sign Out</Button></>)}
             </HStack>
         </Box>
     )
