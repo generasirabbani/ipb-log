@@ -4,6 +4,7 @@ const initialState = {
     isLoading: false,
     user: {},
     notes: [],
+    note: {},
     error: ''
   }
   
@@ -36,6 +37,12 @@ const initialState = {
       return {
         ...state,
         notes: action.value
+      }
+    }
+    if(action.type === 'SET_NOTE'){
+      return {
+        ...state,
+        note: action.value
       }
     }
     if(action.type === 'CHANGE_ERROR'){

@@ -22,11 +22,13 @@ const Home = (props) => {
         {notes.length > 0 ? (
           <React.Fragment>
             {notes.map((note) => (
-              <div className="card-content notes" key={note.id}>
-                <p className="title">{note.data.title}</p>
-                <p className="date">{new Date(note.data.date).toDateString()}</p>
-                <p className="content">{note.data.content}</p>
-              </div>
+              <a href={`/detail/${note.userId}/${note.id}`} key={note.id}>
+                <div className="card-content notes" key={note.id}>
+                  <p className="title">{note.data.title}</p>
+                  <p className="date">{new Date(note.data.date).toDateString()}</p>
+                  <p className="content">{note.data.content}</p>
+                </div>
+              </a>
             ))}
           </React.Fragment>
         ) : (

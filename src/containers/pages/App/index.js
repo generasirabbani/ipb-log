@@ -9,6 +9,8 @@ import Login from '../Login';
 import Register from '../Register';
 import ForgotPassword from '../ForgotPassword';
 import Home from '../Home';
+import Detail from '../Detail';
+import Search from '../Search';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/home" element={<Home />} />
               <Route path="/" element={<Home />} />
+              <Route path="/detail/:userId/:noteId" element={<Detail />} />
+              <Route path="/search/:query" element={<Search />} />
             </Routes>
           </div>
         </ChakraProvider>

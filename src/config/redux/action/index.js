@@ -110,22 +110,89 @@ export const getAllNotesFromAPI = () => (dispatch) => {
   const urlNotes = database.ref('posts');
   return new Promise((resolve, reject) => {
     urlNotes.on('value', (snapshot) => {
-      console.log('get All Notes: ', snapshot.val());
       const data = [];
       snapshot.forEach((userSnapshot) => {
         Object.keys(userSnapshot.val()).map((key) => {
           data.push({
             id: key,
+            userId: userSnapshot.key,
             data: userSnapshot.val()[key],
           });
         });
       });
-      dispatch({ type: 'SET_NOTES', value: data });
+      // Sort the notes by the "date" attribute in descending order
+      const sortedData = data.sort((a, b) => b.data.date - a.data.date);
+      dispatch({ type: 'SET_NOTES', value: sortedData });
+      resolve(sortedData);
+    });
+  });
+};
+
+/* export const searchNotesFromAPI = (query) => (dispatch) => {
+  const urlNotes = database.ref('posts');
+  return new Promise((resolve, reject) => {
+    urlNotes.on('value', (snapshot) => {
+      const data = [];
+      snapshot.forEach((userSnapshot) => {
+        Object.keys(userSnapshot.val()).map((key) => {
+          const post = {
+            id: key,
+            userId: userSnapshot.key,
+            data: userSnapshot.val()[key],
+          }
+          const postDataString = JSON.stringify(post.data);
+          if (postDataString.includes(query)) {
+            data.push(post);
+          }
+        });
+      });
+      // Sort the notes by the "date" attribute in descending order
+      const sortedData = data.sort((a, b) => b.data.date - a.data.date);
+      dispatch({ type: 'SET_NOTES', value: sortedData });
+      resolve(sortedData);
+    });
+  });
+}; */
+
+export const getNotesByIdFromAPI = (userId, noteId) => (dispatch) => {
+  const urlNotes = database.ref(`posts/${userId}/${noteId}`);
+  return new Promise((resolve, reject) => {
+    urlNotes.on('value', (snapshot) => {
+      const data = {
+        id: snapshot.key,
+        data: snapshot.val(),
+      };
+      dispatch({ type: 'SET_NOTE', value: data });
       resolve(snapshot.val());
     });
   });
 };
 
+export const searchNotesFromAPI = (query) => (dispatch) => {
+  const urlNotes = database.ref('posts');
+  return new Promise((resolve, reject) => {
+    urlNotes.on('value', (snapshot) => {
+      const data = [];
+      snapshot.forEach((userSnapshot) => {
+        Object.keys(userSnapshot.val()).map((key) => {
+          const post = {
+            id: key,
+            userId: userSnapshot.key,
+            data: userSnapshot.val()[key],
+          }
+          const postDataString = JSON.stringify(post.data);
+          if (postDataString.includes(query)) {
+            data.push(post);
+          }
+        });
+      });
+      // Sort the notes by the "date" attribute in descending order
+      const sortedData = data.sort((a, b) => b.data.date - a.data.date);
+      dispatch({ type: 'SET_NOTES', value: sortedData });
+      resolve(sortedData);
+    });
+  });
+};
 
 export const updateDataAPI = (data) => (dispatch) => {
   const urlNotes = database.ref(`posts/${data.userId}/${data.noteId}`);
