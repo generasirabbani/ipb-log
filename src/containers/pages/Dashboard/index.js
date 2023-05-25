@@ -10,17 +10,17 @@ const Dashboard = (props) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [textButton, setTextButton] = useState('SIMPAN');
-  const [noteId, setNoteId] = useState('');
+  const [postId, setPostId] = useState('');
   const navigate = useNavigate();
   const toast = useToast();
-  const { notes } = props;
+  const { posts } = props;
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    props.getNotes(userData.uid);
+    props.getPosts(userData.uid);
   }, []);
 
-  const handleSaveNotes = () => {
+  const handleSavePosts = () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
 
     const data = {
@@ -28,9 +28,10 @@ const Dashboard = (props) => {
       content,
       date: new Date().getTime(),
       userId: userData.uid,
+      voteCount: 0,
     };
     if (textButton === 'SIMPAN') {
-      props.saveNotes(data);
+      props.savePosts(data);
       toast({
         title: "Post sudah dibuat!",
         status: "success",
@@ -40,10 +41,17 @@ const Dashboard = (props) => {
       });
       setTitle('');
       setContent('');
-      setNoteId('');
+      setPostId('');
     } else {
-      data.noteId = noteId;
-      props.updateNotes(data);
+      data.postId = postId;
+      props.updatePosts(data);
+      toast({
+        title: "Post berhasil diubah!",
+        status: "success",
+        isClosable: true,
+        position: "top",
+        duration: 3000
+      });
     }
   };
 
@@ -55,37 +63,37 @@ const Dashboard = (props) => {
     }
   };
 
-  const updateNote = (note) => {
-    setTitle(note.data.title);
-    setContent(note.data.content);
+  const updatePost = (post) => {
+    setTitle(post.data.title);
+    setContent(post.data.content);
     setTextButton('UPDATE');
-    setNoteId(note.id);
+    setPostId(post.id);
   };
 
   const cancelUpdate = () => {
     setTitle('');
     setContent('');
     setTextButton('SIMPAN');
-    setNoteId('');
+    setPostId('');
   };
 
-  const deleteNote = (e, note) => {
+  const deletePost = (e, post) => {
     e.stopPropagation();
     const userData = JSON.parse(localStorage.getItem('userData'));
     const data = {
       userId: userData.uid,
-      noteId: note.id,
+      postId: post.id,
     };
-    props.deleteNote(data);
+    props.deletePost(data);
   };
 
   return (
-    <Box>
+    <>
       <NavBar />
-      <Flex width='100%' bg='gray.50' minH='570px' paddingTop='50px'>
-          <VStack ml='50px' mr='100px'>
+      <Flex w='100%' minH='570px' paddingTop='40px'>
+          <VStack ml='50px' w='40%'>
             <FormControl mb='10px'>
-              <FormLabel fontSize='30px'>{textButton === 'SIMPAN' ? 'Tambahkan Post Baru' : 'Update Post'}</FormLabel>
+              <FormLabel fontSize='30px'>{textButton === 'UPDATE' ? 'Update Post' : 'Tambahkan Post Baru'}</FormLabel>
               <Input placeholder="title" className="input-title" value={title} border='1px'
               onChange={(e) => onInputChange(e, 'title')} />
               <Textarea mt='20px' placeholder="content" className="input-content" minH='300px'
@@ -95,42 +103,37 @@ const Dashboard = (props) => {
               <HStack>
                 {textButton === 'UPDATE' ? (<Button className="save-btn cancel" onClick={cancelUpdate}>Cancel</Button>) : null}
                 <Spacer />
-                <Button className="save-btn" onClick={handleSaveNotes}>{textButton}</Button>
+                <Button className="save-btn" onClick={handleSavePosts}>{textButton}</Button>
               </HStack>
             </div>
           </VStack>
-          <Spacer />
-          <VStack spacing='15px'>
-            {notes.length > 0 ? (
-              <React.Fragment>
-                {notes.map((note) => (
-                    <Container w='600px' bg='gray.100' className='card-content notes' key={note.id} onClick={() => updateNote(note)}>
-                      <p className="title">{note.data.title}</p>
-                      <p className="date">{new Date(note.data.date).toDateString()}</p>
-                      <p className="content">{note.data.content}</p>
-                      <div className="delete-btn" onClick={(e) => deleteNote(e, note)}>X</div>
-                    </Container>
-                ))}
-              </React.Fragment>
-            ) : null}
-          </VStack>
-          <Spacer />
-          <Spacer />
+          {posts.length > 0 ? (
+            <VStack w="100%">
+              {posts.map((post) => (
+                <Container w='100%' className='card-content posts' key={post.id} onClick={() => updatePost(post)}>
+                  <p className="title">{post.data.title}</p>
+                  <p className="date">{new Date(post.data.date).toDateString()}</p>
+                  <p className="content">{post.data.content}</p>
+                  <div className="delete-btn" onClick={(e) => deletePost(e, post)}>X</div>
+                </Container>
+              ))}
+            </VStack>
+          ) : null}
       </Flex>
-    </Box>
+    </>
   );
 };
 
 const reduxState = (state) => ({
     userData: state.user,
-    notes: state.notes,
+    posts: state.posts,
 });
 
 const reduxDispatch = (dispatch) => ({
-    saveNotes: (data) => dispatch(addDataToAPI(data)),
-    getNotes: (data) => dispatch(getDataFromAPI(data)),
-    updateNotes: (data) => dispatch(updateDataAPI(data)),
-    deleteNote: (data) => dispatch(deleteDataAPI(data)),
+    savePosts: (data) => dispatch(addDataToAPI(data)),
+    getPosts: (data) => dispatch(getDataFromAPI(data)),
+    updatePosts: (data) => dispatch(updateDataAPI(data)),
+    deletePost: (data) => dispatch(deleteDataAPI(data)),
 });
 
 export default connect(reduxState, reduxDispatch)(Dashboard);

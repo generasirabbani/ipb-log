@@ -82,14 +82,15 @@ export const addDataToAPI = (data) => (dispatch) => {
   database.ref('posts/' + data.userId).push({
     title: data.title,
     content: data.content,
-    date: data.date
+    date: data.date,
+    voteCount: data.voteCount,
   })
 }
 
 export const getDataFromAPI = (userId) => (dispatch) => {
-  const urlNotes = database.ref('posts/' + userId);
+  const urlPosts = database.ref('posts/' + userId);
   return new Promise((resolve, reject) => {
-    urlNotes.on('value', (snapshot) => {
+    urlPosts.on('value', (snapshot) => {
       console.log('get Data: ', snapshot.val());
       const data = [];
       if (snapshot.val()) {
@@ -100,16 +101,17 @@ export const getDataFromAPI = (userId) => (dispatch) => {
           });
         });
       }
-      dispatch({ type: 'SET_NOTES', value: data });
-      resolve(snapshot.val());
+      const sortedData = data.sort((a, b) => b.data.date - a.data.date);
+      dispatch({ type: 'SET_POSTS', value: sortedData });
+      resolve(sortedData);
     });
   });
 };
 
-export const getAllNotesFromAPI = () => (dispatch) => {
-  const urlNotes = database.ref('posts');
+export const getAllPostsFromAPI = () => (dispatch) => {
+  const urlPosts = database.ref('posts');
   return new Promise((resolve, reject) => {
-    urlNotes.on('value', (snapshot) => {
+    urlPosts.on('value', (snapshot) => {
       const data = [];
       snapshot.forEach((userSnapshot) => {
         Object.keys(userSnapshot.val()).map((key) => {
@@ -120,18 +122,18 @@ export const getAllNotesFromAPI = () => (dispatch) => {
           });
         });
       });
-      // Sort the notes by the "date" attribute in descending order
+      // Sort the posts by the "date" attribute in descending order
       const sortedData = data.sort((a, b) => b.data.date - a.data.date);
-      dispatch({ type: 'SET_NOTES', value: sortedData });
+      dispatch({ type: 'SET_POSTS', value: sortedData });
       resolve(sortedData);
     });
   });
 };
 
-/* export const searchNotesFromAPI = (query) => (dispatch) => {
-  const urlNotes = database.ref('posts');
+/* export const searchPostsFromAPI = (query) => (dispatch) => {
+  const urlPosts = database.ref('posts');
   return new Promise((resolve, reject) => {
-    urlNotes.on('value', (snapshot) => {
+    urlPosts.on('value', (snapshot) => {
       const data = [];
       snapshot.forEach((userSnapshot) => {
         Object.keys(userSnapshot.val()).map((key) => {
@@ -146,7 +148,7 @@ export const getAllNotesFromAPI = () => (dispatch) => {
           }
         });
       });
-      // Sort the notes by the "date" attribute in descending order
+      // Sort the posts by the "date" attribute in descending order
       const sortedData = data.sort((a, b) => b.data.date - a.data.date);
       dispatch({ type: 'SET_NOTES', value: sortedData });
       resolve(sortedData);
@@ -154,24 +156,24 @@ export const getAllNotesFromAPI = () => (dispatch) => {
   });
 }; */
 
-export const getNotesByIdFromAPI = (userId, noteId) => (dispatch) => {
-  const urlNotes = database.ref(`posts/${userId}/${noteId}`);
+export const getPostsByIdFromAPI = (userId, postId) => (dispatch) => {
+  const urlPosts = database.ref(`posts/${userId}/${postId}`);
   return new Promise((resolve, reject) => {
-    urlNotes.on('value', (snapshot) => {
+    urlPosts.on('value', (snapshot) => {
       const data = {
         id: snapshot.key,
         data: snapshot.val(),
       };
-      dispatch({ type: 'SET_NOTE', value: data });
+      dispatch({ type: 'SET_POST', value: data });
       resolve(snapshot.val());
     });
   });
 };
 
-export const searchNotesFromAPI = (query) => (dispatch) => {
-  const urlNotes = database.ref('posts');
+export const searchPostsFromAPI = (query) => (dispatch) => {
+  const urlPosts = database.ref('posts');
   return new Promise((resolve, reject) => {
-    urlNotes.on('value', (snapshot) => {
+    urlPosts.on('value', (snapshot) => {
       const data = [];
       snapshot.forEach((userSnapshot) => {
         Object.keys(userSnapshot.val()).map((key) => {
@@ -186,18 +188,18 @@ export const searchNotesFromAPI = (query) => (dispatch) => {
           }
         });
       });
-      // Sort the notes by the "date" attribute in descending order
+      // Sort the posts by the "date" attribute in descending order
       const sortedData = data.sort((a, b) => b.data.date - a.data.date);
-      dispatch({ type: 'SET_NOTES', value: sortedData });
+      dispatch({ type: 'SET_POSTS', value: sortedData });
       resolve(sortedData);
     });
   });
 };
 
 export const updateDataAPI = (data) => (dispatch) => {
-  const urlNotes = database.ref(`posts/${data.userId}/${data.noteId}`);
+  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
   return new Promise((resolve, reject) => {
-    urlNotes.set({
+    urlPosts.update({
       title: data.title,
       content: data.content,
       date: data.date
@@ -212,9 +214,9 @@ export const updateDataAPI = (data) => (dispatch) => {
 }
 
 export const deleteDataAPI = (data) => (dispatch) => {
-  const urlNotes = database.ref(`posts/${data.userId}/${data.noteId}`);
+  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
   return new Promise((resolve, reject) => {
-    urlNotes.remove();
+    urlPosts.remove();
   })
 }
 
@@ -234,5 +236,20 @@ export const resetPasswordByEmail = (data) => (dispatch) => {
         dispatch({type: 'CHANGE_LOADING', value: false})
         reject(false)
       })
+  })
+}
+
+export const updateVoteAPI = (data) => (dispatch) => {
+  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
+  return new Promise((resolve, reject) => {
+    urlPosts.update({
+      voteCount: data.voteCount,
+    }, (err) => {
+      if(err){
+        reject(false);
+      } else {
+        resolve(true);
+      }
+    });
   })
 }

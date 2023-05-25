@@ -25,7 +25,7 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/home" element={<Home />} />
               <Route path="/" element={<Home />} />
-              <Route path="/detail/:userId/:noteId" element={<Detail />} />
+              <Route path="/detail/:userId/:postId" element={<Detail />} />
               <Route path="/search/:query" element={<Search />} />
             </Routes>
           </div>

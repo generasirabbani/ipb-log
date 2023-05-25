@@ -1,52 +1,51 @@
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import React, { useEffect } from 'react';
-import { searchNotesFromAPI } from '../../../config/redux/action';
-import { Box } from '@chakra-ui/react';
+import { searchPostsFromAPI } from '../../../config/redux/action';
+import { Container, VStack, HStack } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
+import VoteButtons from '../../../components/molecules/VoteButtons';
+import { Post } from '../../../components/molecules/Post';
 
 const Search = (props) => {
   const { query } = useParams();
-  const { notes = [] } = props;
+  const { posts = [] } = props;
 
     useEffect(() => {
-        props.getNotesByQuery(query);
+        props.getPostsByQuery(query);
     }, []);
 
     return (
-      <Box>
-        <NavBar />
-        <div className="container">
-          <div className="card-content">
-            <p className="title">All posts:</p>
-          </div>
-          {notes.length > 0 ? (
-            <React.Fragment>
-              {notes.map((note) => (
-                <a href={`/detail/${note.userId}/${note.id}`} key={note.id}>
-                  <div className="card-content notes" key={note.id}>
-                    <p className="title">{note.data.title}</p>
-                    <p className="date">{new Date(note.data.date).toDateString()}</p>
-                    <p className="content">{note.data.content}</p>
-                  </div>
-                </a>
-              ))}
-            </React.Fragment>
-          ) : (
-            <p>No posts available.</p>
-          )}
+      <>
+      <NavBar />
+      <Container maxW="900px" centerContent p={8}>
+        <div className="card-content">
+          <p className="title">All Posts:</p>
         </div>
-      </Box>
+        {posts.length > 0 ? (
+          <VStack w="100%">
+            {posts.map((post) => (
+              <HStack key={post.id}  w="100%" alignItems="flex-start" >
+                <VoteButtons post={post} />
+                <Post post={post} key={post.id} onClick={() => toDetail(post)}/>
+              </HStack>
+            ))}
+          </VStack>
+        ) : (
+          <p>No posts available.</p>
+        )}
+      </Container>
+    </>
     );
   };
   
   const reduxState = (state) => ({
     userData: state.user,
-    notes: state.notes,
+    posts: state.posts,
   });
   
   const reduxDispatch = (dispatch) => ({
-    getNotesByQuery: (query) => dispatch(searchNotesFromAPI(query)),
+    getPostsByQuery: (query) => dispatch(searchPostsFromAPI(query)),
   });
   
 export default connect(reduxState, reduxDispatch)(Search);

@@ -1,51 +1,56 @@
 import React, { useEffect } from 'react';
 import './Home.scss';
 import { connect } from 'react-redux';
-import { getAllNotesFromAPI } from '../../../config/redux/action';
-import { Box } from '@chakra-ui/react';
+import { getAllPostsFromAPI } from '../../../config/redux/action';
+import { Container, HStack, Link, VStack } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
+import { Post } from '../../../components/molecules/Post';
+import VoteButtons from '../../../components/molecules/VoteButtons';
+import { useNavigate } from 'react-router-dom';
 
 const Home = (props) => {
-  const { notes = [] } = props;
+  const { posts = [] } = props;
+  const navigate = useNavigate();
 
   useEffect(() => {
-    props.getAllNotes(); // Fetch all notes
+    props.getAllPosts(); // Fetch all posts
   }, []);
 
+  const toDetail = (post) => {
+    navigate('/detail/' + post.userId + '/' + post.id)
+  }
+
   return (
-    <Box>
+    <>
       <NavBar />
-      <div className="container">
+      <Container maxW="900px" centerContent p={8}>
         <div className="card-content">
-          <p className="title">All posts:</p>
+          <p className="title">All Posts:</p>
         </div>
-        {notes.length > 0 ? (
-          <React.Fragment>
-            {notes.map((note) => (
-              <a href={`/detail/${note.userId}/${note.id}`} key={note.id}>
-                <div className="card-content notes" key={note.id}>
-                  <p className="title">{note.data.title}</p>
-                  <p className="date">{new Date(note.data.date).toDateString()}</p>
-                  <p className="content">{note.data.content}</p>
-                </div>
-              </a>
+        {posts.length > 0 ? (
+          <VStack w="100%">
+            {posts.map((post) => (
+              <HStack key={post.id}  w="100%" alignItems="flex-start" >
+                <VoteButtons post={post} />
+                <Post post={post} key={post.id} onClick={() => toDetail(post)}/>
+              </HStack>
             ))}
-          </React.Fragment>
+          </VStack>
         ) : (
           <p>No posts available.</p>
         )}
-      </div>
-    </Box>
+      </Container>
+    </>
   );
 };
 
 const reduxState = (state) => ({
   userData: state.user,
-  notes: state.notes,
+  posts: state.posts,
 });
 
 const reduxDispatch = (dispatch) => ({
-  getAllNotes: () => dispatch(getAllNotesFromAPI()),
+  getAllPosts: () => dispatch(getAllPostsFromAPI()),
 });
 
 export default connect(reduxState, reduxDispatch)(Home);
