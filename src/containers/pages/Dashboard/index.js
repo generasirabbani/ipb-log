@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Dashboard.scss';
 import { connect } from 'react-redux';
 import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action';
-import { useNavigate } from 'react-router-dom';
-import { Box, Button, Container, Flex, FormControl, FormLabel, HStack, Input, Spacer, Textarea, VStack, useToast } from '@chakra-ui/react';
+import { Button, Container, Flex, FormControl, FormLabel, HStack, Input, Spacer, Textarea, VStack, useToast,
+AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 
 const Dashboard = (props) => {
@@ -11,7 +11,9 @@ const Dashboard = (props) => {
   const [content, setContent] = useState('');
   const [textButton, setTextButton] = useState('SIMPAN');
   const [postId, setPostId] = useState('');
-  const navigate = useNavigate();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const cancelRef = useRef();
   const toast = useToast();
   const { posts } = props;
 
@@ -29,6 +31,7 @@ const Dashboard = (props) => {
       date: new Date().getTime(),
       userId: userData.uid,
       voteCount: 0,
+      votedUsers: [], // Initialize an empty array for votedUsers
     };
     if (textButton === 'SIMPAN') {
       props.savePosts(data);
@@ -77,14 +80,32 @@ const Dashboard = (props) => {
     setPostId('');
   };
 
-  const deletePost = (e, post) => {
+  const showConfirmationDialog = (e, post) => {
     e.stopPropagation();
+    setSelectedPost(post);
+    setIsConfirmationOpen(true);
+  };
+
+  const confirmDeletePost = () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     const data = {
       userId: userData.uid,
-      postId: post.id,
+      postId: selectedPost.id,
     };
     props.deletePost(data);
+    toast({
+      title: "Post berhasil dihapus!",
+      status: "success",
+      isClosable: true,
+      position: "top",
+      duration: 3000
+    });
+    setIsConfirmationOpen(false);
+  };
+
+  const cancelDeletePost = () => {
+    setSelectedPost(null);
+    setIsConfirmationOpen(false);
   };
 
   return (
@@ -114,11 +135,36 @@ const Dashboard = (props) => {
                   <p className="title">{post.data.title}</p>
                   <p className="date">{new Date(post.data.date).toDateString()}</p>
                   <p className="content">{post.data.content}</p>
-                  <div className="delete-btn" onClick={(e) => deletePost(e, post)}>X</div>
+                  <div className="delete-btn" onClick={(e) => showConfirmationDialog(e, post)}>X</div>
                 </Container>
               ))}
             </VStack>
           ) : null}
+
+          
+          {/* Confirmation Dialog */}
+          <AlertDialog isOpen={isConfirmationOpen} leastDestructiveRef={cancelRef}>
+          <AlertDialogOverlay />
+
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Post
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete this post?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={cancelDeletePost}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={confirmDeletePost} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </Flex>
     </>
   );
