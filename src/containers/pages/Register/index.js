@@ -52,7 +52,7 @@ const Register = (props) => {
     }
 
     console.log('data before send: ', username, email, password);
-    const res = await props.registerAPI({ username, email, password }).catch((err) => err);
+    const res = await props.registerAPI({ email, password }).catch((err) => err);
     if (res) {
       setUsername('');
       setEmail('');
