@@ -31,8 +31,8 @@ const Dashboard = (props) => {
       date: new Date().getTime(),
       userId: userData.uid,
       voteCount: 0,
-      votedUsers: [], // Initialize an empty array for votedUsers
     };
+
     if (textButton === 'SIMPAN') {
       props.savePosts(data);
       toast({

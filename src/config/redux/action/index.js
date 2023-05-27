@@ -1,11 +1,5 @@
 import firebase, { database } from '../../firebase';
 
-export const actionUserName = () => (dispatch) => {
-  setTimeout(() => {
-    return dispatch({type: 'CHANGE_USER', value: 'Anonymous'})
-  }, 2000)
-}
-
 export const logoutUserAPI = () => (dispatch) => {
   return new Promise((resolve, reject) => {
     firebase.auth().signOut()
@@ -58,9 +52,11 @@ export const loginUserAPI = (data) => (dispatch) => {
           email: res.user.email,
           uid: res.user.uid,
           emailVerified: res.user.emailVerified,
-          refreshToken: res.user.refreshToken,
-          lastLogin: Date.now()
+          refreshToken: res.user.refreshToken
         }
+        database.ref('users/' + res.user.uid).update({
+          lastLogin: Date.now()
+        });
         dispatch({type: 'CHANGE_LOADING', value: false})
         dispatch({type: 'CHANGE_ISLOGIN', value: true})
         dispatch({type: 'CHANGE_USER', value: dataUser})
@@ -83,7 +79,7 @@ export const addDataToAPI = (data) => (dispatch) => {
     title: data.title,
     content: data.content,
     date: data.date,
-    voteCount: data.voteCount,
+    voteCount: data.voteCount
   })
 }
 
@@ -112,6 +108,7 @@ export const getAllPostsFromAPI = () => (dispatch) => {
   const urlPosts = database.ref('posts');
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
+      console.log('get Data: ', snapshot.val());
       const data = [];
       snapshot.forEach((userSnapshot) => {
         Object.keys(userSnapshot.val()).map((key) => {
@@ -241,15 +238,26 @@ export const resetPasswordByEmail = (data) => (dispatch) => {
 
 export const updateVoteAPI = (data) => (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
+  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/votedUsers/${data.votedUserId}`)
   return new Promise((resolve, reject) => {
     urlPosts.update({
       voteCount: data.voteCount,
-    }, (err) => {
-      if(err){
-        reject(false);
-      } else {
-        resolve(true);
-      }
+    })
+    votedUrl.set({
+      voted: true,
+    });
+  })
+}
+
+export const unvoteAPI = (data) => (dispatch) => {
+  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
+  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/votedUsers/${data.votedUserId}`)
+  return new Promise((resolve, reject) => {
+    urlPosts.update({
+      voteCount: data.voteCount,
+    })
+    votedUrl.set({
+      voted: false,
     });
   })
 }
