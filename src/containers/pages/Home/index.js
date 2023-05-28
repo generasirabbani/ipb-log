@@ -23,16 +23,18 @@ const Home = (props) => {
   return (
     <>
       <NavBar />
-      <Container maxW="900px" centerContent p={8}>
+      <Container minW="900px" centerContent p={8}>
         <div className="card-content">
           <p className="title">All Posts:</p>
         </div>
         {posts.length > 0 ? (
           <VStack w="100%">
             {posts.map((post) => (
-              <HStack key={post.id}  w="100%" alignItems="flex-start" >
+              <HStack key={post.id} w="100%" alignItems="flex-start" >
                 <VoteButtons post={post} />
-                <Post post={post} key={post.id} onClick={() => toDetail(post)}/>
+                <Container minW='800px' onClick={() => toDetail(post)}>
+                  <Post post={post} key={post.id} />
+                </Container>
               </HStack>
             ))}
           </VStack>

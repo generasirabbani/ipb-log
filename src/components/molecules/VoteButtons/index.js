@@ -4,7 +4,7 @@ import { FiArrowDown, FiArrowUp, FiCheck } from "react-icons/fi";
 import { updateVoteAPI, unvoteAPI } from "../../../config/redux/action";
 import { connect } from "react-redux";
 
-const VoteButtons = ({ post, updateVote }) => {
+const VoteButtons = ({ post, updateVote, isLogin }) => {
   const [isVoting, setVoting] = useState(false);
   const [userData, setUserData] = useState({});
 
@@ -17,7 +17,7 @@ const VoteButtons = ({ post, updateVote }) => {
     setVoting(true);
     const voteCount = post.data.voteCount || 0;
     const votedUsers = post.data.votedUsers || {};
-    const userId = userData.uid;
+    const userId = userData?.uid;
     console.log("userId:" + userId);
   
     if (type === "upvote") {
@@ -71,9 +71,9 @@ const VoteButtons = ({ post, updateVote }) => {
 
   const checkIfPostIsAlreadyVoted = () => {
     const votedUsers = post.data.votedUsers || {};
-    const userId = userData.uid;
+    const userId = userData?.uid;
     const voteType = votedUsers[userId] ? votedUsers[userId].voteType : null;
-
+  
     if (voteType === "upvote") {
       return "upvote";
     } else if (voteType === "downvote") {
@@ -81,37 +81,21 @@ const VoteButtons = ({ post, updateVote }) => {
     } else {
       return null;
     }
-  };
+  };  
 
   return (
     <VStack>
       <VStack boxShadow="4px 3px 9px rgba(0, 0, 0, 0.1)">
         <IconButton
-          size="lg"
-          colorScheme={checkIfPostIsAlreadyVoted() === "upvote" ? "red" : "purple"}
+          size='lg'
+          colorScheme={checkIfPostIsAlreadyVoted() === "upvote" ? "blue" : "blue"}
           aria-label={checkIfPostIsAlreadyVoted() === "upvote" ? "Unvote" : "Upvote"}
           icon={checkIfPostIsAlreadyVoted() === "upvote" ? <FiCheck /> : <FiArrowUp />}
           onClick={() => handleClick("upvote")}
           isLoading={isVoting}
-          isDisabled={checkIfPostIsAlreadyVoted() === "downvote"}
+          isDisabled={checkIfPostIsAlreadyVoted() === "downvote" || !isLogin} // Disable if downvoted or not logged in
           borderRadius="md"
-          _hover={{ bg: "transparent" }}
-          _active={{ bg: "transparent" }}
-          _focus={{ boxShadow: "none" }}
-          _disabled={{ opacity: 0.6 }}
-        />
-      </VStack>
-      <VStack boxShadow="4px 3px 9px rgba(0, 0, 0, 0.1)" alignItems="center">
-        <IconButton
-          size="lg"
-          colorScheme={checkIfPostIsAlreadyVoted() === "downvote" ? "red" : "yellow"}
-          aria-label={checkIfPostIsAlreadyVoted() === "downvote" ? "Unvote" : "Downvote"}
-          icon={checkIfPostIsAlreadyVoted() === "downvote" ? <FiCheck /> : <FiArrowDown />}
-          onClick={() => handleClick("downvote")}
-          isLoading={isVoting}
-          isDisabled={checkIfPostIsAlreadyVoted() === "upvote"}
-          borderRadius="md"
-          _hover={{ bg: "transparent" }}
+          // _hover={{ bg: "transparent" }}
           _active={{ bg: "transparent" }}
           _focus={{ boxShadow: "none" }}
           _disabled={{ opacity: 0.6 }}
@@ -124,11 +108,25 @@ const VoteButtons = ({ post, updateVote }) => {
         textAlign="center"
         fontWeight="bold"
         fontSize="sm"
-        py={1}
-        mt={2}
       >
         {post.data.voteCount || 0}
       </Text>
+      <VStack boxShadow="4px 3px 9px rgba(0, 0, 0, 0.1)" alignItems="center">
+        <IconButton
+          size='lg'
+          colorScheme={checkIfPostIsAlreadyVoted() === "downvote" ? "red" : "red"}
+          aria-label={checkIfPostIsAlreadyVoted() === "downvote" ? "Unvote" : "Downvote"}
+          icon={checkIfPostIsAlreadyVoted() === "downvote" ? <FiCheck /> : <FiArrowDown />}
+          onClick={() => handleClick("downvote")}
+          isLoading={isVoting}
+          isDisabled={checkIfPostIsAlreadyVoted() === "upvote" || !isLogin} // Disable if upvoted or not logged in
+          borderRadius="md"
+          // _hover={{ bg: "transparent" }}
+          _active={{ bg: "transparent" }}
+          _focus={{ boxShadow: "none" }}
+          _disabled={{ opacity: 0.6 }}
+        />
+      </VStack>
     </VStack>
   );
 };

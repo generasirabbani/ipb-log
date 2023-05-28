@@ -1,4 +1,4 @@
-import firebase, { database } from '../../firebase';
+import firebase, { database, storage } from '../../firebase';
 
 export const logoutUserAPI = () => (dispatch) => {
   return new Promise((resolve, reject) => {
@@ -74,14 +74,37 @@ export const loginUserAPI = (data) => (dispatch) => {
   })
 }
 
-export const addDataToAPI = (data) => (dispatch) => {
-  database.ref('posts/' + data.userId).push({
-    title: data.title,
-    content: data.content,
-    date: data.date,
-    voteCount: data.voteCount
-  })
-}
+export const addDataToAPI = (data) => async (dispatch) => {
+  const { image } = data;
+
+  try {
+    // Upload the image file to storage
+    if (image) {
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child(`images/${image.name}`);
+      await imageRef.put(image);
+      data.image = await imageRef.getDownloadURL();
+    }
+
+    // Store the post data in the database
+    const postData = {
+      title: data.title,
+      content: data.content,
+      image: data.image || null,
+      date: data.date,
+      voteCount: data.voteCount,
+      userId: data.userId
+    };
+
+    const newPostRef = database.ref('posts/' + data.userId).push();
+    const postId = newPostRef.key;
+    await newPostRef.set(postData);
+
+    // ...existing code...
+  } catch (error) {
+    console.log('Error uploading image:', error);
+  }
+};
 
 export const getDataFromAPI = (userId) => (dispatch) => {
   const urlPosts = database.ref('posts/' + userId);
@@ -108,7 +131,7 @@ export const getAllPostsFromAPI = () => (dispatch) => {
   const urlPosts = database.ref('posts');
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
-      console.log('get Data: ', snapshot.val());
+      console.log('get All Data: ', snapshot.val());
       const data = [];
       snapshot.forEach((userSnapshot) => {
         Object.keys(userSnapshot.val()).map((key) => {
@@ -159,6 +182,7 @@ export const getPostsByIdFromAPI = (userId, postId) => (dispatch) => {
     urlPosts.on('value', (snapshot) => {
       const data = {
         id: snapshot.key,
+        userId: userId,
         data: snapshot.val(),
       };
       dispatch({ type: 'SET_POST', value: data });

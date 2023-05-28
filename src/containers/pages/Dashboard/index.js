@@ -32,6 +32,7 @@ const Dashboard = (props) => {
       date: new Date().getTime(),
       userId: userData.uid,
       voteCount: 0,
+      image: image || null,
     };
 
     if (textButton === 'SIMPAN') {
@@ -46,6 +47,12 @@ const Dashboard = (props) => {
       setTitle('');
       setContent('');
       setPostId('');
+      setImage('');
+
+      const inputImage = document.querySelector('.input-image');
+      if(inputImage) {
+        inputImage.value = '';
+      }
     } else {
       data.postId = postId;
       props.updatePosts(data);
@@ -65,9 +72,11 @@ const Dashboard = (props) => {
     } else if (type === 'content') {
       setContent(e.target.value);
     } else if (type === 'image') {
-      setContent(e.target.value);
+      const file = e.target.files[0];
+      setImage(file);
     }
   };
+  
 
   const updatePost = (post) => {
     setTitle(post.data.title);
@@ -120,14 +129,21 @@ const Dashboard = (props) => {
               <FormLabel fontSize='30px'>{textButton === 'UPDATE' ? 'Update Post' : 'Tambahkan Post Baru'}</FormLabel>
               <Input placeholder="title" className="input-title" value={title} border='1px'
               onChange={(e) => onInputChange(e, 'title')} />
-              {/* <Input
-                placeholder="Image URL"
-                value={image}
+              <Textarea
+                mt="20px"
+                placeholder="content"
+                className="input-content"
+                minH="300px"
+                value={content}
                 border="1px"
+                onChange={(e) => onInputChange(e, 'content')}
+              ></Textarea>
+              <Input
+                type="file"
+                className="input-image"
+                accept="image/*"
                 onChange={(e) => onInputChange(e, 'image')}
-              /> */}
-              <Textarea mt='20px' placeholder="content" className="input-content" minH='300px'
-              value={content} border='1px' onChange={(e) => onInputChange(e, 'content')}></Textarea>
+              />
             </FormControl>
             <div className="action-wrapper">
               <HStack>
@@ -143,6 +159,13 @@ const Dashboard = (props) => {
                 <Container w='100%' className='card-content posts' key={post.id} onClick={() => updatePost(post)}>
                   <p className="title">{post.data.title}</p>
                   <p className="date">{new Date(post.data.date).toDateString()}</p>
+                  {post.data.image && (
+                    <img
+                      src={post.data.image}
+                      alt='Post Image'
+                      style={{ marginTop: "20px", width: "100%" }}
+                    />
+                  )}
                   <p className="content">{post.data.content}</p>
                   <div className="delete-btn" onClick={(e) => showConfirmationDialog(e, post)}>X</div>
                 </Container>
