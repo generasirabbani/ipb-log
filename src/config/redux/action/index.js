@@ -107,7 +107,7 @@ export const addDataToAPI = (data) => async (dispatch) => {
 };
 
 export const getDataFromAPI = (userId) => (dispatch) => {
-  const urlPosts = database.ref('posts/' + userId);
+  const urlPosts = database.ref(`posts/${userId}`);
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
       console.log('get Data: ', snapshot.val());
@@ -217,13 +217,29 @@ export const searchPostsFromAPI = (query) => (dispatch) => {
   });
 };
 
-export const updateDataAPI = (data) => (dispatch) => {
+export const updateDataAPI = (data) => async (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
+  const { image } = data;
+
+  try {
+    // Upload the image file to storage
+    if (image) {
+      const storageRef = storage.ref();
+      const imageRef = storageRef.child(`images/${image.name}`);
+      await imageRef.put(image);
+      data.image = await imageRef.getDownloadURL();
+    }
+
+  } catch (error) {
+    console.log('Error uploading image:', error);
+  }
+
   return new Promise((resolve, reject) => {
     urlPosts.update({
       title: data.title,
       content: data.content,
-      date: data.date
+      date: data.date,
+      image: data.image || null,
     }, (err) => {
       if(err){
         reject(false);

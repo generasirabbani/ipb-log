@@ -48,7 +48,6 @@ const Dashboard = (props) => {
       setContent('');
       setPostId('');
       setImage('');
-
       const inputImage = document.querySelector('.input-image');
       if(inputImage) {
         inputImage.value = '';
@@ -90,6 +89,11 @@ const Dashboard = (props) => {
     setContent('');
     setTextButton('SIMPAN');
     setPostId('');
+    setImage('');
+    const inputImage = document.querySelector('.input-image');
+    if(inputImage) {
+      inputImage.value = '';
+    }
   };
 
   const showConfirmationDialog = (e, post) => {
