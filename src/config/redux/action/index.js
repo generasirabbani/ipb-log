@@ -244,20 +244,8 @@ export const updateVoteAPI = (data) => (dispatch) => {
       voteCount: data.voteCount,
     })
     votedUrl.set({
-      voted: true,
+      voted: data.voted,
+      voteType: data.voteType,
     });
   })
-}
-
-export const unvoteAPI = (data) => (dispatch) => {
-  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
-  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/votedUsers/${data.votedUserId}`)
-  return new Promise((resolve, reject) => {
-    urlPosts.update({
-      voteCount: data.voteCount,
-    })
-    votedUrl.set({
-      voted: false,
-    });
-  })
-}
+};

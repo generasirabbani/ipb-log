@@ -11,6 +11,7 @@ const Dashboard = (props) => {
   const [content, setContent] = useState('');
   const [textButton, setTextButton] = useState('SIMPAN');
   const [postId, setPostId] = useState('');
+  const [image, setImage] = useState('');
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const cancelRef = useRef();
@@ -62,6 +63,8 @@ const Dashboard = (props) => {
     if (type === 'title') {
       setTitle(e.target.value);
     } else if (type === 'content') {
+      setContent(e.target.value);
+    } else if (type === 'image') {
       setContent(e.target.value);
     }
   };
@@ -117,6 +120,12 @@ const Dashboard = (props) => {
               <FormLabel fontSize='30px'>{textButton === 'UPDATE' ? 'Update Post' : 'Tambahkan Post Baru'}</FormLabel>
               <Input placeholder="title" className="input-title" value={title} border='1px'
               onChange={(e) => onInputChange(e, 'title')} />
+              {/* <Input
+                placeholder="Image URL"
+                value={image}
+                border="1px"
+                onChange={(e) => onInputChange(e, 'image')}
+              /> */}
               <Textarea mt='20px' placeholder="content" className="input-content" minH='300px'
               value={content} border='1px' onChange={(e) => onInputChange(e, 'content')}></Textarea>
             </FormControl>
