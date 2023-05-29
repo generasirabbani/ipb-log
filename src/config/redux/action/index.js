@@ -93,14 +93,14 @@ export const addDataToAPI = (data) => async (dispatch) => {
       image: data.image || null,
       date: data.date,
       voteCount: data.voteCount,
-      userId: data.userId
+      userId: data.userId,
+      commentCount: data.commentCount,
     };
 
     const newPostRef = database.ref('posts/' + data.userId).push();
     const postId = newPostRef.key;
     await newPostRef.set(postData);
 
-    // ...existing code...
   } catch (error) {
     console.log('Error uploading image:', error);
   }
@@ -286,6 +286,33 @@ export const updateVoteAPI = (data) => (dispatch) => {
     votedUrl.set({
       voted: data.voted,
       voteType: data.voteType,
+    });
+  })
+};
+
+export const addCommentAPI = (data) => (dispatch) => {
+  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
+  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/comments`)
+  return new Promise((resolve, reject) => {
+    urlPosts.update({
+      commentCount: data.commentCount,
+    })
+    votedUrl.push({
+      commenterId: data.commenterId,
+      comment: data.comment,
+    });
+  })
+};
+
+export const updateCommentAPI = (data) => (dispatch) => {
+  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
+  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/comments`)
+  return new Promise((resolve, reject) => {
+    urlPosts.update({
+      commentCount: data.commentCount,
+    })
+    votedUrl.update({
+      comment: data.comment,
     });
   })
 };

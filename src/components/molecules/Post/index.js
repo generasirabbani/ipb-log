@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Image } from "@chakra-ui/react";
 import React from "react";
 
 export const Post = ({ post }) => {
@@ -23,7 +23,10 @@ export const Post = ({ post }) => {
         {new Date(post.data.date).toDateString()}
       </Text>
       {post.data.image && (
-        <img
+        <Image
+          maxH='400px'
+          maxW='400px'
+          align='center'
           src={post.data.image}
           alt='Post Image'
           style={{ marginTop: "20px", width: "100%" }}

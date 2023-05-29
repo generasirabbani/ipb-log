@@ -19,14 +19,14 @@ const Detail = (props) => {
     <>
       <NavBar />
       <Container minW="900px" centerContent p={8}>
-        <Box className="card-content" bg="blue.500" py={4} px={8} rounded="md" mb={8}>
+        {/* <Box className="card-content" bg="blue.500" py={4} px={8} rounded="md" mb={8}>
           <Heading as="h2" size="lg" color="white">
             Detail Page
           </Heading>
           <Text color="white">
             ID: {userId} | Post ID: {postId}
           </Text>
-        </Box>
+        </Box> */}
         {post.data ? (
           <VStack w="100%" alignItems="flex-start">
             <HStack w="100%" alignItems="flex-start">

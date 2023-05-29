@@ -4,7 +4,7 @@ import { FiArrowDown, FiArrowUp, FiCheck } from "react-icons/fi";
 import { updateVoteAPI, unvoteAPI } from "../../../config/redux/action";
 import { connect } from "react-redux";
 
-const VoteButtons = ({ post, updateVote, isLogin }) => {
+const VoteButtons = ({ post, updateVote }) => {
   const [isVoting, setVoting] = useState(false);
   const [userData, setUserData] = useState({});
 
@@ -93,7 +93,7 @@ const VoteButtons = ({ post, updateVote, isLogin }) => {
           icon={checkIfPostIsAlreadyVoted() === "upvote" ? <FiCheck /> : <FiArrowUp />}
           onClick={() => handleClick("upvote")}
           isLoading={isVoting}
-          isDisabled={checkIfPostIsAlreadyVoted() === "downvote" || !isLogin} // Disable if downvoted or not logged in
+          isDisabled={checkIfPostIsAlreadyVoted() === "downvote" } // Disable if downvoted or not logged in
           borderRadius="md"
           // _hover={{ bg: "transparent" }}
           _active={{ bg: "transparent" }}
@@ -119,7 +119,7 @@ const VoteButtons = ({ post, updateVote, isLogin }) => {
           icon={checkIfPostIsAlreadyVoted() === "downvote" ? <FiCheck /> : <FiArrowDown />}
           onClick={() => handleClick("downvote")}
           isLoading={isVoting}
-          isDisabled={checkIfPostIsAlreadyVoted() === "upvote" || !isLogin} // Disable if upvoted or not logged in
+          isDisabled={checkIfPostIsAlreadyVoted() === "upvote" } // Disable if upvoted or not logged in
           borderRadius="md"
           // _hover={{ bg: "transparent" }}
           _active={{ bg: "transparent" }}
@@ -139,4 +139,4 @@ const reduxDispatch = (dispatch) => ({
   updateVote: (data) => dispatch(updateVoteAPI(data)),
 });
 
-export default connect(reduxState, reduxDispatch)(VoteButtons);
+export default connect(null, reduxDispatch)(VoteButtons);

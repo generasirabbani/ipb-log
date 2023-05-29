@@ -7,6 +7,7 @@ import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
 import { useNavigate } from 'react-router-dom';
+import Comment from '../../../components/molecules/CommentButton';
 
 const Home = (props) => {
   const { posts = [] } = props;
@@ -32,8 +33,11 @@ const Home = (props) => {
             {posts.map((post) => (
               <HStack key={post.id} w="100%" alignItems="flex-start" >
                 <VoteButtons post={post} />
-                <Container minW='800px' onClick={() => toDetail(post)}>
-                  <Post post={post} key={post.id} />
+                <Container>
+                  <Container minW='800px' onClick={() => toDetail(post)}>
+                    <Post post={post} key={post.id} />
+                  </Container>
+                  <Comment post={post}/>
                 </Container>
               </HStack>
             ))}

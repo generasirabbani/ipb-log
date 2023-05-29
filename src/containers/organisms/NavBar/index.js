@@ -8,10 +8,12 @@ import {
   Button,
   useToast,
   Input,
+  IconButton,
 } from "@chakra-ui/react";
 import { connect } from "react-redux";
 import { logoutUserAPI, searchPostsFromAPI } from "../../../config/redux/action";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineSearch } from "react-icons/ai";
 
 const NavBar = (props) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -80,9 +82,11 @@ const NavBar = (props) => {
             maxW="500px"
             mr="4"
           />
-          <Button onClick={handleSearch} colorScheme="blue">
-            Search
-          </Button>
+          <IconButton
+          aria-label="Comment here"
+          icon={<AiOutlineSearch />}
+          onClick={handleSearch} 
+          colorScheme="blue" />
         </Box>
 
         <Spacer />

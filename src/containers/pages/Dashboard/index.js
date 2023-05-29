@@ -33,6 +33,7 @@ const Dashboard = (props) => {
       userId: userData.uid,
       voteCount: 0,
       image: image || null,
+      commentCount: 0,
     };
 
     if (textButton === 'SIMPAN') {
