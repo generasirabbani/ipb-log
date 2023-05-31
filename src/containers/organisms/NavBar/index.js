@@ -7,7 +7,6 @@ import {
   Container,
 } from "@chakra-ui/react";
 import { connect } from "react-redux";
-import { logoutUserAPI, refreshPostState, searchPostsFromAPI } from "../../../config/redux/action";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "./SearchInput";
 import RightContent from "../RightContent/RightContent";
@@ -18,7 +17,6 @@ const NavBar = (props) => {
   const userData = JSON.parse(localStorage.getItem('userData'));
 
   const toHome = () => {
-    props.refreshPosts();
     navigate('/home');
   };
 
@@ -54,4 +52,4 @@ const reduxDispatch = (dispatch) => ({
   refreshPosts: () => dispatch(refreshPostState()),
 });
 
-export default connect(reduxState, reduxDispatch)(NavBar);
+export default connect(null, reduxDispatch)(NavBar);

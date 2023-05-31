@@ -62,7 +62,15 @@ const Register = (props) => {
         <div className="auth-card">
           <p className="auth-title">IPBLog Sign Up Page</p>
           <form onSubmit={handleRegisterSubmit}>
-            <FormControl isInvalid={isInvalid} isRequired>
+            <FormControl 
+              isInvalid={isInvalid} 
+              isRequired 
+              onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                      handleRegisterSubmit();
+                  }
+              }}
+            >
               <FormLabel>Username</FormLabel>
               <Input
                 className="input"

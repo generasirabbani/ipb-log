@@ -20,7 +20,6 @@ import {
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const LoginForm = (props) => {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isInvalid, setInvalid] = useState(false);
@@ -29,9 +28,7 @@ const LoginForm = (props) => {
   const toast = useToast();
 
   const handleChangeText = (e) => {
-    if (e.target.id === 'username') {
-      setUsername(e.target.value);
-    } else if (e.target.id === 'email') {
+    if (e.target.id === 'email') {
       setEmail(e.target.value);
     } else if (e.target.id === 'password') {
       setPassword(e.target.value);
@@ -90,7 +87,15 @@ const LoginForm = (props) => {
         <div className="auth-card">
           <p className="auth-title">IPBLog Login Page</p>
           <form onSubmit={handleLoginSubmit}>
-            <FormControl isInvalid={isInvalid} isRequired>
+            <FormControl 
+              isInvalid={isInvalid} 
+              isRequired 
+              onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                      handleLoginSubmit();
+                  }
+              }}
+            >
               <FormLabel>Email</FormLabel>
               <Input
                 className="input"

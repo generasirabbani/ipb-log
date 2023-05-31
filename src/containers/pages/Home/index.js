@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
-import './Home.scss';
 import { connect } from 'react-redux';
 import { getAllPostsFromAPI } from '../../../config/redux/action';
-import { Container, Flex, HStack, Link, VStack } from '@chakra-ui/react';
+import { Container, Flex, HStack, Heading, IconButton, Link, VStack } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
 import { useNavigate } from 'react-router-dom';
 import Comment from '../../../components/molecules/CommentButton';
+import { AiOutlineComment } from 'react-icons/ai';
 
 const Home = (props) => {
   const { posts = [] } = props;
+  const userData = JSON.parse(localStorage.getItem("userData"));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,9 +27,7 @@ const Home = (props) => {
       <NavBar />
       <Flex minW='400px' alignContent='center' align='center' p={8}>
         <VStack w='100%' >
-          <div className="card-content">
-            <p className="title">All Posts:</p>
-          </div>
+          <Heading mb='20px'>All Posts:</Heading>
           {posts.length > 0 ? (
             <VStack alignSelf='center'>
               {posts.map((post) => (
@@ -38,7 +37,12 @@ const Home = (props) => {
                     <Flex onClick={() => toDetail(post)}>
                       <Post post={post} key={post.id} />
                     </Flex>
-                    <Comment post={post}/>
+                    <IconButton
+                      isDisabled={userData === null || props.userData === null}
+                      aria-label="Comment here"
+                      icon={<AiOutlineComment />}
+                      onClick={() => toDetail(post)}
+                    />
                   </Flex>
                 </HStack>
               ))}

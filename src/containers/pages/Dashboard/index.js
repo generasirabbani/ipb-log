@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Dashboard.scss';
 import { connect } from 'react-redux';
 import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action';
-import { Button, Container, Flex, FormControl, FormLabel, HStack, Input, Spacer, Textarea, VStack, useToast,
-AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay } from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormLabel, HStack, Input, Spacer, Textarea, VStack, useToast,
+AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, IconButton } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
+import { Post } from '../../../components/molecules/Post';
+import { RxCross1 } from 'react-icons/rx';
 
 const Dashboard = (props) => {
   const [title, setTitle] = useState('');
@@ -34,6 +36,7 @@ const Dashboard = (props) => {
       voteCount: 0,
       image: image || null,
       commentCount: 0,
+      username: userData.username
     };
 
     if (textButton === 'SIMPAN') {
@@ -129,13 +132,14 @@ const Dashboard = (props) => {
     <>
       <NavBar />
       <Flex w='100%' minH='570px' paddingTop='40px'>
-          <VStack ml='50px' w='40%'>
+          <VStack ml='100px' w='40%'>
             <FormControl mb='10px'>
               <FormLabel fontSize='30px'>{textButton === 'UPDATE' ? 'Update Post' : 'Tambahkan Post Baru'}</FormLabel>
               <Input placeholder="title" className="input-title" value={title} border='1px'
               onChange={(e) => onInputChange(e, 'title')} />
               <Textarea
-                mt="20px"
+                mt="5px"
+                mb="5px"
                 placeholder="content"
                 className="input-content"
                 minH="300px"
@@ -161,19 +165,15 @@ const Dashboard = (props) => {
           {posts.length > 0 ? (
             <VStack w="100%">
               {posts.map((post) => (
-                <Container w='100%' className='card-content posts' key={post.id} onClick={() => updatePost(post)}>
-                  <p className="title">{post.data.title}</p>
-                  <p className="date">{new Date(post.data.date).toDateString()}</p>
-                  {post.data.image && (
-                    <img
-                      src={post.data.image}
-                      alt='Post Image'
-                      style={{ marginTop: "20px", width: "100%" }}
-                    />
-                  )}
-                  <p className="content">{post.data.content}</p>
-                  <div className="delete-btn" onClick={(e) => showConfirmationDialog(e, post)}>X</div>
-                </Container>
+                <Flex key={post.id} >
+                  <Post post={post} key={post.id} onClick={() => updatePost(post)} />
+                  <IconButton
+                    aria-label="Delete Post"
+                    icon={< RxCross1 />}
+                    onClick={(e) => showConfirmationDialog(e, post)}
+                    colorScheme='red'
+                  />
+                </Flex>
               ))}
             </VStack>
           ) : null}

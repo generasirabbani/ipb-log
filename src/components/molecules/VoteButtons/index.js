@@ -4,14 +4,9 @@ import { FiArrowDown, FiArrowUp, FiCheck } from "react-icons/fi";
 import { updateVoteAPI, unvoteAPI } from "../../../config/redux/action";
 import { connect } from "react-redux";
 
-const VoteButtons = ({ post, updateVote }) => {
+const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
   const [isVoting, setVoting] = useState(false);
-  const [userData, setUserData] = useState({});
-
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    setUserData(userData);
-  }, []);
+  const userData = JSON.parse(localStorage.getItem('userData'));
 
   const handleClick = async (type) => {
     setVoting(true);
@@ -93,7 +88,7 @@ const VoteButtons = ({ post, updateVote }) => {
           icon={checkIfPostIsAlreadyVoted() === "upvote" ? <FiCheck /> : <FiArrowUp />}
           onClick={() => handleClick("upvote")}
           isLoading={isVoting}
-          isDisabled={checkIfPostIsAlreadyVoted() === "downvote" } // Disable if downvoted or not logged in
+          isDisabled={checkIfPostIsAlreadyVoted() === "downvote" || userData === null || userDataGlobal === null }
           borderRadius="md"
           // _hover={{ bg: "transparent" }}
           _active={{ bg: "transparent" }}
@@ -119,7 +114,7 @@ const VoteButtons = ({ post, updateVote }) => {
           icon={checkIfPostIsAlreadyVoted() === "downvote" ? <FiCheck /> : <FiArrowDown />}
           onClick={() => handleClick("downvote")}
           isLoading={isVoting}
-          isDisabled={checkIfPostIsAlreadyVoted() === "upvote" } // Disable if upvoted or not logged in
+          isDisabled={checkIfPostIsAlreadyVoted() === "upvote" || userData === null || userDataGlobal === null }
           borderRadius="md"
           // _hover={{ bg: "transparent" }}
           _active={{ bg: "transparent" }}
@@ -132,6 +127,7 @@ const VoteButtons = ({ post, updateVote }) => {
 };
 
 const reduxState = (state) => ({
+  userDataGlobal: state.user,
   isLogin: state.isLogin,
 });
 
@@ -139,4 +135,4 @@ const reduxDispatch = (dispatch) => ({
   updateVote: (data) => dispatch(updateVoteAPI(data)),
 });
 
-export default connect(null, reduxDispatch)(VoteButtons);
+export default connect(reduxState, reduxDispatch)(VoteButtons);

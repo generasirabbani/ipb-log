@@ -14,6 +14,7 @@ const Detail = (props) => {
 
   useEffect(() => {
     props.getSinglePost(userId, postId);
+    // console.log("post single : " + JSON.stringify(post));
   }, []);
 
   return (
@@ -25,7 +26,7 @@ const Detail = (props) => {
             Detail Page
           </Heading>
           <Text color="white">
-            ID: {userId} | Post ID: {postId}
+            Posted by: {post.username} | Post ID: {postId}
           </Text>
         </Box>
         {post.data ? (

@@ -16,7 +16,8 @@ const LoginForm = ({ isLoading, resetPassword }) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const res = await resetPassword({ email }).catch((err) => err);
     if (res) {
       setEmail('');
@@ -28,6 +29,7 @@ const LoginForm = ({ isLoading, resetPassword }) => {
         position: "top",
         duration: 5000
       });
+      navigate('/login');
     } else {
       setInvalid(true);
     }
@@ -47,7 +49,15 @@ const LoginForm = ({ isLoading, resetPassword }) => {
           <div className="auth-card">
             <p className="auth-title">Forgot Password Page</p>
             <form onSubmit={handleSubmit}>
-              <FormControl isInvalid={isInvalid} >
+              <FormControl 
+                isInvalid={isInvalid} 
+                isRequired 
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSubmit(e);
+                    }
+                }}
+              >
                 <FormLabel>Email</FormLabel>
                 <Input className="input" id="email" placeholder="user@email.com" type="email"
                   onChange={handleChangeText} value={email} />

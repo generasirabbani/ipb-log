@@ -16,9 +16,9 @@ const AuthButtons = (props) => {
     const res = await props.logoutUser().catch((err) => err);
     if (res) {
       localStorage.setItem('userData', null);
-      console.log("Sign Out Success!")
+      console.log("Log Out Success!")
       toast({
-        title: "Sign Out Success!",
+        title: "Log Out Success!",
         status: "success",
         isClosable: true,
         position: "top",
@@ -26,7 +26,7 @@ const AuthButtons = (props) => {
       });
       navigate('/home');
     } else {
-      console.log('Sign Out Failed!');
+      console.log('Log Out Failed!');
     }
   };
 
@@ -36,10 +36,6 @@ const AuthButtons = (props) => {
 
   const toLogin = () => {
     navigate('/login');
-  };
-
-  const toHome = () => {
-    navigate('/home');
   };
 
   const toRegister = () => {

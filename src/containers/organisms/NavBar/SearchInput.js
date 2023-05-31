@@ -57,11 +57,10 @@ const SearchInput = (props) => {
     )
 }
 
-
 const reduxState = (state) => ({
     userData: state.user,
     isLogin: state.isLogin,
-  });
+});
   
 const reduxDispatch = (dispatch) => ({
   searchPosts: (query) => dispatch(searchPostsFromAPI(query)),

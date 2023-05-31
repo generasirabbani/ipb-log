@@ -5,6 +5,7 @@ export const logoutUserAPI = () => (dispatch) => {
     firebase.auth().signOut()
       .then(() => {
         dispatch({type: 'CHANGE_ISLOGIN', value: false})
+        dispatch({type: 'CHANGE_USER', value: null})
         resolve(true);
       })
       .catch((error) => {
@@ -45,19 +46,18 @@ export const registerUserAPI = (data) => (dispatch) => {
 
 export const loginUserAPI = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {
-    dispatch({type: 'CHANGE_LOADING', value: true})
     firebase.auth().signInWithEmailAndPassword(data.email, data.password)
       .then(res => {
+        const userDataAPI = database.ref('users/' + res.user.uid);
         const dataUser = {
           email: res.user.email,
           uid: res.user.uid,
           emailVerified: res.user.emailVerified,
           refreshToken: res.user.refreshToken
         }
-        database.ref('users/' + res.user.uid).update({
+        userDataAPI.update({
           lastLogin: Date.now()
         });
-        dispatch({type: 'CHANGE_LOADING', value: false})
         dispatch({type: 'CHANGE_ISLOGIN', value: true})
         dispatch({type: 'CHANGE_USER', value: dataUser})
         resolve(dataUser)
@@ -67,8 +67,6 @@ export const loginUserAPI = (data) => (dispatch) => {
         var errorMessage = error.message;
         console.log(errorCode, errorMessage)
         dispatch({type: 'CHANGE_ERROR', value: errorMessage})
-        dispatch({type: 'CHANGE_LOADING', value: false})
-        dispatch({type: 'CHANGE_ISLOGIN', value: false})
         reject(false)
       })
   })
@@ -95,6 +93,7 @@ export const addDataToAPI = (data) => async (dispatch) => {
       voteCount: data.voteCount,
       userId: data.userId,
       commentCount: data.commentCount,
+      username: data.username,
     };
 
     const newPostRef = database.ref('posts/' + data.userId).push();
@@ -176,17 +175,20 @@ export const getAllPostsFromAPI = () => (dispatch) => {
   });
 }; */
 
-export const getPostsByIdFromAPI = (userId, postId) => (dispatch) => {
+export const getPostsByIdFromAPI = (userId, postId) => async (dispatch) => {
   const urlPosts = database.ref(`posts/${userId}/${postId}`);
+  const userDataAPI = await database.ref('users/' + userId).once('value');
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
+      // console.log("user data api:" + JSON.stringify(userDataAPI));
       const data = {
         id: snapshot.key,
         userId: userId,
+        username: userDataAPI.val().username,
         data: snapshot.val(),
       };
       dispatch({ type: 'SET_POST', value: data });
-      resolve(snapshot.val());
+      resolve(data);
     });
   });
 };
@@ -259,10 +261,8 @@ export const deleteDataAPI = (data) => (dispatch) => {
 
 export const resetPasswordByEmail = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {
-    dispatch({type: 'CHANGE_LOADING', value: true})
     firebase.auth().sendPasswordResetEmail(data.email)
       .then(res => {
-        dispatch({type: 'CHANGE_LOADING', value: false})
         resolve(true)
       })
       .catch((error) => {
@@ -270,7 +270,6 @@ export const resetPasswordByEmail = (data) => (dispatch) => {
         var errorMessage = error.message;
         console.log(errorCode, errorMessage)
         dispatch({type: 'CHANGE_ERROR', value: errorMessage})
-        dispatch({type: 'CHANGE_LOADING', value: false})
         reject(false)
       })
   })
@@ -316,7 +315,3 @@ export const updateCommentAPI = (data) => (dispatch) => {
     });
   })
 };
-
-export const refreshPostState = () => (dispatch) => {
-  dispatch({ type: 'SET_POSTS', value: [] });
-}

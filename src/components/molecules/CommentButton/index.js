@@ -4,16 +4,11 @@ import { AiOutlineComment } from "react-icons/ai";
 import { addCommentAPI, updateCommentAPI } from "../../../config/redux/action";
 import { connect } from "react-redux";
 
-const Comment = ({ post, updateComment, addComment }) => {
-  const [userData, setUserData] = useState({});
+const Comment = ({ post, updateComment, addComment, userDataGlobal }) => {
+  const userData = JSON.parse(localStorage.getItem("userData"));
   const [isCommenting, setIsCommenting] = useState(false);
   const [commentInput, setCommentInput] = useState('');
   const toast = useToast();
-
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    setUserData(userData);
-  }, []);
 
   const handleClick = () => {
     setIsCommenting(true);
@@ -36,9 +31,7 @@ const Comment = ({ post, updateComment, addComment }) => {
 
   return (
     <Flex>
-      {isCommenting ? 
-      (<>
-        <Input
+      <Input
           placeholder="Enter your comment"
           value={commentInput}
           onChange={(e) => setCommentInput(e.target.value)}
@@ -49,20 +42,12 @@ const Comment = ({ post, updateComment, addComment }) => {
           icon={<AiOutlineComment />}
           onClick={handleAddComment}
         />
-      </>) : 
-      (<IconButton
-        aria-label="Comment here"
-        icon={<AiOutlineComment />}
-        onClick={handleClick}
-      />)}
-      {/* Add a button or any other UI component to submit the comment */}
-      {/* For example, here's an IconButton */}
-      
     </Flex>
   );
 };
 
 const reduxState = (state) => ({
+  userDataGlobal: state.user,
   isLogin: state.isLogin,
 });
 
