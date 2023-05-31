@@ -1,4 +1,4 @@
-import { HStack, IconButton, Input, Text, VStack, useToast } from "@chakra-ui/react";
+import { Flex, HStack, IconButton, Input, Text, VStack, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { AiOutlineComment } from "react-icons/ai";
 import { addCommentAPI, updateCommentAPI } from "../../../config/redux/action";
@@ -35,7 +35,7 @@ const Comment = ({ post, updateComment, addComment }) => {
   }
 
   return (
-    <HStack>
+    <Flex>
       {isCommenting ? 
       (<>
         <Input
@@ -58,7 +58,7 @@ const Comment = ({ post, updateComment, addComment }) => {
       {/* Add a button or any other UI component to submit the comment */}
       {/* For example, here's an IconButton */}
       
-    </HStack>
+    </Flex>
   );
 };
 

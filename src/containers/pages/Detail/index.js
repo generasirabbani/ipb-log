@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getPostsByIdFromAPI } from '../../../config/redux/action';
-import { Box, Container, Heading, Text, VStack, HStack } from '@chakra-ui/react';
+import { Box, Container, Heading, Text, VStack, HStack, Flex } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
+import Comment from '../../../components/molecules/CommentButton';
 
 const Detail = (props) => {
   const { userId, postId } = useParams();
@@ -19,23 +20,24 @@ const Detail = (props) => {
     <>
       <NavBar />
       <Container minW="900px" centerContent p={8}>
-        {/* <Box className="card-content" bg="blue.500" py={4} px={8} rounded="md" mb={8}>
+        <Box className="card-content" bg="blue.500" py={4} px={8} rounded="md" mb={8}>
           <Heading as="h2" size="lg" color="white">
             Detail Page
           </Heading>
           <Text color="white">
             ID: {userId} | Post ID: {postId}
           </Text>
-        </Box> */}
+        </Box>
         {post.data ? (
-          <VStack w="100%" alignItems="flex-start">
-            <HStack w="100%" alignItems="flex-start">
-              <VoteButtons post={post} />
-              <Container minW="800px">
-                <Post post={post} key={post.id} />
-              </Container>
-            </HStack>
-          </VStack>
+        <HStack key={post.id} w="100%" alignItems="flex-start" ml='350px'>
+          <VoteButtons post={post} />
+          <Flex direction="column" >
+            <Flex onClick={() => toDetail(post)}>
+              <Post post={post} key={post.id} />
+            </Flex>
+            <Comment post={post} />
+          </Flex>
+        </HStack>
         ) : (
           <Text>Loading...</Text>
         )}

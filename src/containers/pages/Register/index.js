@@ -93,7 +93,7 @@ const Register = (props) => {
                 />
                 <InputRightElement>
                   <IconButton
-                    variant={showPassword ? 'solid' : 'ghost'}
+                    variant={showPassword ? 'ghost' : 'ghost'}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={togglePasswordVisibility}
                     icon={showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}

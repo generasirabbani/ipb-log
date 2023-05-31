@@ -8,7 +8,8 @@ export const Post = ({ post }) => {
       padding='16px'
       boxShadow='4px 3px 9px rgba(0, 0, 0, 0.1)'
       rounded='md'
-      w='100%'
+      minW='435px'
+      minH='150px'
       transition='all ease 0.35s'
       _hover={{
         cursor: "pointer",

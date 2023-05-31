@@ -316,3 +316,7 @@ export const updateCommentAPI = (data) => (dispatch) => {
     });
   })
 };
+
+export const refreshPostState = () => (dispatch) => {
+  dispatch({ type: 'SET_POSTS', value: [] });
+}

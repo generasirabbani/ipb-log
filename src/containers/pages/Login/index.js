@@ -110,12 +110,14 @@ const LoginForm = (props) => {
                   onChange={handleChangeText}
                   value={password}
                 />
-                <InputRightElement width="4.5rem">
+                <InputRightElement>
                   <IconButton
-                    h="1.75rem"
-                    size="sm"
+                    variant={showPassword ? 'ghost' : 'ghost'}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={togglePasswordVisibility}
                     icon={showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                    bg="none"
+                    _hover={{ bg: 'none' }}
                   />
                 </InputRightElement>
               </InputGroup>
