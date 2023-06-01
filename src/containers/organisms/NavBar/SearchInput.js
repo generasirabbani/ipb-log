@@ -22,11 +22,12 @@ const SearchInput = (props) => {
     };
 
     return (
-        <Flex flexGrow={1} mr={10} ml={10} align="center">
+        <Flex flexGrow={1} mr={5} ml={5} align="center">
             <InputGroup>
-                <InputLeftElement pointerEvents='none'>
-                <SearchIcon color='gray.300' />
-                </InputLeftElement>
+                <InputLeftElement
+                    pointerEvents="none"
+                    children={<SearchIcon color='gray.400' mb={1} />}
+                />
                 <Input 
                     type="text"
                     placeholder="Search posts..."
@@ -49,7 +50,7 @@ const SearchInput = (props) => {
                         border: "1px solid",
                         borderColor: "blue.500"
                     }}
-                    height="40px"
+                    height="34px"
                     bg="gray.50"
                 />
             </InputGroup>

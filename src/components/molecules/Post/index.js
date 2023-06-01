@@ -21,7 +21,7 @@ export const Post = ({ post }) => {
         {post.data.title}
       </Text>
       <Text fontSize='12px'>
-        {new Date(post.data.date).toDateString()}
+        {new Date(post.data.createdAt).toDateString()}
       </Text>
       {post.data.image && (
         <Image

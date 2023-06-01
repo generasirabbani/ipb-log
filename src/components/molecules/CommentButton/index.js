@@ -4,7 +4,7 @@ import { AiOutlineComment } from "react-icons/ai";
 import { addCommentAPI, updateCommentAPI } from "../../../config/redux/action";
 import { connect } from "react-redux";
 
-const Comment = ({ post, updateComment, addComment, userDataGlobal }) => {
+const CommentButton = ({ post, updateComment, addComment, userDataGlobal }) => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [isCommenting, setIsCommenting] = useState(false);
   const [commentInput, setCommentInput] = useState('');
@@ -30,19 +30,23 @@ const Comment = ({ post, updateComment, addComment, userDataGlobal }) => {
   }
 
   return (
-    <Flex>
-      <Input
-          placeholder="Enter your comment"
-          value={commentInput}
-          onChange={(e) => setCommentInput(e.target.value)}
-          mb="2"
-        />
-        <IconButton
-          aria-label="Submit your Comment"
-          icon={<AiOutlineComment />}
-          onClick={handleAddComment}
-        />
-    </Flex>
+    <>
+      { userData !== null || userDataGlobal !== null ? (
+      <Flex>
+        <Input
+            placeholder="Enter your comment"
+            value={commentInput}
+            onChange={(e) => setCommentInput(e.target.value)}
+            mb="2"
+          />
+          <IconButton
+            aria-label="Submit your Comment"
+            icon={<AiOutlineComment />}
+            onClick={handleAddComment}
+          />
+      </Flex>
+      ) : null}
+    </>
   );
 };
 
@@ -56,4 +60,4 @@ const reduxDispatch = (dispatch) => ({
   updateComment: (data) => dispatch(updateCommentAPI(data)),
 });
 
-export default connect(reduxState, reduxDispatch)(Comment);
+export default connect(reduxState, reduxDispatch)(CommentButton);

@@ -89,15 +89,14 @@ export const addDataToAPI = (data) => async (dispatch) => {
       title: data.title,
       content: data.content,
       image: data.image || null,
-      date: data.date,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
       voteCount: data.voteCount,
       userId: data.userId,
       commentCount: data.commentCount,
-      username: data.username,
     };
 
     const newPostRef = database.ref('posts/' + data.userId).push();
-    const postId = newPostRef.key;
     await newPostRef.set(postData);
 
   } catch (error) {
@@ -119,7 +118,7 @@ export const getDataFromAPI = (userId) => (dispatch) => {
           });
         });
       }
-      const sortedData = data.sort((a, b) => b.data.date - a.data.date);
+      const sortedData = data.sort((a, b) => b.data.createdAt - a.data.createdAt);
       dispatch({ type: 'SET_POSTS', value: sortedData });
       resolve(sortedData);
     });
@@ -142,7 +141,7 @@ export const getAllPostsFromAPI = () => (dispatch) => {
         });
       });
       // Sort the posts by the "date" attribute in descending order
-      const sortedData = data.sort((a, b) => b.data.date - a.data.date);
+      const sortedData = data.sort((a, b) => b.data.createdAt - a.data.createdAt);
       dispatch({ type: 'SET_POSTS', value: sortedData });
       resolve(sortedData);
     });
@@ -212,7 +211,7 @@ export const searchPostsFromAPI = (query) => (dispatch) => {
         });
       });
       // Sort the posts by the "date" attribute in descending order
-      const sortedData = data.sort((a, b) => b.data.date - a.data.date);
+      const sortedData = data.sort((a, b) => b.data.createdAt - a.data.createdAt);
       dispatch({ type: 'SET_POSTS', value: sortedData });
       resolve(sortedData);
     });
@@ -240,7 +239,7 @@ export const updateDataAPI = (data) => async (dispatch) => {
     urlPosts.update({
       title: data.title,
       content: data.content,
-      date: data.date,
+      updatedAt: data.updatedAt,
       image: data.image || null,
     }, (err) => {
       if(err){

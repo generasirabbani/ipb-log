@@ -6,7 +6,7 @@ import { Box, Container, Heading, Text, VStack, HStack, Flex } from '@chakra-ui/
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
-import Comment from '../../../components/molecules/CommentButton';
+import CommentButton from '../../../components/molecules/CommentButton';
 
 const Detail = (props) => {
   const { userId, postId } = useParams();
@@ -36,7 +36,7 @@ const Detail = (props) => {
             <Flex onClick={() => toDetail(post)}>
               <Post post={post} key={post.id} />
             </Flex>
-            <Comment post={post} />
+            <CommentButton post={post} />
           </Flex>
         </HStack>
         ) : (

@@ -8,6 +8,7 @@ import VoteButtons from '../../../components/molecules/VoteButtons';
 import { useNavigate } from 'react-router-dom';
 import Comment from '../../../components/molecules/CommentButton';
 import { AiOutlineComment } from 'react-icons/ai';
+import CreatePostLink from '../../organisms/CreatePostLink';
 
 const Home = (props) => {
   const { posts = [] } = props;
@@ -25,9 +26,11 @@ const Home = (props) => {
   return (
     <>
       <NavBar />
-      <Flex minW='400px' alignContent='center' align='center' p={8}>
+      <Flex minW='400px' direction='column' align='center' p={8}>
+        <Flex>
+          <CreatePostLink />
+        </Flex>
         <VStack w='100%' >
-          <Heading mb='20px'>All Posts:</Heading>
           {posts.length > 0 ? (
             <VStack alignSelf='center'>
               {posts.map((post) => (
@@ -51,7 +54,6 @@ const Home = (props) => {
             <p>No posts available.</p>
           )}
         </VStack>
-        
       </Flex>
     </>
   );

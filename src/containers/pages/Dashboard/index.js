@@ -7,6 +7,7 @@ AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialog
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import { RxCross1 } from 'react-icons/rx';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = (props) => {
   const [title, setTitle] = useState('');
@@ -17,6 +18,7 @@ const Dashboard = (props) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const cancelRef = useRef();
+  const navigate = useNavigate();
   const toast = useToast();
   const { posts } = props;
 
@@ -31,12 +33,12 @@ const Dashboard = (props) => {
     const data = {
       title,
       content,
-      date: new Date().getTime(),
+      createdAt: new Date().getTime(),
+      updatedAt: new Date().getTime(),
       userId: userData.uid,
       voteCount: 0,
       image: image || null,
-      commentCount: 0,
-      username: userData.username
+      commentCount: 0
     };
 
     if (textButton === 'SIMPAN') {
@@ -128,6 +130,10 @@ const Dashboard = (props) => {
     setIsConfirmationOpen(false);
   };
 
+  const toDetail = (post) => {
+    navigate('/detail/' + post.userId + '/' + post.id)
+  }
+
   return (
     <>
       <NavBar />
@@ -165,8 +171,8 @@ const Dashboard = (props) => {
           {posts.length > 0 ? (
             <VStack w="100%">
               {posts.map((post) => (
-                <Flex key={post.id} >
-                  <Post post={post} key={post.id} onClick={() => updatePost(post)} />
+                <Flex key={post.id} onClick={() => updatePost(post)} >
+                  <Post post={post} key={post.id} />
                   <IconButton
                     aria-label="Delete Post"
                     icon={< RxCross1 />}

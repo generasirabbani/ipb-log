@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Heading,
-  Button,
   useToast,
   Flex,
-  Container,
 } from "@chakra-ui/react";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SearchInput from "./SearchInput";
-import RightContent from "../RightContent/RightContent";
+import RightContent from "./RightContent/RightContent";
 
 const NavBar = (props) => {
   const toast = useToast();
@@ -21,9 +19,9 @@ const NavBar = (props) => {
   };
 
   return (
-    <Flex bg="gray.200" h="80px" padding="6px 12px">
+    <Flex bg="gray.200" h="54px" padding="6px 12px">
       <Flex align="center" >
-        <Heading ml='30px' 
+        <Heading ml='20px' 
         userSelect='none'
         onClick={toHome}
         fontFamily= 'Poppins'
@@ -35,7 +33,7 @@ const NavBar = (props) => {
         _hover={{
           cursor: 'pointer'
         }}
-        >IPBLog</Heading>
+      >IPBLog</Heading>
       </Flex>
       <SearchInput />
       <RightContent />
