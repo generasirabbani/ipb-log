@@ -28,8 +28,9 @@ export const registerUserAPI = (data) => (dispatch) => {
           uid: res.user.uid,
           username: data.username,
           email: res.user.email,
-          lastLogin: Date.now()
+          lastLogin: Date.now(),
         }
+        database.ref('users/' + res.user.uid).set(dataUser);
         dispatch({type: 'CHANGE_LOADING', value: false})
         resolve(dataUser)
       })
@@ -74,7 +75,7 @@ export const loginUserAPI = (data) => (dispatch) => {
 
 export const addDataToAPI = (data) => async (dispatch) => {
   const { image } = data;
-
+  const userDataAPI = await database.ref('users/' + data.userId).once('value');
   try {
     // Upload the image file to storage
     if (image) {
@@ -94,6 +95,7 @@ export const addDataToAPI = (data) => async (dispatch) => {
       voteCount: data.voteCount,
       userId: data.userId,
       commentCount: data.commentCount,
+      creatorName: userDataAPI.val().username,
     };
 
     const newPostRef = database.ref('posts/' + data.userId).push();
@@ -174,18 +176,17 @@ export const getAllPostsFromAPI = () => (dispatch) => {
   });
 }; */
 
-export const getPostsByIdFromAPI = (userId, postId) => async (dispatch) => {
+export const getPostsByIdFromAPI = (userId, postId) => (dispatch) => {
   const urlPosts = database.ref(`posts/${userId}/${postId}`);
-  const userDataAPI = await database.ref('users/' + userId).once('value');
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
       // console.log("user data api:" + JSON.stringify(userDataAPI));
       const data = {
         id: snapshot.key,
         userId: userId,
-        username: userDataAPI.val().username,
         data: snapshot.val(),
       };
+      console.log("Single post : " + JSON.stringify(data));
       dispatch({ type: 'SET_POST', value: data });
       resolve(data);
     });
@@ -212,8 +213,8 @@ export const searchPostsFromAPI = (query) => (dispatch) => {
       });
       // Sort the posts by the "date" attribute in descending order
       const sortedData = data.sort((a, b) => b.data.updatedAt - a.data.updatedAt);
-      dispatch({ type: 'SET_HOME_POSTS', value: sortedData });
       dispatch({ type: 'SET_USER_POSTS', value: sortedData });
+      dispatch({ type: 'SET_HOME_POSTS', value: sortedData });
       resolve(sortedData);
     });
   });

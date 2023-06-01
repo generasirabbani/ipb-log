@@ -9,8 +9,8 @@ import { IoFilterCircleOutline, IoNotificationsOutline, IoVideocamOutline } from
 
 const Icons = (props) => {
   const navigate = useNavigate();
-  const toDashboard = () => {
-    navigate('/dashboard');
+  const toCreatePost = () => {
+    navigate('/create-post');
   }
     
   return (
@@ -87,7 +87,7 @@ const Icons = (props) => {
           cursor='pointer' 
           borderRadius={4} 
           _hover={{bg: "gray.300"}}
-          onClick={toDashboard}
+          onClick={toCreatePost}
         >
             <Icon as={GrAdd} fontSize={20} />
         </Flex>

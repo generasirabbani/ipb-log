@@ -22,6 +22,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
+    console.log("userData : " + JSON.stringify(userData));
     props.getPosts(userData.uid);
   }, []);
 
@@ -39,7 +40,7 @@ const Dashboard = (props) => {
       commentCount: 0
     };
 
-    console.log("DATA : " + JSON.stringify(data))
+    // console.log("DATA : " + JSON.stringify(data))
 
     if (textButton === 'SIMPAN') {
       props.savePosts(data);
@@ -129,6 +130,11 @@ const Dashboard = (props) => {
     setSelectedPost(null);
     setIsConfirmationOpen(false);
   };
+
+  const isUserPosts = (post) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    return post.userId === userData.uid;
+  }
 
   return (
     <>

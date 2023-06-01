@@ -26,7 +26,7 @@ const Detail = (props) => {
             Detail Page
           </Heading>
           <Text color="white">
-            Posted by: {post.username} | Post ID: {postId}
+            Posted by: {post.data.creatorName} | Post ID: {postId}
           </Text>
         </Box>
         {post.data ? (

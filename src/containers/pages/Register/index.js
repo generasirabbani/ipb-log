@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { registerUserAPI } from '../../../config/redux/action';
 import { useNavigate } from 'react-router-dom';
 import { FormControl, Input, Button, useToast, Box, HStack, Spacer, FormLabel, FormErrorMessage, InputGroup, InputRightElement, IconButton } from '@chakra-ui/react';
-import { database } from '../../../config/firebase';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const Register = (props) => {
@@ -34,7 +33,6 @@ const Register = (props) => {
       setEmail('');
       setPassword('');
       setInvalid(false);
-      database.ref('users/' + res.uid).set(res);
       toast({
         title: 'Akun sudah dibuat',
         status: 'success',
