@@ -1,20 +1,20 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Flex, Stack, Button, Image } from "@chakra-ui/react";
 
 const ImageUpload = ({
-  selectedFile,
-  setSelectedFile,
+  setImageShown,
   setSelectedTab,
-  onSelectImage
+  onSelectImage,
+  imageShown
 }) => {
   const selectFileRef = useRef(null);
 
   return (
     <Flex direction="column" justify="center" align="center" width="100%">
-      {selectedFile ? (
+      {imageShown ? (
         <>
           <Image
-            src={selectedFile}
+            src={imageShown}
             maxWidth="400px"
             maxHeight="400px"
           />
@@ -25,7 +25,7 @@ const ImageUpload = ({
             <Button
               variant="outline"
               height="28px"
-              onClick={() => setSelectedFile("")}
+              onClick={() => setImageShown("")}
             >
               Remove
             </Button>
@@ -51,7 +51,7 @@ const ImageUpload = ({
           <input
             id="file-upload"
             type="file"
-            accept="image/x-png,image/gif,image/jpeg"
+            accept="image/*"
             hidden
             ref={selectFileRef}
             onChange={onSelectImage}

@@ -7,7 +7,6 @@ AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialog
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import { RxCross1 } from 'react-icons/rx';
-import { useNavigate } from 'react-router-dom';
 
 const Dashboard = (props) => {
   const [title, setTitle] = useState('');
@@ -18,7 +17,6 @@ const Dashboard = (props) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const cancelRef = useRef();
-  const navigate = useNavigate();
   const toast = useToast();
   const { posts } = props;
 
@@ -40,6 +38,8 @@ const Dashboard = (props) => {
       image: image || null,
       commentCount: 0
     };
+
+    console.log("DATA : " + JSON.stringify(data))
 
     if (textButton === 'SIMPAN') {
       props.savePosts(data);
@@ -130,10 +130,6 @@ const Dashboard = (props) => {
     setIsConfirmationOpen(false);
   };
 
-  const toDetail = (post) => {
-    navigate('/detail/' + post.userId + '/' + post.id)
-  }
-
   return (
     <>
       <NavBar />
@@ -215,7 +211,7 @@ const Dashboard = (props) => {
 
 const reduxState = (state) => ({
     userData: state.user,
-    posts: state.posts,
+    posts: state.userPosts,
 });
 
 const reduxDispatch = (dispatch) => ({

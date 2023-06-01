@@ -119,7 +119,7 @@ export const getDataFromAPI = (userId) => (dispatch) => {
         });
       }
       const sortedData = data.sort((a, b) => b.data.updatedAt - a.data.updatedAt);
-      dispatch({ type: 'SET_POSTS', value: sortedData });
+      dispatch({ type: 'SET_USER_POSTS', value: sortedData });
       resolve(sortedData);
     });
   });
@@ -142,7 +142,7 @@ export const getAllPostsFromAPI = () => (dispatch) => {
       });
       // Sort the posts by the "date" attribute in descending order
       const sortedData = data.sort((a, b) => b.data.updatedAt - a.data.updatedAt);
-      dispatch({ type: 'SET_POSTS', value: sortedData });
+      dispatch({ type: 'SET_HOME_POSTS', value: sortedData });
       resolve(sortedData);
     });
   });
@@ -212,7 +212,8 @@ export const searchPostsFromAPI = (query) => (dispatch) => {
       });
       // Sort the posts by the "date" attribute in descending order
       const sortedData = data.sort((a, b) => b.data.updatedAt - a.data.updatedAt);
-      dispatch({ type: 'SET_POSTS', value: sortedData });
+      dispatch({ type: 'SET_HOME_POSTS', value: sortedData });
+      dispatch({ type: 'SET_USER_POSTS', value: sortedData });
       resolve(sortedData);
     });
   });

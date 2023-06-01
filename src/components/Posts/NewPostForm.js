@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, useToast } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
 import { BiPoll } from "react-icons/bi";
 import { BsLink45Deg, BsMic } from "react-icons/bs";
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import TabItem from './TabItem';
 import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
+import { addDataToAPI } from '../../config/redux/action';
 
 const formTabs = [
   {
@@ -41,7 +42,9 @@ const NewPostForm = (props) => {
   const selectFileRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+  const toast = useToast();
+  const [imageShown, setImageShown] = useState('');
+
   const handleCreatePost = () => {
     setLoading(true);
     const { title, body } = textInputs;
@@ -55,9 +58,9 @@ const NewPostForm = (props) => {
       userId: userData.uid,
       voteCount: 0,
       image: selectedFile || null,
-      commentCount: 0,
-      username: userData.username
+      commentCount: 0
     };
+    // console.log("DATA : " + JSON.stringify(data))
 
     props.savePosts(data);
     toast({
@@ -67,9 +70,18 @@ const NewPostForm = (props) => {
       position: "top",
       duration: 3000
     });
+    setTextInputs({
+      title: "",
+      body: "",
+    });
+    setSelectedFile('');
+    setImageShown('');
+    setLoading(false);
   }
 
   const onSelectImage = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
     const reader = new FileReader();
     if (event.target.files?.[0]) {
       reader.readAsDataURL(event.target.files[0]);
@@ -77,7 +89,7 @@ const NewPostForm = (props) => {
   
     reader.onload = (readerEvent) => {
       if (readerEvent.target?.result) {
-        setSelectedFile(readerEvent.target?.result);
+        setImageShown(readerEvent.target?.result);
       }
     };
   };
@@ -112,11 +124,11 @@ const NewPostForm = (props) => {
         )}
         {selectedTab === "Images & Video" && (
           <ImageUpload
-            selectedFile={selectedFile}
-            setSelectedFile={setSelectedFile}
+            setImageShown={setImageShown}
             setSelectedTab={setSelectedTab}
             selectFileRef={selectFileRef}
             onSelectImage={onSelectImage}
+            imageShown={imageShown}
           />
         )}
       </Flex>

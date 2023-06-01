@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getAllPostsFromAPI } from '../../../config/redux/action';
-import { Container, Flex, HStack, Heading, IconButton, Link, VStack } from '@chakra-ui/react';
+import { Flex, HStack, IconButton, VStack } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
 import { useNavigate } from 'react-router-dom';
-import Comment from '../../../components/molecules/CommentButton';
 import { AiOutlineComment } from 'react-icons/ai';
 import CreatePostLink from '../../organisms/CreatePostLink';
 
@@ -61,7 +60,7 @@ const Home = (props) => {
 
 const reduxState = (state) => ({
   userData: state.user,
-  posts: state.posts,
+  posts: state.homePosts,
 });
 
 const reduxDispatch = (dispatch) => ({

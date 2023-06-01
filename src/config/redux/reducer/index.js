@@ -3,7 +3,8 @@ const initialState = {
   isLogin: false,
   isLoading: false,
   user: {},
-  posts: [],
+  homePosts: [],
+  userPosts: [],
   post: {},
   error: ''
 }
@@ -33,10 +34,16 @@ const reducer = (state=initialState, action) => {
       isLoading: action.value
     }
   }
-  if(action.type === 'SET_POSTS'){
+  if(action.type === 'SET_HOME_POSTS'){
     return {
       ...state,
-      posts: action.value
+      homePosts: action.value
+    }
+  }
+  if(action.type === 'SET_USER_POSTS'){
+    return {
+      ...state,
+      userPosts: action.value
     }
   }
   if(action.type === 'SET_POST'){
