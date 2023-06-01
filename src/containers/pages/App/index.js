@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Link,  } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../../../config/redux'
 import { ChakraProvider } from '@chakra-ui/react';
@@ -25,7 +25,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/home" element={<Home />} />
-              {/* <Route path="/" element={<None />} /> */}
+              <Route path="/" element={<Home />} />
               <Route path="/detail/:userId/:postId" element={<Detail />} />
               <Route path="/search/:query" element={<Search />} />
               <Route path="/create-post" element={<SubmitPostPage />} />

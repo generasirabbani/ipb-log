@@ -16,7 +16,7 @@ const Home = (props) => {
 
   useEffect(() => {
     props.getAllPosts(); // Fetch all posts
-  }, []);
+  }, );
 
   const toDetail = (post) => {
     navigate('/detail/' + post.userId + '/' + post.id)

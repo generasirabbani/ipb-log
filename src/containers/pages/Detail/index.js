@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getPostsByIdFromAPI } from '../../../config/redux/action';
-import { Box, Container, Heading, Text, VStack, HStack, Flex } from '@chakra-ui/react';
+import { Box, Container, Heading, Text, HStack, Flex } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
@@ -15,7 +15,7 @@ const Detail = (props) => {
   useEffect(() => {
     props.getSinglePost(userId, postId);
     // console.log("post single : " + JSON.stringify(post));
-  }, []);
+  }, );
 
   return (
     <>
@@ -33,7 +33,7 @@ const Detail = (props) => {
         <HStack key={post.id} w="100%" alignItems="flex-start" ml='350px'>
           <VoteButtons post={post} />
           <Flex direction="column" >
-            <Flex onClick={() => toDetail(post)}>
+            <Flex>
               <Post post={post} key={post.id} />
             </Flex>
             <CommentButton post={post} />

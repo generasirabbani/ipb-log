@@ -1,10 +1,11 @@
-import { Button, Flex, Icon, useToast } from '@chakra-ui/react';
-import React, { Component } from 'react';
-import { BsArrowUpRightCircle, BsChatDots } from "react-icons/bs"
+import { Flex, Icon } from '@chakra-ui/react';
+import React from 'react';
+// import { BsArrowUpRightCircle, BsChatDots } from "react-icons/bs"
 import { GrAdd } from "react-icons/gr"
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { IoFilterCircleOutline, IoNotificationsOutline, IoVideocamOutline } from 'react-icons/io5';
+import { logoutUserAPI } from '../../../../config/redux/action';
+// import { IoFilterCircleOutline, IoNotificationsOutline, IoVideocamOutline } from 'react-icons/io5';
 
 
 const Icons = (props) => {
