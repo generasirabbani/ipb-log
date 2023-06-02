@@ -173,8 +173,19 @@ const Dashboard = (props) => {
           {posts.length > 0 ? (
             <VStack w="100%">
               {posts.map((post) => (
-                <Flex key={post.id} onClick={() => updatePost(post)} >
-                  <Post post={post} key={post.id} />
+                <Flex
+                  key={post.id}
+                  onClick={() => updatePost(post)}
+                >
+                <Post
+                  post={post}
+                  key={post.id}
+                  _hover={{
+                    cursor: "pointer",
+                    background: "rgba(0, 0, 0, 0.1)",
+                    transform: "translateY(-2px)",
+                  }}
+                />
                   <IconButton
                     aria-label="Delete Post"
                     icon={< RxCross1 />}

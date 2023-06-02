@@ -6,7 +6,8 @@ const initialState = {
   homePosts: [],
   userPosts: [],
   post: {},
-  error: ''
+  postComments: [],
+  error: '',
 }
 
 const reducer = (state=initialState, action) => {
@@ -50,6 +51,12 @@ const reducer = (state=initialState, action) => {
     return {
       ...state,
       post: action.value
+    }
+  }
+  if(action.type === 'SET_POST_COMMENTS'){
+    return {
+      ...state,
+      postComments: action.value
     }
   }
   if(action.type === 'CHANGE_ERROR'){

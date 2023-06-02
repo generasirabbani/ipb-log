@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getPostsByIdFromAPI } from '../../../config/redux/action';
@@ -6,7 +6,7 @@ import { Box, Container, Heading, Text, HStack, Flex } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
-import CommentButton from '../../../components/molecules/CommentButton';
+import Comments from '../../organisms/Comments';
 
 const Detail = (props) => {
   const { userId, postId } = useParams();
@@ -14,8 +14,8 @@ const Detail = (props) => {
 
   useEffect(() => {
     props.getSinglePost(userId, postId);
-    // console.log("post single : " + JSON.stringify(post));
-  }, );
+    console.log("post single : " + JSON.stringify(post));
+  }, []);
 
   return (
     <>
@@ -26,7 +26,7 @@ const Detail = (props) => {
             Detail Page
           </Heading>
           <Text color="white">
-            Posted by: {post.data.creatorName} | Post ID: {postId}
+            Posted by: {post.data?.creatorName} | Post ID: {postId}
           </Text>
         </Box>
         {post.data ? (
@@ -36,7 +36,7 @@ const Detail = (props) => {
             <Flex>
               <Post post={post} key={post.id} />
             </Flex>
-            <CommentButton post={post} />
+            <Comments post={post} />
           </Flex>
         </HStack>
         ) : (

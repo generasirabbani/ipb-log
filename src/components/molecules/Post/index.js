@@ -1,21 +1,16 @@
 import { Box, Text, Image } from "@chakra-ui/react";
 import React from "react";
 
-export const Post = ({ post }) => {
+export const Post = ({ post, _hover }) => {
   return (
     <Box
       border='1px solid rgba(0, 0, 0, 0.1)'
       padding='16px'
-      boxShadow='4px 3px 9px rgba(0, 0, 0, 0.1)'
-      rounded='md'
+      bg='white'
       minW='435px'
       minH='150px'
       transition='all ease 0.35s'
-      _hover={{
-        cursor: "pointer",
-        background: "rgba(0, 0, 0, 0.1)",
-        transform: "translateY(-2px)",
-      }}
+      _hover={_hover}
     >
       <Text fontSize='24px' fontWeight='bold'>
         {post.data.title}

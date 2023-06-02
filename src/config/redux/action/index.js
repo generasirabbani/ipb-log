@@ -45,18 +45,20 @@ export const registerUserAPI = (data) => (dispatch) => {
   })
 }
 
-export const loginUserAPI = (data) => (dispatch) => {
+export const loginUserAPI = (data) => async (dispatch) => {
   return new Promise((resolve, reject) => {
     firebase.auth().signInWithEmailAndPassword(data.email, data.password)
-      .then(res => {
-        const userDataAPI = database.ref('users/' + res.user.uid);
+      .then(async(res) => {
+        const userDataRef = database.ref('users/' + res.user.uid);
+        const userDataAPI = await database.ref('users/' + res.user.uid).once('value');
         const dataUser = {
           email: res.user.email,
           uid: res.user.uid,
+          username: userDataAPI.val().username,
           emailVerified: res.user.emailVerified,
           refreshToken: res.user.refreshToken
         }
-        userDataAPI.update({
+        userDataRef.update({
           lastLogin: Date.now()
         });
         dispatch({type: 'CHANGE_ISLOGIN', value: true})
@@ -315,4 +317,21 @@ export const updateCommentAPI = (data) => (dispatch) => {
       comment: data.comment,
     });
   })
+};
+
+export const getCommentsAPI = (userId, postId) => (dispatch) => {
+  const urlComments = database.ref(`posts/${userId}/${postId}/comments`);
+  return new Promise((resolve, reject) => {
+    urlComments.on('value', (snapshot) => {
+      // console.log("user data api:" + JSON.stringify(userDataAPI));
+      const data = {
+        id: snapshot.key,
+        userId: userId,
+        data: snapshot.val(),
+      };
+      console.log("Single post comments : " + JSON.stringify(data));
+      dispatch({ type: 'SET_POST_COMMENTS', value: data });
+      resolve(data);
+    });
+  });
 };

@@ -16,7 +16,7 @@ const Home = (props) => {
 
   useEffect(() => {
     props.getAllPosts(); // Fetch all posts
-  }, );
+  }, []);
 
   const toDetail = (post) => {
     navigate('/detail/' + post.userId + '/' + post.id)
@@ -36,8 +36,18 @@ const Home = (props) => {
                 <HStack key={post.id} w="100%" alignItems="flex-start" >
                   <VoteButtons post={post} />
                   <Flex direction="column" >
-                    <Flex onClick={() => toDetail(post)}>
-                      <Post post={post} key={post.id} />
+                    <Flex
+                      onClick={() => toDetail(post)}
+                    >
+                      <Post
+                        post={post}
+                        key={post.id}
+                        _hover={{
+                          cursor: "pointer",
+                          background: "rgba(0, 0, 0, 0.1)",
+                          transform: "translateY(-2px)",
+                        }}
+                      />
                     </Flex>
                     <IconButton
                       isDisabled={userData === null || props.userData === null}
