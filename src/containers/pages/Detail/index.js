@@ -17,8 +17,8 @@ const Detail = (props) => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     props.getSinglePost(userId, postId);
-    console.log("post single : " + JSON.stringify(post));
-    console.log("from detail : " + JSON.stringify(userData));
+    // console.log("post single : " + JSON.stringify(post));
+    // console.log("from detail : " + JSON.stringify(userData));
     setUserData(userData);
   }, []);
 
@@ -41,13 +41,13 @@ const Detail = (props) => {
             Detail Page
           </Heading>
           <Text color="black">
-            --------------------------------------------
+            -------------------------------------------
           </Text>
           <Text color="#263C92">
             Posted by: {post.data?.creatorName}
           </Text>
           <Text color="black">
-            --------------------------------------------
+            -------------------------------------------
           </Text>
           <Text color="#263C92">
             Posted at: {new Date(post.data?.createdAt).toString()} 

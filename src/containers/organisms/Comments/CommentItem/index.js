@@ -9,6 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import moment from "moment";
+import 'moment/locale/id'
 import {
   IoArrowDownCircleOutline,
   IoArrowUpCircleOutline,
@@ -21,9 +22,9 @@ const CommentItem = ({
   isLoading,
   userId,
 }) => {
-  useEffect(() => {
-    // console.log("from commentitem: " + JSON.stringify(userId));
-  }, []);
+  // useEffect(() => {
+  //   // console.log("from commentitem: " + JSON.stringify(userId));
+  // }, []);
 
   return (
     <Flex>
@@ -36,16 +37,14 @@ const CommentItem = ({
             fontWeight={700}
             _hover={{ textDecoration: "underline", cursor: "pointer" }}
           >
-            {comment.commenterName}
+            {comment.data?.commenterName}
           </Text>
-          {comment.createdAt?.seconds && (
-            <Text color="gray.600">
-              {moment(new Date(comment.createdAt?.seconds * 1000)).fromNow()}
-            </Text>
-          )}
+          <Text color="gray.600">
+            {moment(new Date(comment.data?.createdAt)).locale("id").fromNow()}
+          </Text>
           {isLoading && <Spinner size="sm" />}
         </Stack>
-        <Text fontSize="10pt">{comment.text}</Text>
+        <Text fontSize="10pt">{comment.data?.text}</Text>
         <Stack
           direction="row"
           align="center"
@@ -55,7 +54,7 @@ const CommentItem = ({
         >
           <Icon as={IoArrowUpCircleOutline} />
           <Icon as={IoArrowDownCircleOutline} />
-          {userId === comment.commenterId && (
+          {userId === comment.data?.commenterId && (
             <>
               <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
                 Edit

@@ -85,9 +85,8 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
           size='lg'
           bg='none'
           fontSize={30}
-          // colorScheme={checkIfPostIsAlreadyVoted() === "upvote" ? "blue" : "blue"}
           aria-label={checkIfPostIsAlreadyVoted() === "upvote" ? "Unvote" : "Upvote"}
-          icon={checkIfPostIsAlreadyVoted() === "upvote" ? <TbArrowBigUpFilled color="blue" /> : <TbArrowBigUp />}
+          icon={checkIfPostIsAlreadyVoted() === "upvote" ? <TbArrowBigUpFilled color="blue" /> : <TbArrowBigUp color="gray" />}
           onClick={() => handleClick("upvote")}
           isLoading={isVoting}
           isDisabled={checkIfPostIsAlreadyVoted() === "downvote" || userData === null || userDataGlobal === null }
@@ -112,9 +111,8 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
           size='lg'
           bg='none'
           fontSize={30}
-          // colorScheme={checkIfPostIsAlreadyVoted() === "downvote" ? "red" : "red"}
           aria-label={checkIfPostIsAlreadyVoted() === "downvote" ? "Unvote" : "Downvote"}
-          icon={checkIfPostIsAlreadyVoted() === "downvote" ? <TbArrowBigDownFilled color="red"/> : <TbArrowBigDown/>}
+          icon={checkIfPostIsAlreadyVoted() === "downvote" ? <TbArrowBigDownFilled color="red"/> : <TbArrowBigDown color="gray" />}
           onClick={() => handleClick("downvote")}
           isLoading={isVoting}
           isDisabled={checkIfPostIsAlreadyVoted() === "upvote" || userData === null || userDataGlobal === null }

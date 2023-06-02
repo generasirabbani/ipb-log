@@ -32,7 +32,7 @@ const CreatePostLink = (props) => {
     >
         <Icon as={CgProfile} fontSize={36} color="gray.300" mr={4} />
         <Input
-        placeholder="Create Post"
+        placeholder="Buat Post"
         fontSize="10pt"
         _placeholder={{ color: "gray.500" }}
         _hover={{
@@ -61,13 +61,13 @@ const CreatePostLink = (props) => {
         cursor="pointer"
         onClick={onClick}
         />
-        <Icon
+        {/* <Icon
         as={BsLink45Deg}
         fontSize={24}
         color="gray.400"
         cursor="pointer"
         onClick={onClick}
-        />
+        /> */}
     </Flex>
   );
 };

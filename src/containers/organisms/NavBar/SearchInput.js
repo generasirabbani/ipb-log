@@ -30,7 +30,7 @@ const SearchInput = (props) => {
                 />
                 <Input 
                     type="text"
-                    placeholder="Search posts..."
+                    placeholder="Cari Post"
                     value={searchQuery}
                     onChange={onSearchInputChange}
                     onKeyDown={(e) => {

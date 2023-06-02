@@ -1,4 +1,4 @@
-import { addCommentAPI, getCommentsAPI, updateCommentAPI } from '../../../config/redux/action'
+import { addCommentAPI, deleteCommentAPI, getCommentsAPI, updateCommentAPI } from '../../../config/redux/action'
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
@@ -18,7 +18,7 @@ const Comments = (props) => {
 //   const userData = props.userData || JSON.parse(localStorage.getItem("userData"));
   const [comment, setComment] = useState("");
   const [userData, setUserData] = useState();
-  const { post, getComments, postComments, addComment, updateComment } = props;
+  const { post, getComments, postComments, addComment, updateComment, deleteComment } = props;
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -30,14 +30,14 @@ const Comments = (props) => {
 
 
   const handleAddComment = async () => {
-    const commentCount = post.data.commentCount || 0;
+    const commentCount = post.data.commentCount;
     const data = {
       userId: post.userId,
       postId: post.id,
       commentCount: commentCount + 1,
       commenterName: userData?.username,
       commenterId: userData?.uid,
-      createdAt: new Date(),
+      createdAt: new Date().getTime(),
       text: comment,
     }
     console.log("comment data before added : " + data);
@@ -51,6 +51,26 @@ const Comments = (props) => {
     });
     setComment('');
   }
+
+  const onDeleteComment = (selectedComment) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const commentCount = post.data.commentCount;
+    const data = {
+      userId: userData.uid,
+      postId: post.id,
+      commentId: selectedComment.id,
+      commentCount: commentCount - 1,
+    };
+
+    deleteComment(data);
+    toast({
+      title: "Komen berhasil dihapus!",
+      status: "success",
+      isClosable: true,
+      position: "top",
+      duration: 3000
+    });
+  };
   
   useEffect(() => {
     console.log("HERE IS SELECTED POST", post.id);
@@ -87,8 +107,8 @@ const Comments = (props) => {
                 {postComments.map((item) => (
                 <CommentItem
                     key={item.id}
-                    comment={item.data}
-                    // onDeleteComment={onDeleteComment}
+                    comment={item}
+                    onDeleteComment={onDeleteComment}
                     // isLoading={deleteLoading === item.id}
                     userId={userData?.uid}
                 />
@@ -124,6 +144,7 @@ const reduxDispatch = (dispatch) => ({
   addComment: (data) => dispatch(addCommentAPI(data)),
   updateComment: (data) => dispatch(updateCommentAPI(data)),
   getComments: (userId, postId) => dispatch(getCommentsAPI(userId, postId)),
+  deleteComment: (data) => dispatch(deleteCommentAPI(data)),
 });
 
 export default connect(reduxState, reduxDispatch)(Comments);

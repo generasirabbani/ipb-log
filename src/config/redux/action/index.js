@@ -357,6 +357,17 @@ export const updateCommentAPI = (data) => (dispatch) => {
   })
 };
 
+export const deleteCommentAPI = (data) => (dispatch) => {
+  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
+  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/comments/${data.commentId}`)
+  return new Promise((resolve, reject) => {
+    urlPosts.update({
+      commentCount: data.commentCount,
+    })
+    votedUrl.remove();
+  })
+};
+
 export const getCommentsAPI = (userId, postId) => (dispatch) => {
   const urlComments = database.ref(`posts/${userId}/${postId}/comments`);
   
