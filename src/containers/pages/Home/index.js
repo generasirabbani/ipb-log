@@ -6,12 +6,11 @@ import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
 import { useNavigate } from 'react-router-dom';
-import { AiOutlineComment } from 'react-icons/ai';
 import CreatePostLink from '../../organisms/CreatePostLink';
+import PostIcons from '../../../components/molecules/PostIcons';
 
 const Home = (props) => {
   const { posts = [] } = props;
-  const userData = JSON.parse(localStorage.getItem("userData"));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const Home = (props) => {
   return (
     <>
       <NavBar />
-      <Flex minW='400px' direction='column' align='center' p={8}>
+      <Flex minW='400px' direction='column' align='center' p={8} paddingTop={62}>
         <Flex>
           <CreatePostLink />
         </Flex>
@@ -33,12 +32,10 @@ const Home = (props) => {
           {posts.length > 0 ? (
             <VStack alignSelf='center'>
               {posts.map((post) => (
-                <HStack key={post.id} w="100%" alignItems="flex-start" >
+                <HStack key={post.id} alignItems="flex-start" >
                   <VoteButtons post={post} />
                   <Flex direction="column" >
-                    <Flex
-                      onClick={() => toDetail(post)}
-                    >
+                    <Flex onClick={() => toDetail(post)} >
                       <Post
                         post={post}
                         key={post.id}
@@ -49,11 +46,16 @@ const Home = (props) => {
                         }}
                       />
                     </Flex>
-                    <IconButton
+                    {/* <IconButton
                       isDisabled={userData === null || props.userData === null}
                       aria-label="Comment here"
                       icon={<AiOutlineComment />}
                       onClick={() => toDetail(post)}
+                    /> */}
+                    <PostIcons
+                      post={post}
+                      toDetail={toDetail}
+                      isDashboard={false}
                     />
                   </Flex>
                 </HStack>

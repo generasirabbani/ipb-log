@@ -9,24 +9,48 @@ import VoteButtons from '../../../components/molecules/VoteButtons';
 import Comments from '../../organisms/Comments';
 
 const Detail = (props) => {
+  const [userData, setUserData] = useState();
+  // const userData = props.userData || JSON.parse(localStorage.getItem("userData"));
   const { userId, postId } = useParams();
   const { post = {} } = props;
 
   useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
     props.getSinglePost(userId, postId);
     console.log("post single : " + JSON.stringify(post));
+    console.log("from detail : " + JSON.stringify(userData));
+    setUserData(userData);
   }, []);
 
   return (
     <>
       <NavBar />
-      <Container minW="900px" centerContent p={8}>
-        <Box className="card-content" bg="blue.500" py={4} px={8} rounded="md" mb={8}>
-          <Heading as="h2" size="lg" color="white">
+      <Flex minW="900px" p={8} pt={74}>
+        <Box
+          userSelect='none'
+          bg="white"
+          py={4}
+          px={8}
+          w='300px'
+          rounded="md"
+          mb={8}
+          pos='fixed'
+          border='1px solid rgba(0, 0, 0, 0.5)'
+        >
+          <Heading as="h2" size="lg" color="#263C92">
             Detail Page
           </Heading>
-          <Text color="white">
-            Posted by: {post.data?.creatorName} | Post ID: {postId}
+          <Text color="black">
+            --------------------------------------------
+          </Text>
+          <Text color="#263C92">
+            Posted by: {post.data?.creatorName}
+          </Text>
+          <Text color="black">
+            --------------------------------------------
+          </Text>
+          <Text color="#263C92">
+            Posted at: {new Date(post.data?.createdAt).toString()} 
           </Text>
         </Box>
         {post.data ? (
@@ -42,7 +66,7 @@ const Detail = (props) => {
         ) : (
           <Text>Loading...</Text>
         )}
-      </Container>
+      </Flex>
     </>
   );
 };

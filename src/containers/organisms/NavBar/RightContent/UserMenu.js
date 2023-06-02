@@ -84,7 +84,7 @@ const UserMenu = (props) => {
                     <MenuItem
                      fontSize='10pt'
                      fontWeight={700}
-                     _hover={{bg: '#263C92', color: 'white'}}
+                     _hover={{bg: '#1E33F2', color: 'white'}}
                      onClick={toDashboard}
                     >
                       <Flex align='center'>
@@ -96,7 +96,7 @@ const UserMenu = (props) => {
                     <MenuItem
                       fontSize='10pt'
                       fontWeight={700}
-                      _hover={{bg: '#263C92', color: 'white'}}
+                      _hover={{bg: '#1E33F2', color: 'white'}}
                       onClick={handleSignOut}
                     >
                       <Flex align='center'>

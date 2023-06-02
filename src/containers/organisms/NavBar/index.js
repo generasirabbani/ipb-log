@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Heading,
-  useToast,
   Flex,
 } from "@chakra-ui/react";
 import { connect } from "react-redux";
@@ -10,16 +9,14 @@ import SearchInput from "./SearchInput";
 import RightContent from "./RightContent/RightContent";
 
 const NavBar = (props) => {
-  const toast = useToast();
   const navigate = useNavigate();
-  const userData = JSON.parse(localStorage.getItem('userData'));
 
   const toHome = () => {
     navigate('/home');
   };
 
   return (
-    <Flex bg="gray.200" h="54px" padding="6px 12px">
+    <Flex bg="white" h="54px" padding="6px 12px" pos='fixed' w='100%' zIndex='999'>
       <Flex align="center" >
         <Heading ml='20px' 
         userSelect='none'
@@ -47,7 +44,7 @@ const reduxState = (state) => ({
 });
 
 const reduxDispatch = (dispatch) => ({
-  refreshPosts: () => dispatch(refreshPostState()),
+  
 });
 
 export default connect(null, reduxDispatch)(NavBar);

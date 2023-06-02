@@ -15,7 +15,7 @@ const formTabs = [
     icon: IoDocumentText,
   },
   {
-    title: "Images & Video",
+    title: "Images",
     icon: IoImageOutline,
   },
   // {
@@ -122,7 +122,7 @@ const NewPostForm = (props) => {
             loading={loading}
           />
         )}
-        {selectedTab === "Images & Video" && (
+        {selectedTab === "Images" && (
           <ImageUpload
             setImageShown={setImageShown}
             setSelectedTab={setSelectedTab}

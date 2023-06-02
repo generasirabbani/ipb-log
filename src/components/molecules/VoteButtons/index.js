@@ -1,6 +1,6 @@
-import { IconButton, Text, VStack } from "@chakra-ui/react";
+import { Flex, IconButton, Text, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { FiArrowDown, FiArrowUp, FiCheck } from "react-icons/fi";
+import { TbArrowBigUpFilled, TbArrowBigUp, TbArrowBigDown, TbArrowBigDownFilled } from "react-icons/tb";
 import { updateVoteAPI, unvoteAPI } from "../../../config/redux/action";
 import { connect } from "react-redux";
 
@@ -79,13 +79,15 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
   };  
 
   return (
-    <VStack>
-      <VStack boxShadow="4px 3px 9px rgba(0, 0, 0, 0.1)">
+    <Flex direction='column'>
+      <VStack>
         <IconButton
           size='lg'
-          colorScheme={checkIfPostIsAlreadyVoted() === "upvote" ? "blue" : "blue"}
+          bg='none'
+          fontSize={30}
+          // colorScheme={checkIfPostIsAlreadyVoted() === "upvote" ? "blue" : "blue"}
           aria-label={checkIfPostIsAlreadyVoted() === "upvote" ? "Unvote" : "Upvote"}
-          icon={checkIfPostIsAlreadyVoted() === "upvote" ? <FiCheck /> : <FiArrowUp />}
+          icon={checkIfPostIsAlreadyVoted() === "upvote" ? <TbArrowBigUpFilled color="blue" /> : <TbArrowBigUp />}
           onClick={() => handleClick("upvote")}
           isLoading={isVoting}
           isDisabled={checkIfPostIsAlreadyVoted() === "downvote" || userData === null || userDataGlobal === null }
@@ -93,25 +95,26 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
           // _hover={{ bg: "transparent" }}
           _active={{ bg: "transparent" }}
           _focus={{ boxShadow: "none" }}
-          _disabled={{ opacity: 0.6 }}
+          _disabled={{ opacity: 0.25 }}
         />
       </VStack>
       <Text
-        bg="gray.100"
-        rounded="md"
-        w="100%"
+        userSelect='none'
+        bg="none"
+        fontSize={20}
         textAlign="center"
         fontWeight="bold"
-        fontSize="sm"
       >
         {post.data.voteCount || 0}
       </Text>
-      <VStack boxShadow="4px 3px 9px rgba(0, 0, 0, 0.1)" alignItems="center">
+      <VStack>
         <IconButton
           size='lg'
-          colorScheme={checkIfPostIsAlreadyVoted() === "downvote" ? "red" : "red"}
+          bg='none'
+          fontSize={30}
+          // colorScheme={checkIfPostIsAlreadyVoted() === "downvote" ? "red" : "red"}
           aria-label={checkIfPostIsAlreadyVoted() === "downvote" ? "Unvote" : "Downvote"}
-          icon={checkIfPostIsAlreadyVoted() === "downvote" ? <FiCheck /> : <FiArrowDown />}
+          icon={checkIfPostIsAlreadyVoted() === "downvote" ? <TbArrowBigDownFilled color="red"/> : <TbArrowBigDown/>}
           onClick={() => handleClick("downvote")}
           isLoading={isVoting}
           isDisabled={checkIfPostIsAlreadyVoted() === "upvote" || userData === null || userDataGlobal === null }
@@ -119,10 +122,10 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
           // _hover={{ bg: "transparent" }}
           _active={{ bg: "transparent" }}
           _focus={{ boxShadow: "none" }}
-          _disabled={{ opacity: 0.6 }}
+          _disabled={{ opacity: 0.25 }}
         />
       </VStack>
-    </VStack>
+    </Flex>
   );
 };
 

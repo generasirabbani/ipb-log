@@ -225,42 +225,78 @@ export const searchPostsFromAPI = (query) => (dispatch) => {
 export const updateDataAPI = (data) => async (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
   const { image } = data;
+  let previousImageUrl = null;
 
   try {
-    // Upload the image file to storage
+    // Check if image exists and retrieve the previous image URL
     if (image) {
+      const snapshot = await urlPosts.once('value');
+      const previousData = snapshot.val();
+      previousImageUrl = previousData.image;
+      
+      // Upload the new image file to storage
       const storageRef = storage.ref();
       const imageRef = storageRef.child(`images/${image.name}`);
       await imageRef.put(image);
       data.image = await imageRef.getDownloadURL();
     }
-
   } catch (error) {
     console.log('Error uploading image:', error);
   }
 
   return new Promise((resolve, reject) => {
-    urlPosts.update({
+    const updateData = {
       title: data.title,
       content: data.content,
       updatedAt: data.updatedAt,
       image: data.image || null,
-    }, (err) => {
-      if(err){
+    };
+
+    urlPosts.update(updateData, (err) => {
+      if (err) {
         reject(false);
       } else {
         resolve(true);
+
+        // Delete the previous image if it exists and a new image is uploaded
+        if (previousImageUrl && data.image) {
+          const storageRef = storage.refFromURL(previousImageUrl);
+          storageRef.delete().catch((error) => {
+            console.log('Error deleting previous image:', error);
+          });
+        }
       }
     });
-  })
-}
+  });
+};
 
-export const deleteDataAPI = (data) => (dispatch) => {
+
+export const deleteDataAPI = (data) => async (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
-  return new Promise((resolve, reject) => {
-    urlPosts.remove();
-  })
-}
+  let imageUrl = null;
+
+  try {
+    // Retrieve the image URL before removing the data
+    const snapshot = await urlPosts.once('value');
+    const postData = snapshot.val();
+    imageUrl = postData.image;
+
+    // Remove the data from the database
+    await urlPosts.remove();
+
+    // Delete the image from storage if it exists
+    if (imageUrl) {
+      const storageRef = storage.refFromURL(imageUrl);
+      await storageRef.delete();
+    }
+
+    return true;
+  } catch (error) {
+    console.log('Error deleting data:', error);
+    return false;
+  }
+};
+
 
 export const resetPasswordByEmail = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {
@@ -300,8 +336,10 @@ export const addCommentAPI = (data) => (dispatch) => {
       commentCount: data.commentCount,
     })
     votedUrl.push({
+      commenterName: data.commenterName,
       commenterId: data.commenterId,
-      comment: data.comment,
+      createdAt: data.createdAt,
+      text: data.text,
     });
   })
 };
@@ -321,17 +359,18 @@ export const updateCommentAPI = (data) => (dispatch) => {
 
 export const getCommentsAPI = (userId, postId) => (dispatch) => {
   const urlComments = database.ref(`posts/${userId}/${postId}/comments`);
-  return new Promise((resolve, reject) => {
-    urlComments.on('value', (snapshot) => {
-      // console.log("user data api:" + JSON.stringify(userDataAPI));
-      const data = {
-        id: snapshot.key,
-        userId: userId,
-        data: snapshot.val(),
+  
+  urlComments.on('value', (snapshot) => {
+    const comments = [];
+    
+    snapshot.forEach((childSnapshot) => {
+      const comment = {
+        id: childSnapshot.key,
+        data: childSnapshot.val(),
       };
-      console.log("Single post comments : " + JSON.stringify(data));
-      dispatch({ type: 'SET_POST_COMMENTS', value: data });
-      resolve(data);
+      comments.push(comment);
     });
+    
+    dispatch({ type: 'SET_POST_COMMENTS', value: comments });
   });
 };

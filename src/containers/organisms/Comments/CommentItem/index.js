@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -9,11 +9,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import moment from "moment";
-import { FaReddit } from "react-icons/fa";
 import {
   IoArrowDownCircleOutline,
   IoArrowUpCircleOutline,
 } from "react-icons/io5";
+import { CgProfile } from "react-icons/cg";
 
 const CommentItem = ({
   comment,
@@ -21,10 +21,14 @@ const CommentItem = ({
   isLoading,
   userId,
 }) => {
+  useEffect(() => {
+    // console.log("from commentitem: " + JSON.stringify(userId));
+  }, []);
+
   return (
     <Flex>
       <Box mr={2}>
-        <Icon as={FaReddit} fontSize={30} color="gray.300" />
+        <Icon as={CgProfile} fontSize={30} color="gray.300" />
       </Box>
       <Stack spacing={1}>
         <Stack direction="row" align="center" spacing={2} fontSize="8pt">
@@ -32,7 +36,7 @@ const CommentItem = ({
             fontWeight={700}
             _hover={{ textDecoration: "underline", cursor: "pointer" }}
           >
-            {comment.creatorDisplayText}
+            {comment.commenterName}
           </Text>
           {comment.createdAt?.seconds && (
             <Text color="gray.600">
@@ -51,7 +55,7 @@ const CommentItem = ({
         >
           <Icon as={IoArrowUpCircleOutline} />
           <Icon as={IoArrowDownCircleOutline} />
-          {userId === comment.creatorId && (
+          {userId === comment.commenterId && (
             <>
               <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
                 Edit

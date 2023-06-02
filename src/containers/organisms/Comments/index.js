@@ -7,33 +7,54 @@ import {
   SkeletonText,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import CommentItem from "./CommentItem";
 import CommentInput from './CommentInput';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Comments = (props) => {
+//   const userData = props.userData || JSON.parse(localStorage.getItem("userData"));
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
-  const [commentFetchLoading, setCommentFetchLoading] = useState(false);
-  const [commentCreateLoading, setCommentCreateLoading] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState("");
-  const { post, getComments, userData, isLogin, postComments, addComment, updateComment } = props;
-
-  const getPostComments = async () => {
-    try {
-      getComments(post.id, post.userId);
-      setComments(postComments);
-    } catch (error) {
-      console.log("getPostComments error", error.message);
-    }
-    setCommentFetchLoading(false);
-  };
+  const [userData, setUserData] = useState();
+  const { post, getComments, postComments, addComment, updateComment } = props;
+  const toast = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("HERE IS SELECTED POST", post.id);
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    // console.log("from comments : " + JSON.stringify(userData));
+    setUserData(userData);
+  }, []);
 
-    getPostComments();
+
+  const handleAddComment = async () => {
+    const commentCount = post.data.commentCount || 0;
+    const data = {
+      userId: post.userId,
+      postId: post.id,
+      commentCount: commentCount + 1,
+      commenterName: userData?.username,
+      commenterId: userData?.uid,
+      createdAt: new Date(),
+      text: comment,
+    }
+    console.log("comment data before added : " + data);
+    addComment(data);
+    toast({
+      title: 'Komen ditambahkan',
+      status: 'success',
+      isClosable: true,
+      position: 'top',
+      duration: 1000,
+    });
+    setComment('');
+  }
+  
+  useEffect(() => {
+    console.log("HERE IS SELECTED POST", post.id);
+    getComments(post.userId, post.id);
   }, []);
 
   return (
@@ -42,63 +63,52 @@ const Comments = (props) => {
       p={2} 
       borderRadius="0px 0px 4px 4px" 
       border='1px solid rgba(0, 0, 0, 0.1)'
+      rounded='lg'
+      mt={5}
     >
       <Flex
         direction="column"
-        pl={10}
-        pr={4}
-        mb={6}
+        p={5}
+        // mb={6}
         fontSize="10pt"
         width="100%"
       >
         <CommentInput
+          post={post}
           comment={comment}
           setComment={setComment}
-          loading={commentCreateLoading}
-        //   user={user}
-        //   onCreateComment={onCreateComment}
+          handleAddComment={handleAddComment}
         />
       </Flex>
       <Stack spacing={6} p={2}>
-        {commentFetchLoading ? (
-          <>
-            {[0, 1, 2].map((item) => (
-              <Box key={item} padding="6" bg="white">
-                <SkeletonCircle size="10" />
-                <SkeletonText mt="4" noOfLines={2} spacing="4" />
-              </Box>
-            ))}
-          </>
-        ) : (
-          <>
-            {!!comments?.length ? (
-              <>
-                {comments.map((item) => (
-                  <CommentItem
+        <>
+            {!!postComments.length ? (
+            <>
+                {postComments.map((item) => (
+                <CommentItem
                     key={item.id}
-                    comment={item}
+                    comment={item.data}
                     // onDeleteComment={onDeleteComment}
-                    isLoading={deleteLoading === item.id}
-                    // userId={user.uid}
-                  />
+                    // isLoading={deleteLoading === item.id}
+                    userId={userData?.uid}
+                />
                 ))}
-              </>
+            </>
             ) : (
-              <Flex
+            <Flex
                 direction="column"
                 justify="center"
                 align="center"
                 borderTop="1px solid"
                 borderColor="gray.100"
                 p={20}
-              >
+            >
                 <Text fontWeight={700} opacity={0.3}>
-                  No Comments Yet
+                No Comments Yet
                 </Text>
-              </Flex>
+            </Flex>
             )}
-          </>
-        )}
+        </>
       </Stack>
     </Box>
   );

@@ -28,7 +28,7 @@ const AuthButtons = (props) => {
         height="28px"
         display={{ base: "none", sm: "flex" }}
         width={{ base: "70px", md: "110px" }}
-        mr={2}
+        m={1}
       >Log In</Button>
       <Button onClick={toRegister}
         colorScheme="blue"
@@ -36,7 +36,7 @@ const AuthButtons = (props) => {
         height="28px"
         display={{ base: "none", sm: "flex" }}
         width={{ base: "70px", md: "110px" }}
-        mr={2}
+        m={1}
       >Sign Up</Button>
     </>
   );

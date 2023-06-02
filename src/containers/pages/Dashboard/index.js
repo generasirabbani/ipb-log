@@ -3,10 +3,13 @@ import './Dashboard.scss';
 import { connect } from 'react-redux';
 import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action';
 import { Button, Flex, FormControl, FormLabel, HStack, Input, Spacer, Textarea, VStack, useToast,
-AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, IconButton } from '@chakra-ui/react';
+AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, IconButton, Icon, Text } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import { RxCross1 } from 'react-icons/rx';
+import { AiOutlineDelete } from 'react-icons/ai';
+import PostIcons from '../../../components/molecules/PostIcons';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = (props) => {
   const [title, setTitle] = useState('');
@@ -18,6 +21,7 @@ const Dashboard = (props) => {
   const [selectedPost, setSelectedPost] = useState(null);
   const cancelRef = useRef();
   const toast = useToast();
+  const navigate = useNavigate();
   const { posts } = props;
 
   useEffect(() => {
@@ -131,15 +135,14 @@ const Dashboard = (props) => {
     setIsConfirmationOpen(false);
   };
 
-  const isUserPosts = (post) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    return post.userId === userData.uid;
+  const toDetail = (post) => {
+    navigate('/detail/' + post.userId + '/' + post.id)
   }
 
   return (
     <>
       <NavBar />
-      <Flex w='100%' minH='570px' paddingTop='40px'>
+      <Flex w='100%' minH='570px' paddingTop={94}>
           <VStack ml='100px' w='40%'>
             <FormControl mb='10px'>
               <FormLabel fontSize='30px'>{textButton === 'UPDATE' ? 'Update Post' : 'Tambahkan Post Baru'}</FormLabel>
@@ -176,6 +179,7 @@ const Dashboard = (props) => {
                 <Flex
                   key={post.id}
                   onClick={() => updatePost(post)}
+                  direction='column'
                 >
                 <Post
                   post={post}
@@ -183,20 +187,18 @@ const Dashboard = (props) => {
                   _hover={{
                     cursor: "pointer",
                     background: "rgba(0, 0, 0, 0.1)",
-                    transform: "translateY(-2px)",
                   }}
                 />
-                  <IconButton
-                    aria-label="Delete Post"
-                    icon={< RxCross1 />}
-                    onClick={(e) => showConfirmationDialog(e, post)}
-                    colorScheme='red'
-                  />
+                <PostIcons
+                  post={post}
+                  toDetail={toDetail}
+                  isDashboard={true}
+                  showConfirmationDialog={showConfirmationDialog}
+                />
                 </Flex>
               ))}
             </VStack>
           ) : null}
-
           
           {/* Confirmation Dialog */}
           <AlertDialog isOpen={isConfirmationOpen} leastDestructiveRef={cancelRef}>
