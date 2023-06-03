@@ -71,6 +71,26 @@ const Comments = (props) => {
       duration: 3000
     });
   };
+
+  const onEditComment = (selectedComment) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const commentCount = post.data.commentCount;
+    const data = {
+      userId: userData.uid,
+      postId: post.id,
+      commentId: selectedComment.id,
+      text: comment,
+    };
+
+    updateComment(data);
+    toast({
+      title: "Komen berhasil dihapus!",
+      status: "success",
+      isClosable: true,
+      position: "top",
+      duration: 3000
+    });
+  };
   
   useEffect(() => {
     console.log("HERE IS SELECTED POST", post.id);
@@ -110,6 +130,7 @@ const Comments = (props) => {
                     comment={item}
                     onDeleteComment={onDeleteComment}
                     // isLoading={deleteLoading === item.id}
+                    onEditComment={onEditComment}
                     userId={userData?.uid}
                 />
                 ))}

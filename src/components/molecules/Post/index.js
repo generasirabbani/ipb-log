@@ -1,9 +1,18 @@
 import { Box, Text, Image, Flex } from "@chakra-ui/react";
 import moment from "moment";
-import 'moment/locale/id'
+import "moment/locale/id";
 import React from "react";
 
-export const Post = ({ post, _hover }) => {
+export const Post = ({ post, _hover, isDetail = false }) => {
+  const maxCharCount = 100; // Maximum number of characters to show
+
+  const truncateContent = (content) => {
+    if (!isDetail && content.length > maxCharCount) {
+      return content.slice(0, maxCharCount) + "...";
+    }
+    return content;
+  };
+
   return (
     <Box
       border="1px solid rgba(229, 231, 235, 1)"
@@ -37,7 +46,7 @@ export const Post = ({ post, _hover }) => {
         </Flex>
       )}
       <Text mt="20px" fontSize="14px">
-        {post.data.content}
+        {truncateContent(post.data.content)}
       </Text>
     </Box>
   );

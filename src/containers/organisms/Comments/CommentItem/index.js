@@ -19,6 +19,7 @@ import { CgProfile } from "react-icons/cg";
 const CommentItem = ({
   comment,
   onDeleteComment,
+  onEditComment,
   isLoading,
   userId,
 }) => {
@@ -56,7 +57,11 @@ const CommentItem = ({
           <Icon as={IoArrowDownCircleOutline} />
           {userId === comment.data?.commenterId && (
             <>
-              <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
+              <Text
+                fontSize="9pt"
+                _hover={{ color: "blue.500" }}
+                onClick={() => onEditComment(comment)}
+              >
                 Edit
               </Text>
               <Text

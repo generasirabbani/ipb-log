@@ -8,6 +8,7 @@ import TabItem from './TabItem';
 import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
 import { addDataToAPI } from '../../config/redux/action';
+import { useNavigate } from 'react-router-dom';
 
 const formTabs = [
   {
@@ -41,7 +42,7 @@ const NewPostForm = (props) => {
   const [selectedFile, setSelectedFile] = useState('');
   const selectFileRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const toast = useToast();
   const [imageShown, setImageShown] = useState('');
 
@@ -77,6 +78,7 @@ const NewPostForm = (props) => {
     setSelectedFile('');
     setImageShown('');
     setLoading(false);
+    navigate('/home');
   }
 
   const onSelectImage = (event) => {

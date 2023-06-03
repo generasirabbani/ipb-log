@@ -82,7 +82,7 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
     <Flex direction='column'>
       <VStack>
         <IconButton
-          size='lg'
+          size='sm'
           bg='none'
           fontSize={30}
           aria-label={checkIfPostIsAlreadyVoted() === "upvote" ? "Unvote" : "Upvote"}
@@ -100,7 +100,7 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
       <Text
         userSelect='none'
         bg="none"
-        fontSize={20}
+        fontSize={15}
         textAlign="center"
         fontWeight="bold"
       >
@@ -108,7 +108,7 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
       </Text>
       <VStack>
         <IconButton
-          size='lg'
+          size='sm'
           bg='none'
           fontSize={30}
           aria-label={checkIfPostIsAlreadyVoted() === "downvote" ? "Unvote" : "Downvote"}

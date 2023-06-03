@@ -7,6 +7,8 @@ import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
 import Comments from '../../organisms/Comments';
+import moment from 'moment';
+import 'moment/locale/id'
 
 const Detail = (props) => {
   const [userData, setUserData] = useState();
@@ -31,7 +33,7 @@ const Detail = (props) => {
           bg="white"
           py={4}
           px={8}
-          w='300px'
+          w='330px'
           rounded="md"
           mb={8}
           pos='fixed'
@@ -41,24 +43,30 @@ const Detail = (props) => {
             Detail Page
           </Heading>
           <Text color="black">
-            -------------------------------------------
+            -------------------------------------------------
           </Text>
           <Text color="#263C92">
-            Posted by: {post.data?.creatorName}
+            Dipost oleh {post.data?.creatorName}
+          </Text>
+          {/* <Text color="black">
+            -------------------------------------------------
+          </Text> */}
+          <Text color="#263C92">
+            hari {moment(new Date(post.data?.createdAt)).locale("id").format('dddd, DD MMMM YYYY, HH:mm:ss')} 
           </Text>
           <Text color="black">
-            -------------------------------------------
+            -------------------------------------------------
           </Text>
           <Text color="#263C92">
-            Posted at: {new Date(post.data?.createdAt).toString()} 
+            Terakhir diubah hari {moment(new Date(post.data?.updatedAt)).locale("id").format('dddd, DD MMMM YYYY, HH:mm:ss')} 
           </Text>
         </Box>
         {post.data ? (
-        <HStack key={post.id} w="100%" alignItems="flex-start" ml='350px'>
+        <HStack key={post.id} w="100%" alignItems="flex-start" ml='30%'>
           <VoteButtons post={post} />
           <Flex direction="column" >
             <Flex>
-              <Post post={post} key={post.id} />
+              <Post post={post} key={post.id} isDetail={true} />
             </Flex>
             <Comments post={post} />
           </Flex>

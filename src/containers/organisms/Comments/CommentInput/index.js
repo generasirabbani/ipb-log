@@ -19,7 +19,7 @@ const CommentInput = (props) => {
       {userData !== null ? (
         <>
           <Text mb={1}>
-            Comment as{" "}
+            Komen sebagai{" "}
             <span style={{ color: "#3182CE" }}>
               {userData?.username}
             </span>

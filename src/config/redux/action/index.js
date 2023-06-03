@@ -118,6 +118,7 @@ export const getDataFromAPI = (userId) => (dispatch) => {
         Object.keys(snapshot.val()).map((key) => {
           data.push({
             id: key,
+            userId,
             data: snapshot.val()[key],
           });
         });
@@ -270,7 +271,6 @@ export const updateDataAPI = (data) => async (dispatch) => {
   });
 };
 
-
 export const deleteDataAPI = (data) => async (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
   let imageUrl = null;
@@ -296,7 +296,6 @@ export const deleteDataAPI = (data) => async (dispatch) => {
     return false;
   }
 };
-
 
 export const resetPasswordByEmail = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {
@@ -339,20 +338,18 @@ export const addCommentAPI = (data) => (dispatch) => {
       commenterName: data.commenterName,
       commenterId: data.commenterId,
       createdAt: data.createdAt,
+      updatedAt: data.createdAt,
       text: data.text,
     });
   })
 };
 
 export const updateCommentAPI = (data) => (dispatch) => {
-  const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
-  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/comments`)
+  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/comments/${data.commentId}`)
   return new Promise((resolve, reject) => {
-    urlPosts.update({
-      commentCount: data.commentCount,
-    })
     votedUrl.update({
-      comment: data.comment,
+      text: data.text,
+      updatedAt: new Date().getTime(),
     });
   })
 };

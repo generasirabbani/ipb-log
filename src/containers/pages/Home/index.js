@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getAllPostsFromAPI } from '../../../config/redux/action';
-import { Flex, HStack, IconButton, VStack } from '@chakra-ui/react';
+import { Box, Flex, HStack, IconButton, VStack } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
@@ -24,13 +24,19 @@ const Home = (props) => {
   return (
     <>
       <NavBar />
-      <Flex minW='400px' direction='column' align='center' p={8} paddingTop={62}>
-        <Flex>
+      <Flex p={8} paddingTop={62}>
+        <Box
+          userSelect='none'
+          bg="none"
+          py={4}
+          px={8}
+          w='30%'
+          mb={8}
+        ></Box>
+        <Flex direction='column'>
           <CreatePostLink />
-        </Flex>
-        <VStack w='100%' >
           {posts.length > 0 ? (
-            <VStack alignSelf='center'>
+            <Flex direction='column'>
               {posts.map((post) => (
                 <HStack key={post.id} alignItems="flex-start" >
                   <VoteButtons post={post} />
@@ -60,11 +66,11 @@ const Home = (props) => {
                   </Flex>
                 </HStack>
               ))}
-            </VStack>
+            </Flex>
           ) : (
             <p>No posts available.</p>
           )}
-        </VStack>
+        </Flex>
       </Flex>
     </>
   );
