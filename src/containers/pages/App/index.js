@@ -24,8 +24,9 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/home" element={<Home />} />
               <Route path="/" element={<Home />} />
-              <Route path="/detail/:userId/:postId" element={<Detail />} />
-              <Route path="/post" element={<SubmitPostPage />} />
+              <Route path="/add-post" element={<SubmitPostPage />} />
+              <Route path="/post/:userId/:postId" element={<Detail />} />
+              <Route path="/post/:userId/:postId/edit" element={<SubmitPostPage />} />
             </Routes>
           </div>
         </ChakraProvider>

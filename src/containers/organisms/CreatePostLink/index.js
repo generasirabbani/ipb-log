@@ -14,7 +14,7 @@ const CreatePostLink = (props) => {
     if(userData === null || props.userData === null) {
         navigate('/login');
     } else {
-        navigate('/post');
+        navigate('/add-post');
     }
   }
 

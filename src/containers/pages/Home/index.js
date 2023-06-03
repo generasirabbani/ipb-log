@@ -18,7 +18,7 @@ const Home = (props) => {
   }, []);
 
   const toDetail = (post) => {
-    navigate('/detail/' + post.userId + '/' + post.id)
+    navigate('/post/' + post.userId + '/' + post.id)
   }
 
   return (

@@ -1,20 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Flex,
   Icon,
   Text,
 } from "@chakra-ui/react";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { BsChat } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const PostIcons = ({ post, showConfirmationDialog }) => {
+  const [userData, setUserData] = useState();
   const location = useLocation();
   const isDashboard = location.pathname === "/dashboard";
   const navigate = useNavigate();
   const toDetail = (post) => {
-    navigate('/detail/' + post.userId + '/' + post.id)
+    navigate('/post/' + post.userId + '/' + post.id)
   }
+  const toEdit = (post) => {
+    navigate('/post/' + post.userId + '/' + post.id + '/edit');
+  }
+  
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    setUserData(userData);
+  }, []);
 
   return (
     <Flex
@@ -61,7 +70,20 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
             <Icon as={IoBookmarkOutline} mr={2} />
             <Text fontSize="9pt">Save</Text>
           </Flex> */}
-          {isDashboard ? (
+          {userData?.uid === post?.userId && (
+            <Flex
+              align="center"
+              p="8px 10px"
+              borderRadius={4}
+              _hover={{ bg: "gray.200" }}
+              cursor="pointer"
+              onClick={() => toEdit(post)}
+            >
+              <Icon as={AiOutlineEdit} mr={2} />
+              <Text fontSize="9pt">Edit</Text>
+            </Flex>
+          )}
+          {isDashboard && (
           <Flex
             align="center"
             p="8px 10px"
@@ -74,7 +96,7 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
                 <Icon as={AiOutlineDelete} mr={2} />
                 <Text fontSize="9pt">Delete</Text>
             </Flex>
-          ) : null}
+          )}
         </Flex>
       </Flex>
     </Flex>

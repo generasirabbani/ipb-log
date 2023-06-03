@@ -50,6 +50,7 @@ const TextInputs = ({
               padding="0px 30px"
               isLoading={loading}
               onClick={handleUpdatePost}
+              colorScheme="blue"
             >
               Update
             </Button>
@@ -58,6 +59,7 @@ const TextInputs = ({
               padding="0px 30px"
               isLoading={loading}
               onClick={cancelUpdate}
+              colorScheme="red"
             >
               Cancel
             </Button>

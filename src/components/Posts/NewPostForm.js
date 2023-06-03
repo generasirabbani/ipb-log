@@ -1,22 +1,22 @@
-import { Flex, useToast } from '@chakra-ui/react'
-import React, { useRef, useState } from 'react'
-import { BiPoll } from "react-icons/bi";
-import { BsLink45Deg, BsMic } from "react-icons/bs";
-import { IoDocumentText, IoImageOutline } from "react-icons/io5";
+import { useEffect, useRef, useState } from 'react';
+import { Flex, useToast } from '@chakra-ui/react';
+import { BiPoll } from 'react-icons/bi';
+import { BsLink45Deg, BsMic } from 'react-icons/bs';
+import { IoDocumentText, IoImageOutline } from 'react-icons/io5';
 import { connect } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TabItem from './TabItem';
 import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
 import { addDataToAPI, updateDataAPI } from '../../config/redux/action';
-import { useNavigate } from 'react-router-dom';
 
 const formTabs = [
   {
-    title: "Post",
+    title: 'Post',
     icon: IoDocumentText,
   },
   {
-    title: "Images",
+    title: 'Images',
     icon: IoImageOutline,
   },
   // {
@@ -36,8 +36,8 @@ const formTabs = [
 const NewPostForm = (props) => {
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
-    title: "",
-    body: "",
+    title: '',
+    body: '',
   });
   const [selectedFile, setSelectedFile] = useState('');
   const selectFileRef = useRef<HTMLInputElement>(null);
@@ -45,7 +45,23 @@ const NewPostForm = (props) => {
   const navigate = useNavigate();
   const toast = useToast();
   const [imageShown, setImageShown] = useState('');
-  const {isUpdating, setIsUpdating} = props;
+  const [isUpdating, setIsUpdating] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const isEditing = location.pathname.includes('/edit');
+    setIsUpdating(isEditing);
+
+    if (isUpdating && props.post) {
+      const { post } = props;
+
+      setTextInputs({
+        title: post.data.title,
+        body: post.data.content,
+      });
+      setImageShown(post.data.image);
+    }
+  }, [location.pathname, isUpdating, props.post]);
 
   const handleCreatePost = () => {
     setLoading(true);
@@ -60,74 +76,79 @@ const NewPostForm = (props) => {
       userId: userData.uid,
       voteCount: 0,
       image: selectedFile || null,
-      commentCount: 0
+      commentCount: 0,
     };
-    // console.log("DATA : " + JSON.stringify(data))
 
     props.savePost(data);
+
     toast({
-      title: "Post sudah dibuat!",
-      status: "success",
+      title: 'Post telah dibuat!',
+      status: 'success',
       isClosable: true,
-      position: "top",
-      duration: 3000
+      position: 'top',
+      duration: 3000,
     });
+
     setTextInputs({
-      title: "",
-      body: "",
+      title: '',
+      body: '',
     });
     setSelectedFile('');
     setImageShown('');
     setLoading(false);
     navigate('/home');
-  }
+  };
 
   const handleUpdatePost = async () => {
     setLoading(true);
     const { title, body } = textInputs;
     const { post } = props;
-  
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
     const updatedData = {
-      ...post.data,
       title,
       content: body,
       updatedAt: new Date().getTime(),
+      userId: userData.uid,
       image: selectedFile || null,
+      postId: post.id,
     };
-  
+
     try {
-      await props.updatePosts(updatedData);
+      await props.updatePost(updatedData);
+
       toast({
-        title: "Post berhasil diperbarui!",
-        status: "success",
+        title: 'Post berhasil diperbarui!',
+        status: 'success',
         isClosable: true,
-        position: "top",
+        position: 'top',
         duration: 3000,
       });
+
       setIsUpdating(false);
       setTextInputs({
-        title: "",
-        body: "",
+        title: '',
+        body: '',
       });
-      setSelectedFile("");
-      setImageShown("");
+      setSelectedFile('');
+      setImageShown('');
       setLoading(false);
-      navigate("/home");
+      navigate('/home');
     } catch (error) {
-      console.log("Error updating post:", error);
+      console.log('Error updating post:', error);
       setLoading(false);
     }
   };
-  
 
   const onSelectImage = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
     const reader = new FileReader();
+
     if (event.target.files?.[0]) {
       reader.readAsDataURL(event.target.files[0]);
     }
-  
+
     reader.onload = (readerEvent) => {
       if (readerEvent.target?.result) {
         setImageShown(readerEvent.target?.result);
@@ -142,17 +163,18 @@ const NewPostForm = (props) => {
     }));
   };
 
-  const cancelUpdate = () => {
+  const cancelUpdatePost = () => {
     setIsUpdating(false);
     setTextInputs({
-      title: "",
-      body: "",
+      title: '',
+      body: '',
     });
+    navigate('/post/' + props.post.userId + '/' + props.post.id);
   };
 
   return (
-    <Flex direction='column' bg='white' borderRadius={4} mt={2}>
-      <Flex width='100%'>
+    <Flex direction="column" bg="white" borderRadius={4} mt={2}>
+      <Flex width="100%">
         {formTabs.map((item, index) => (
           <TabItem
             key={index}
@@ -163,18 +185,19 @@ const NewPostForm = (props) => {
         ))}
       </Flex>
       <Flex p={4}>
-        {selectedTab === "Post" && (
+        {selectedTab === 'Post' && (
           <TextInputs
-          textInputs={textInputs}
-          onChange={onTextChange}
-          handleCreatePost={handleCreatePost}
-          handleUpdatePost={handleUpdatePost}
-          loading={loading}
-          isUpdating={isUpdating}
-          cancelUpdate={cancelUpdate}
-        />
+            textInputs={textInputs}
+            onChange={onTextChange}
+            handleCreatePost={handleCreatePost}
+            handleUpdatePost={handleUpdatePost}
+            loading={loading}
+            isUpdating={isUpdating}
+            setIsUpdating={setIsUpdating}
+            cancelUpdate={cancelUpdatePost}
+          />
         )}
-        {selectedTab === "Images" && (
+        {selectedTab === 'Images' && (
           <ImageUpload
             setImageShown={setImageShown}
             setSelectedTab={setSelectedTab}
@@ -185,16 +208,14 @@ const NewPostForm = (props) => {
         )}
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-const reduxState = (state) => ({
-
-});
+const reduxState = (state) => ({});
 
 const reduxDispatch = (dispatch) => ({
   savePost: (data) => dispatch(addDataToAPI(data)),
   updatePost: (data) => dispatch(updateDataAPI(data)),
 });
 
-export default connect(reduxState, reduxDispatch)(NewPostForm)
+export default connect(reduxState, reduxDispatch)(NewPostForm);

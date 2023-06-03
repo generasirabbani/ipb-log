@@ -55,6 +55,7 @@ export const loginUserAPI = (data) => async (dispatch) => {
           email: res.user.email,
           uid: res.user.uid,
           username: userDataAPI.val().username,
+          lastLogin: userDataAPI.val().lastLogin,
           emailVerified: res.user.emailVerified,
           refreshToken: res.user.refreshToken
         }
@@ -134,7 +135,7 @@ export const getAllPostsFromAPI = () => (dispatch) => {
   const urlPosts = database.ref('posts');
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
-      console.log('get All Data: ', snapshot.val());
+      // console.log('get All Data: ', snapshot.val());
       const data = [];
       snapshot.forEach((userSnapshot) => {
         Object.keys(userSnapshot.val()).map((key) => {
@@ -189,7 +190,7 @@ export const getPostsByIdFromAPI = (userId, postId) => (dispatch) => {
         userId: userId,
         data: snapshot.val(),
       };
-      console.log("Single post : " + JSON.stringify(data));
+      // console.log("Single post : " + JSON.stringify(data));
       dispatch({ type: 'SET_POST', value: data });
       resolve(data);
     });

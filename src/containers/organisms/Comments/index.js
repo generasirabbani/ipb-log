@@ -92,7 +92,7 @@ const Comments = (props) => {
   };
   
   useEffect(() => {
-    console.log("HERE IS SELECTED POST", post.id);
+    // console.log("HERE IS SELECTED POST", post.id);
     getComments(post.userId, post.id);
   }, []);
 

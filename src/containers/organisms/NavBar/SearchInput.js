@@ -15,7 +15,7 @@ const SearchInput = (props) => {
     const [searchQuery, setSearchQuery] = useState("");
     const location = useLocation();
     const isDashboard = location.pathname === "/dashboard";
-    const isDetail = location.pathname.includes("/detail");
+    const isDetail = location.pathname.includes("/post");
 
     const handleSearch = () => {
         const userData = JSON.parse(localStorage.getItem("userData"));
