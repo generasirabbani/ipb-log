@@ -20,7 +20,6 @@ const CommentItem = (props) => {
   // useEffect(() => {
   //   // console.log("from commentitem: " + JSON.stringify(userId));
   // }, []);
-
   const {
     comment,
     onDeleteComment,
@@ -34,7 +33,7 @@ const CommentItem = (props) => {
     setIsEditing(true);
     setSelectedComment(comment);
   }
-  
+
   return (
     <Flex>
       <Box mr={2}>

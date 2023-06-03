@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 const Comments = (props) => {
 //   const userData = props.userData || JSON.parse(localStorage.getItem("userData"));
   const [comment, setComment] = useState("");
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState({});
   const [selectedComment, setSelectedComment] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const { post, getComments, postComments, addComment, updateComment, deleteComment } = props;

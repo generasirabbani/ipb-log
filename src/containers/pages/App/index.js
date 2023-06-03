@@ -1,4 +1,3 @@
-import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '../../../config/redux'
@@ -25,6 +24,7 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/home" element={<Home />} />
               <Route path="/" element={<Home />} />
+              <Route path="" element={<Home />} />
               <Route path="/detail/:userId/:postId" element={<Detail />} />
               <Route path="/create-post" element={<SubmitPostPage />} />
             </Routes>
