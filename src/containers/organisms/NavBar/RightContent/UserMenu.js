@@ -89,7 +89,7 @@ const UserMenu = (props) => {
                     >
                       <Flex align='center'>
                         <Icon fontSize={20} mr={2} as={CgProfile} />
-                        {userData.username}
+                        {userData?.username}
                       </Flex>
                     </MenuItem>
                     <MenuDivider />
