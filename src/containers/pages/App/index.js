@@ -25,7 +25,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/" element={<Home />} />
               <Route path="/detail/:userId/:postId" element={<Detail />} />
-              <Route path="/create-post" element={<SubmitPostPage />} />
+              <Route path="/post" element={<SubmitPostPage />} />
             </Routes>
           </div>
         </ChakraProvider>

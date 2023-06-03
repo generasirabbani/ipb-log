@@ -247,7 +247,6 @@ export const searchPostsFromAPI = (query, userId) => (dispatch) => {
   });
 };
 
-
 export const updateDataAPI = (data) => async (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
   const { image } = data;

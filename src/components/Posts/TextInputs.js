@@ -5,7 +5,10 @@ const TextInputs = ({
   textInputs,
   onChange,
   handleCreatePost,
-  loading
+  handleUpdatePost,
+  loading,
+  isUpdating,
+  cancelUpdate
 }) => {
   return (
     <Stack spacing={3} width="100%">
@@ -40,15 +43,36 @@ const TextInputs = ({
         height="100px"
       />
       <Flex justify="flex-end">
-        <Button
-          height="34px"
-          padding="0px 30px"
-          disabled={!textInputs.title}
-          isLoading={loading}
-          onClick={handleCreatePost}
-        >
-          Post
-        </Button>
+        {isUpdating ? (
+          <>
+            <Button
+              height="34px"
+              padding="0px 30px"
+              isLoading={loading}
+              onClick={handleUpdatePost}
+            >
+              Update
+            </Button>
+            <Button
+              height="34px"
+              padding="0px 30px"
+              isLoading={loading}
+              onClick={cancelUpdate}
+            >
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <Button
+            height="34px"
+            padding="0px 30px"
+            disabled={!textInputs.title}
+            isLoading={loading}
+            onClick={handleCreatePost}
+          >
+            Post
+          </Button>
+        )}
       </Flex>
     </Stack>
   );

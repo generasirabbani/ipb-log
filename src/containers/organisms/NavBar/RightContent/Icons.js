@@ -11,7 +11,7 @@ import { logoutUserAPI } from '../../../../config/redux/action';
 const Icons = (props) => {
   const navigate = useNavigate();
   const toCreatePost = () => {
-    navigate('/create-post');
+    navigate('/post');
   }
     
   return (

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import TabItem from './TabItem';
 import TextInputs from './TextInputs';
 import ImageUpload from './ImageUpload';
-import { addDataToAPI } from '../../config/redux/action';
+import { addDataToAPI, updateDataAPI } from '../../config/redux/action';
 import { useNavigate } from 'react-router-dom';
 
 const formTabs = [
@@ -45,6 +45,7 @@ const NewPostForm = (props) => {
   const navigate = useNavigate();
   const toast = useToast();
   const [imageShown, setImageShown] = useState('');
+  const {isUpdating, setIsUpdating} = props;
 
   const handleCreatePost = () => {
     setLoading(true);
@@ -63,7 +64,7 @@ const NewPostForm = (props) => {
     };
     // console.log("DATA : " + JSON.stringify(data))
 
-    props.savePosts(data);
+    props.savePost(data);
     toast({
       title: "Post sudah dibuat!",
       status: "success",
@@ -80,6 +81,44 @@ const NewPostForm = (props) => {
     setLoading(false);
     navigate('/home');
   }
+
+  const handleUpdatePost = async () => {
+    setLoading(true);
+    const { title, body } = textInputs;
+    const { post } = props;
+  
+    const updatedData = {
+      ...post.data,
+      title,
+      content: body,
+      updatedAt: new Date().getTime(),
+      image: selectedFile || null,
+    };
+  
+    try {
+      await props.updatePosts(updatedData);
+      toast({
+        title: "Post berhasil diperbarui!",
+        status: "success",
+        isClosable: true,
+        position: "top",
+        duration: 3000,
+      });
+      setIsUpdating(false);
+      setTextInputs({
+        title: "",
+        body: "",
+      });
+      setSelectedFile("");
+      setImageShown("");
+      setLoading(false);
+      navigate("/home");
+    } catch (error) {
+      console.log("Error updating post:", error);
+      setLoading(false);
+    }
+  };
+  
 
   const onSelectImage = (event) => {
     const file = event.target.files[0];
@@ -103,6 +142,14 @@ const NewPostForm = (props) => {
     }));
   };
 
+  const cancelUpdate = () => {
+    setIsUpdating(false);
+    setTextInputs({
+      title: "",
+      body: "",
+    });
+  };
+
   return (
     <Flex direction='column' bg='white' borderRadius={4} mt={2}>
       <Flex width='100%'>
@@ -118,11 +165,14 @@ const NewPostForm = (props) => {
       <Flex p={4}>
         {selectedTab === "Post" && (
           <TextInputs
-            textInputs={textInputs}
-            onChange={onTextChange}
-            handleCreatePost={handleCreatePost}
-            loading={loading}
-          />
+          textInputs={textInputs}
+          onChange={onTextChange}
+          handleCreatePost={handleCreatePost}
+          handleUpdatePost={handleUpdatePost}
+          loading={loading}
+          isUpdating={isUpdating}
+          cancelUpdate={cancelUpdate}
+        />
         )}
         {selectedTab === "Images" && (
           <ImageUpload
@@ -143,7 +193,8 @@ const reduxState = (state) => ({
 });
 
 const reduxDispatch = (dispatch) => ({
-  savePosts: (data) => dispatch(addDataToAPI(data)),
+  savePost: (data) => dispatch(addDataToAPI(data)),
+  updatePost: (data) => dispatch(updateDataAPI(data)),
 });
 
 export default connect(reduxState, reduxDispatch)(NewPostForm)
