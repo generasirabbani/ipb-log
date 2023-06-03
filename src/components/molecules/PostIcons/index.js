@@ -16,7 +16,8 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
   const toDetail = (post) => {
     navigate('/post/' + post.userId + '/' + post.id)
   }
-  const toEdit = (post) => {
+  const toEdit = (e, post) => {
+    e.stopPropagation();
     navigate('/post/' + post.userId + '/' + post.id + '/edit');
   }
   
@@ -77,22 +78,22 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
               borderRadius={4}
               _hover={{ bg: "gray.200" }}
               cursor="pointer"
-              onClick={() => toEdit(post)}
+              onClick={(e) => toEdit(e, post)}
             >
               <Icon as={AiOutlineEdit} mr={2} />
               <Text fontSize="9pt">Edit</Text>
             </Flex>
           )}
           {isDashboard && (
-          <Flex
-            align="center"
-            p="8px 10px"
-            borderRadius={4}
-            _hover={{ bg: "gray.200" }}
-            cursor="pointer"
-            w={90}
-            onClick={(e) => showConfirmationDialog(e, post)}
-            >
+            <Flex
+              align="center"
+              p="8px 10px"
+              borderRadius={4}
+              _hover={{ bg: "gray.200" }}
+              cursor="pointer"
+              w={90}
+              onClick={(e) => showConfirmationDialog(e, post)}
+              >
                 <Icon as={AiOutlineDelete} mr={2} />
                 <Text fontSize="9pt">Delete</Text>
             </Flex>

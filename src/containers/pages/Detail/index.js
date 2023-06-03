@@ -42,11 +42,11 @@ const Detail = (props) => {
           zIndex='500'
         >
           <Heading as="h2" size="lg" color="#263C92">
-            Detail Page
+            Halaman Post
           </Heading>
           <Divider my={2} borderColor="black" />
           <Text color="#263C92">
-            Dipost oleh {post.data?.creatorName}.
+            Dipost oleh {post.data?.creatorName}.{"\n"}
           </Text>
           <Text color="#263C92">
             Hari {moment(new Date(post.data?.createdAt)).locale("id").format('dddd, DD MMMM YYYY, HH:mm:ss')} 
