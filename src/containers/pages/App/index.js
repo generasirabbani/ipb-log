@@ -24,7 +24,6 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/home" element={<Home />} />
               <Route path="/" element={<Home />} />
-              <Route path="" element={<Home />} />
               <Route path="/detail/:userId/:postId" element={<Detail />} />
               <Route path="/create-post" element={<SubmitPostPage />} />
             </Routes>

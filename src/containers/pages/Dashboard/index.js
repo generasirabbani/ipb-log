@@ -192,7 +192,6 @@ const Dashboard = (props) => {
                 <PostIcons
                   post={post}
                   toDetail={toDetail}
-                  isDashboard={true}
                   showConfirmationDialog={showConfirmationDialog}
                 />
                 </Flex>

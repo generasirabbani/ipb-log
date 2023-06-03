@@ -27,11 +27,14 @@ const CommentItem = (props) => {
     setSelectedComment,
     isLoading,
     userId,
+    setComment,
   } = props;
 
   const handleClick = () => {
     setIsEditing(true);
     setSelectedComment(comment);
+    setComment(comment.data.text);
+    console.log("cek isian" + JSON.stringify(comment));
   }
 
   return (
@@ -43,16 +46,17 @@ const CommentItem = (props) => {
         <Stack direction="row" align="center" spacing={2} fontSize="8pt">
           <Text
             fontWeight={700}
-            _hover={{ textDecoration: "underline", cursor: "pointer" }}
+            // _hover={{ textDecoration: "underline", cursor: "pointer" }}
+            userSelect='none'
           >
             {comment.data?.commenterName}
           </Text>
           <Text color="gray.600">
             {moment(new Date(comment.data?.createdAt)).locale("id").fromNow()}
           </Text>
-          {isLoading && <Spinner size="sm" />}
+          {/* {isLoading && <Spinner size="sm" />} */}
         </Stack>
-        <Text fontSize="10pt">{comment.data?.text}</Text>
+        <Text fontSize="10pt" wordBreak='break-word'>{comment.data?.text}</Text>
         <Stack
           direction="row"
           align="center"
@@ -60,8 +64,8 @@ const CommentItem = (props) => {
           fontWeight={600}
           color="gray.500"
         >
-          <Icon as={IoArrowUpCircleOutline} />
-          <Icon as={IoArrowDownCircleOutline} />
+          {/* <Icon as={IoArrowUpCircleOutline} />
+          <Icon as={IoArrowDownCircleOutline} /> */}
           {userId === comment.data?.commenterId && (
             <>
               <Text

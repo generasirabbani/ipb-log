@@ -28,10 +28,7 @@ const Home = (props) => {
         <Box
           userSelect='none'
           bg="none"
-          py={4}
-          px={8}
           w='30%'
-          mb={8}
         ></Box>
         <Flex direction='column'>
           <CreatePostLink />

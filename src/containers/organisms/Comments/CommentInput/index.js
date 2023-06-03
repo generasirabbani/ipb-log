@@ -6,13 +6,28 @@ import { connect } from "react-redux";
 
 const CommentInput = (props) => {
   const [userData, setUserData] = useState();
-  const { comment, setComment, loading, handleAddComment } = props;
+  const { 
+    comment, 
+    setComment, 
+    loading, 
+    handleAddComment, 
+    onEditComment, 
+    isEditing,
+    setIsEditing,
+    setSelectedComment,
+  } = props;
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
     // console.log("from commentinput : " + JSON.stringify(userData));
     setUserData(userData);
   }, []);
+
+  const cancelEdit = () => {
+    setComment("");
+    setIsEditing(false);
+    setSelectedComment({});
+  }
 
   return (
     <Flex direction="column" position="relative" alignContent='center'>
@@ -40,7 +55,7 @@ const CommentInput = (props) => {
             }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                handleAddComment();
+                !isEditing ? handleAddComment() : onEditComment()
               }
             }}
           />
@@ -56,12 +71,25 @@ const CommentInput = (props) => {
           >
             <Button
               height="20px"
-              disabled={!comment.length}
+              // disabled={!comment.length}
               isLoading={loading}
-              onClick={handleAddComment}
+              onClick={
+                !isEditing ? handleAddComment : onEditComment
+              }
             >
-              Comment
+              {!isEditing ? "Comment" : "Update"}
             </Button>
+            {isEditing ? (
+              <Button
+                  height="20px"
+                  bg="red.100"
+                  // disabled={!comment.length}
+                  isLoading={loading}
+                  onClick={cancelEdit}
+                >
+                  Cancel
+                </Button>
+            ) : null}
           </Flex>
         </>
       ) : (

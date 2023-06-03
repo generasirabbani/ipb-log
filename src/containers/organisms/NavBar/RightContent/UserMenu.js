@@ -67,19 +67,17 @@ const UserMenu = (props) => {
             >
             <Flex align='center'>
                 <Flex align='center'>
-                    { userData !== null || props.userData !== null ? (
-                        <>
-                            <Icon fontSize={24} mr={1} color="gray.500" as={AiOutlineMenu}/>
-                        </>
+                    { userData !== null && props.userData !== null ? (
+                      <Icon fontSize={24} mr={1} color="gray.500" as={AiOutlineMenu}/>
                     ) : (
-                        <Icon fontSize={24} mr={1} color="gray.400" as={VscAccount} />
+                      <Icon fontSize={24} mr={1} color="gray.400" as={VscAccount} />
                     )}
                     </Flex>
                     <ChevronDownIcon />
                 </Flex>
             </MenuButton>
             <MenuList>
-                {userData !== null || props.userData !== null ? (
+                {userData !== null && props.userData !== null ? (
                     <>
                     <MenuItem
                      fontSize='10pt'

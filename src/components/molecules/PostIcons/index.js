@@ -6,15 +6,22 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat } from "react-icons/bs";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const PostIcons = ({ post, toDetail, isDashboard, showConfirmationDialog }) => {
+const PostIcons = ({ post, showConfirmationDialog }) => {
+  const location = useLocation();
+  const isDashboard = location.pathname === "/dashboard";
+  const navigate = useNavigate();
+  const toDetail = (post) => {
+    navigate('/detail/' + post.userId + '/' + post.id)
+  }
+
   return (
     <Flex
       border="1px solid rgba(0, 0, 0, 0.1)"
       bg="white"
       rounded='lg'
-      mt={2}
-      mb={5}
+      my={2}
     >
       <Flex
         align="center"

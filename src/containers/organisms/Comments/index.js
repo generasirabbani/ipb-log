@@ -81,7 +81,7 @@ const Comments = (props) => {
 
     updateComment(data);
     toast({
-      title: "Komen berhasil dihapus!",
+      title: "Komen berhasil diganti!",
       status: "success",
       isClosable: true,
       position: "top",
@@ -98,17 +98,16 @@ const Comments = (props) => {
 
   return (
     <Box 
+      maxW='435px'
       bg="white" 
       p={2} 
       borderRadius="0px 0px 4px 4px" 
       border='1px solid rgba(0, 0, 0, 0.1)'
       rounded='lg'
-      mt={5}
     >
       <Flex
         direction="column"
         p={5}
-        // mb={6}
         fontSize="10pt"
         width="100%"
       >
@@ -118,6 +117,8 @@ const Comments = (props) => {
           selectedComment={selectedComment}
           setComment={setComment}
           isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          setSelectedComment={setSelectedComment}
           handleAddComment={handleAddComment}
           onEditComment={onEditComment}
         />
@@ -131,9 +132,10 @@ const Comments = (props) => {
                     key={item.id}
                     comment={item}
                     onDeleteComment={onDeleteComment}
+                    setSelectedComment={setSelectedComment}
                     // isLoading={deleteLoading === item.id}
                     setIsEditing={setIsEditing}
-                    onEditComment={onEditComment}
+                    setComment={setComment}
                     userId={userData?.uid}
                 />
                 ))}
