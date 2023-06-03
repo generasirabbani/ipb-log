@@ -196,25 +196,49 @@ export const getPostsByIdFromAPI = (userId, postId) => (dispatch) => {
   });
 };
 
-export const searchPostsFromAPI = (query) => (dispatch) => {
-  const urlPosts = database.ref('posts');
+export const searchPostsFromAPI = (query, userId) => (dispatch) => {
+  let urlPosts;
+
+  if (userId !== null) {
+    urlPosts = database.ref(`posts/${userId}`);
+  } else {
+    urlPosts = database.ref('posts');
+  }
+
+  console.log("query : " + query + " userId : " + userId);
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
       const data = [];
-      snapshot.forEach((userSnapshot) => {
-        Object.keys(userSnapshot.val()).map((key) => {
-          const post = {
-            id: key,
-            userId: userSnapshot.key,
-            data: userSnapshot.val()[key],
-          }
-          const postDataString = JSON.stringify(post.data);
-          if (postDataString.includes(query)) {
-            data.push(post);
-          }
-        });
-      });
-      // Sort the posts by the "date" attribute in descending order
+      if(userId === null){
+        snapshot.forEach((userSnapshot) => {
+          Object.keys(userSnapshot.val()).map((key) => {
+            const post = {
+              id: key,
+              userId: userSnapshot.key,
+              data: userSnapshot.val()[key],
+            };
+            const postDataString = JSON.stringify(post.data);
+            if (postDataString.includes(query)) {
+              data.push(post);
+            }
+          });
+        }); 
+      } else {
+        if (snapshot.val()) {
+          Object.keys(snapshot.val()).map((key) => {
+            const post = {
+              id: key,
+              userId,
+              data: snapshot.val()[key],
+            };
+            const postDataString = JSON.stringify(post.data);
+            if (postDataString.includes(query)) {
+              data.push(post);
+            }
+          });
+        }
+      }
+      // Sort the posts by the "updatedAt" attribute in descending order
       const sortedData = data.sort((a, b) => b.data.updatedAt - a.data.updatedAt);
       dispatch({ type: 'SET_USER_POSTS', value: sortedData });
       dispatch({ type: 'SET_HOME_POSTS', value: sortedData });
@@ -222,6 +246,7 @@ export const searchPostsFromAPI = (query) => (dispatch) => {
     });
   });
 };
+
 
 export const updateDataAPI = (data) => async (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);

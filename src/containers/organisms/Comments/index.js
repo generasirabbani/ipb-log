@@ -1,10 +1,8 @@
 import { addCommentAPI, deleteCommentAPI, getCommentsAPI, updateCommentAPI } from '../../../config/redux/action'
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
-  SkeletonCircle,
-  SkeletonText,
   Stack,
   Text,
   useToast,
@@ -12,15 +10,15 @@ import {
 import CommentItem from "./CommentItem";
 import CommentInput from './CommentInput';
 import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 const Comments = (props) => {
 //   const userData = props.userData || JSON.parse(localStorage.getItem("userData"));
   const [comment, setComment] = useState("");
   const [userData, setUserData] = useState();
+  const [selectedComment, setSelectedComment] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
   const { post, getComments, postComments, addComment, updateComment, deleteComment } = props;
   const toast = useToast();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -40,7 +38,7 @@ const Comments = (props) => {
       createdAt: new Date().getTime(),
       text: comment,
     }
-    console.log("comment data before added : " + data);
+    console.log("comment data before added : " + JSON.stringify(data));
     addComment(data);
     toast({
       title: 'Komen ditambahkan',
@@ -52,13 +50,13 @@ const Comments = (props) => {
     setComment('');
   }
 
-  const onDeleteComment = (selectedComment) => {
+  const onDeleteComment = (deletedComment) => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     const commentCount = post.data.commentCount;
     const data = {
       userId: userData.uid,
       postId: post.id,
-      commentId: selectedComment.id,
+      commentId: deletedComment.id,
       commentCount: commentCount - 1,
     };
 
@@ -72,9 +70,8 @@ const Comments = (props) => {
     });
   };
 
-  const onEditComment = (selectedComment) => {
+  const onEditComment = () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
-    const commentCount = post.data.commentCount;
     const data = {
       userId: userData.uid,
       postId: post.id,
@@ -90,6 +87,8 @@ const Comments = (props) => {
       position: "top",
       duration: 3000
     });
+    setSelectedComment({});
+    setIsEditing(false);
   };
   
   useEffect(() => {
@@ -116,8 +115,11 @@ const Comments = (props) => {
         <CommentInput
           post={post}
           comment={comment}
+          selectedComment={selectedComment}
           setComment={setComment}
+          isEditing={isEditing}
           handleAddComment={handleAddComment}
+          onEditComment={onEditComment}
         />
       </Flex>
       <Stack spacing={6} p={2}>
@@ -130,6 +132,7 @@ const Comments = (props) => {
                     comment={item}
                     onDeleteComment={onDeleteComment}
                     // isLoading={deleteLoading === item.id}
+                    setIsEditing={setIsEditing}
                     onEditComment={onEditComment}
                     userId={userData?.uid}
                 />

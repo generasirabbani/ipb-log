@@ -7,7 +7,7 @@ export const Post = ({ post, _hover, isDetail = false }) => {
   const maxCharCount = 100; // Maximum number of characters to show
 
   const truncateContent = (content) => {
-    if (!isDetail && content.length > maxCharCount) {
+    if (!isDetail && content?.length > maxCharCount) {
       return content.slice(0, maxCharCount) + "...";
     }
     return content;

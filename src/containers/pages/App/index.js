@@ -10,7 +10,6 @@ import Register from '../Register';
 import ForgotPassword from '../ForgotPassword';
 import Home from '../Home';
 import Detail from '../Detail';
-import Search from '../Search';
 import SubmitPostPage from '../SubmitPostPage';
 
 function App() {
@@ -27,7 +26,6 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/" element={<Home />} />
               <Route path="/detail/:userId/:postId" element={<Detail />} />
-              <Route path="/search/:query" element={<Search />} />
               <Route path="/create-post" element={<SubmitPostPage />} />
             </Routes>
           </div>

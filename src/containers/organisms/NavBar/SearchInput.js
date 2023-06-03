@@ -9,12 +9,19 @@ import {
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { searchPostsFromAPI } from "../../../config/redux/action";
+import { useLocation } from "react-router-dom";
 
 const SearchInput = (props) => {
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState("");
+    const location = useLocation();
+    const isDashboard = location.pathname === "/dashboard";
+    const isDetail = location.pathname.includes("/detail");
 
     const handleSearch = () => {
-        props.searchPosts(searchQuery);
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        console.log("userData : " + JSON.stringify(userData));
+        console.log("userId: " + userData.uid);
+        !isDashboard ? props.searchPosts(searchQuery, null) : props.searchPosts(searchQuery, userData.uid)
     };
     
     const onSearchInputChange = (e) => {
@@ -29,6 +36,7 @@ const SearchInput = (props) => {
                     children={<SearchIcon color='gray.400' mb={1} />}
                 />
                 <Input 
+                    isDisabled = {isDetail}
                     type="text"
                     placeholder="Cari Post"
                     value={searchQuery}
@@ -64,7 +72,7 @@ const reduxState = (state) => ({
 });
   
 const reduxDispatch = (dispatch) => ({
-  searchPosts: (query) => dispatch(searchPostsFromAPI(query)),
+  searchPosts: (query, userId) => dispatch(searchPostsFromAPI(query, userId)),
 });
 
 export default connect(reduxState, reduxDispatch)(SearchInput);

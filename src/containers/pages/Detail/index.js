@@ -38,6 +38,7 @@ const Detail = (props) => {
           mb={8}
           pos='fixed'
           border='1px solid rgba(0, 0, 0, 0.5)'
+          zIndex='500'
         >
           <Heading as="h2" size="lg" color="#263C92">
             Detail Page

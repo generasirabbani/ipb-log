@@ -16,17 +16,25 @@ import {
 } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 
-const CommentItem = ({
-  comment,
-  onDeleteComment,
-  onEditComment,
-  isLoading,
-  userId,
-}) => {
+const CommentItem = (props) => {
   // useEffect(() => {
   //   // console.log("from commentitem: " + JSON.stringify(userId));
   // }, []);
 
+  const {
+    comment,
+    onDeleteComment,
+    setIsEditing,
+    setSelectedComment,
+    isLoading,
+    userId,
+  } = props;
+
+  const handleClick = () => {
+    setIsEditing(true);
+    setSelectedComment(comment);
+  }
+  
   return (
     <Flex>
       <Box mr={2}>
@@ -60,7 +68,7 @@ const CommentItem = ({
               <Text
                 fontSize="9pt"
                 _hover={{ color: "blue.500" }}
-                onClick={() => onEditComment(comment)}
+                onClick={handleClick}
               >
                 Edit
               </Text>
