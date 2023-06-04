@@ -58,35 +58,35 @@ const NewPostForm = (props) => {
         title: post.data.title,
         body: post.data.content,
       });
-      const imageUrl = post.data.image;
-      setImageShown(imageUrl);
-      console.log("cek url : " + imageUrl); 
-      fetch(imageUrl, { mode: 'no-cors' })
-        .then((response) => {
-          console.log("response check : ", response);
-          return response.blob();
-        })
-        .then((blob) => {
-          // Extract file name
-          const fileNameStartIndex = imageUrl.lastIndexOf('%2F') + 3;
-          const fileNameEndIndex = imageUrl.lastIndexOf('?');
-          const fileName = imageUrl.substring(fileNameStartIndex, fileNameEndIndex);
-          console.log("file name check : " + fileName);
+      // const imageUrl = post.data.image;
+      // setImageShown(imageUrl);
+      // console.log("cek url : " + imageUrl); 
+      // fetch(imageUrl, { mode: 'no-cors' })
+      //   .then((response) => {
+      //     console.log("response check : ", response);
+      //     return response.blob();
+      //   })
+      //   .then((blob) => {
+      //     // Extract file name
+      //     const fileNameStartIndex = imageUrl.lastIndexOf('%2F') + 3;
+      //     const fileNameEndIndex = imageUrl.lastIndexOf('?');
+      //     const fileName = imageUrl.substring(fileNameStartIndex, fileNameEndIndex);
+      //     console.log("file name check : " + fileName);
           
-          // Extract file type
-          const fileTypeStartIndex = fileName.lastIndexOf('.') + 1;
-          const fileExtension = fileName.substring(fileTypeStartIndex);
-          const fileType = `image/${fileExtension}`;
-          console.log("file type check : " + fileType);
+      //     // Extract file type
+      //     const fileTypeStartIndex = fileName.lastIndexOf('.') + 1;
+      //     const fileExtension = fileName.substring(fileTypeStartIndex);
+      //     const fileType = `image/${fileExtension}`;
+      //     console.log("file type check : " + fileType);
 
-          const file = new File([blob], fileName, { type: fileType });
-          setSelectedFile(file);
-          console.log('File object set:', file);
-        })
-        .catch((error) => {
-          console.log('Error creating File object:', error);
-          setSelectedFile(null);
-        });
+      //     const file = new File([blob], fileName, { type: fileType });
+      //     setSelectedFile(file);
+      //     console.log('File object set:', file);
+      //   })
+      //   .catch((error) => {
+      //     console.log('Error creating File object:', error);
+      //     setSelectedFile(null);
+      //   });
     }
   }, [location.pathname, isUpdating, props.post]);
 
