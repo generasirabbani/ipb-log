@@ -1,20 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Dashboard.scss';
 import { connect } from 'react-redux';
-import { addDataToAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action';
-import { Button, Flex, FormControl, FormLabel, HStack, Input, Spacer, Textarea, VStack, useToast,
-AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, IconButton, Icon, Text, Heading, Divider, Box } from '@chakra-ui/react';
+import { addDataToAPI, deleteAccountAPI, deleteDataAPI, getDataFromAPI, updateDataAPI } from '../../../config/redux/action';
+import { Button, Flex, VStack, useToast, Text, Heading, Divider, Box } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
-import { RxCross1 } from 'react-icons/rx';
-import { AiOutlineDelete } from 'react-icons/ai';
 import PostIcons from '../../../components/molecules/PostIcons';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import 'moment/locale/id'
+import DeleteAlert from '../../../components/molecules/DeleteAlert';
 
 const Dashboard = (props) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const cancelRef = useRef();
   const toast = useToast();
@@ -35,6 +34,39 @@ const Dashboard = (props) => {
     setIsConfirmationOpen(true);
   };
 
+  const showAlert = () => {
+    setIsAlertOpen(true);
+  }
+  const confirmDeleteAccount = async () => {
+    const res = await props.deleteAccount().catch((err) => err);
+    if (res) {
+      localStorage.setItem('userData', null);
+      // console.log("Akun berhasil dihapus!")
+      toast({
+        title: "Akun berhasil dihapus!",
+        status: "success",
+        isClosable: true,
+        position: "top",
+        duration: 5000
+      });
+      setIsAlertOpen(false);
+      navigate('/home');
+    } else {
+      // console.log('Log Out Gagal!');
+      toast({
+        title: "Akun gagal dihapus!",
+        status: "failed",
+        isClosable: true,
+        position: "top",
+        duration: 5000
+      });
+      setIsAlertOpen(false);
+    }
+  }
+  const cancelDeleteAccount = () => {
+    setIsAlertOpen(false);
+  }
+  
   const confirmDeletePost = () => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     const data = {
@@ -64,35 +96,7 @@ const Dashboard = (props) => {
   return (
     <>
       <NavBar />
-      <Flex p={8} paddingTop={94}>
-        <Box
-          userSelect='none'
-          bg="white"
-          py={4}
-          px={8}
-          w='25%'
-          rounded="md"
-          mb={8}
-          pos='fixed'
-          border='1px solid rgba(0, 0, 0, 0.5)'
-          zIndex='500'
-        >
-          <Heading as="h2" size="lg" color="#263C92">
-            Halaman User{"\n"}{userData.username}
-          </Heading>
-          <Divider my={2} borderColor="black" />
-          <Text color="#263C92">
-            {userData.email}
-          </Text>
-          <Divider my={2} borderColor="black" />
-          <Text color="#263C92">
-            Terakhir Login : {moment(new Date(userData.lastLogin)).locale("id").format('dddd, DD MMMM YYYY')}
-          </Text>
-          <Divider my={2} borderColor="black" />
-          <Text color="#263C92">
-            Jumlah Post : {posts.length}
-          </Text>
-        </Box>
+      <Flex p={8} paddingTop={74}>
           {posts.length > 0 ? (
             <VStack w="100%">
               {posts.map((post) => (
@@ -118,44 +122,90 @@ const Dashboard = (props) => {
               ))}
             </VStack>
           ) : (
+            <VStack w="100%">
+              <Box
+                border="1px solid rgba(229, 231, 235, 1)"
+                padding="16px"
+                bg="white"
+                w="435px"
+                transition="all ease 0.35s"
+                boxShadow="0px 4px 4px rgba(0, 0, 0, 0.04)"
+                rounded="lg"
+              >
+                <Text fontSize="24px" fontWeight="bold">
+                  Anda Belum Pernah Post
+                </Text>
+              </Box>
+            </VStack>
+          )}
+          <Flex
+            mb={8}
+            mr='60px'
+            pos='fixed'
+            w='25%'
+            right={0}
+            zIndex='500'
+            direction='column'
+          >
             <Box
-              border="1px solid rgba(229, 231, 235, 1)"
-              padding="16px"
+              userSelect='none'
               bg="white"
-              w="435px"
-              transition="all ease 0.35s"
-              boxShadow="0px 4px 4px rgba(0, 0, 0, 0.04)"
-              rounded="lg"
+              py={4}
+              px={8}
+              rounded="md"
+              border='1px solid rgba(0, 0, 0, 0.3)'
             >
-              <Text fontSize="24px" fontWeight="bold">
-                Anda Belum Pernah Post
+              <Heading as="h2" size="lg" color="#263C92">
+                Halaman User{"\n"}{userData.username}
+              </Heading>
+              <Divider my={2} borderColor="black" />
+              <Text color="#263C92">
+                {userData.email}
+              </Text>
+              <Divider my={2} borderColor="black" />
+              <Text color="#263C92">
+                Terakhir Login : {moment(new Date(userData.lastLogin)).locale("id").format('dddd, DD MMMM YYYY')}
+              </Text>
+              <Divider my={2} borderColor="black" />
+              <Text color="#263C92">
+                Jumlah Post : {posts.length}
               </Text>
             </Box>
-          )}
-          
-          {/* Confirmation Dialog */}
-          <AlertDialog isOpen={isConfirmationOpen} leastDestructiveRef={cancelRef}>
-          <AlertDialogOverlay />
-
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete Post
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Are you sure you want to delete this post?
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={cancelDeletePost}>
-                Cancel
-              </Button>
-              <Button colorScheme="red" onClick={confirmDeletePost} ml={3}>
-                Delete
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+            <Flex justifyContent='center'>
+            {/* <Button 
+              // onClick={toLogin}
+              colorScheme="blue"
+              variant="solid"
+              height="28px"
+              display={{ base: "none", sm: "flex" }}
+              width={{ base: "70px", md: "110px" }}
+              m={1}
+            >Edit</Button> */}
+            <Button 
+              onClick={showAlert}
+              colorScheme="red"
+              variant="solid"
+              height="28px"
+              display={{ base: "none", sm: "flex" }}
+              width={{ base: "90px", md: "130px" }}
+              m={1}
+            >Delete Akun</Button>
+            </Flex>
+          </Flex>
+          <DeleteAlert 
+            deletedItem={"Post"}
+            isConfirmationOpen={isConfirmationOpen}
+            cancelRef={cancelRef}
+            cancelDelete={cancelDeletePost}
+            confirmDelete={confirmDeletePost}
+          />
+          <DeleteAlert 
+            deletedItem={"Akun"}
+            isConfirmationOpen={isAlertOpen}
+            cancelRef={cancelRef}
+            cancelDelete={cancelDeleteAccount}
+            confirmDelete={confirmDeleteAccount}
+          />
       </Flex>
     </>
   );
@@ -171,6 +221,7 @@ const reduxDispatch = (dispatch) => ({
     getPosts: (data) => dispatch(getDataFromAPI(data)),
     updatePosts: (data) => dispatch(updateDataAPI(data)),
     deletePost: (data) => dispatch(deleteDataAPI(data)),
+    deleteAccount: () => dispatch(deleteAccountAPI()),
 });
 
 export default connect(reduxState, reduxDispatch)(Dashboard);

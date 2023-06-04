@@ -46,7 +46,6 @@ export const registerUserAPI = (data) => (dispatch) => {
                 username: data.username,
                 email: res.user.email,
                 lastLogin: Date.now(),
-                createdAt: Date.now(),
               };
               database.ref('users/' + res.user.uid).set(dataUser);
               dispatch({ type: 'CHANGE_LOADING', value: false });
@@ -109,6 +108,7 @@ export const loginUserAPI = (data) => async (dispatch) => {
   return new Promise((resolve, reject) => {
     firebase.auth().signInWithEmailAndPassword(data.email, data.password)
       .then(async(res) => {
+        console.log("cek isi user : " + JSON.stringify(res.user));
         const userDataRef = database.ref('users/' + res.user.uid);
         const userDataAPI = await database.ref('users/' + res.user.uid).once('value');
         const dataUser = {

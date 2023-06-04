@@ -31,7 +31,7 @@ const UserMenu = (props) => {
     const res = await props.logoutUser().catch((err) => err);
     if (res) {
       localStorage.setItem('userData', null);
-      console.log("Log Out Success!")
+      console.log("Log Out Berhasil!")
       toast({
         title: "Log Out Success!",
         status: "success",
@@ -41,7 +41,7 @@ const UserMenu = (props) => {
       });
       navigate('/home');
     } else {
-      console.log('Log Out Failed!');
+      console.log('Log Out Gagal!');
     }
   };
 

@@ -38,7 +38,7 @@ const Detail = (props) => {
           rounded="md"
           mb={8}
           pos='fixed'
-          border='1px solid rgba(0, 0, 0, 0.5)'
+          border='1px solid rgba(0, 0, 0, 0.3)'
           zIndex='500'
         >
           <Heading as="h2" size="lg" color="#263C92">
