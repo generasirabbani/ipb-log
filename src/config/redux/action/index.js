@@ -20,30 +20,90 @@ export const logoutUserAPI = () => (dispatch) => {
 
 export const registerUserAPI = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {
-    dispatch({type: 'CHANGE_LOADING', value: true})
-    firebase.auth().createUserWithEmailAndPassword(data.email, data.password)
-      .then(res => {
-        console.log('success: ', res);
-        const dataUser = {
-          uid: res.user.uid,
-          username: data.username,
-          email: res.user.email,
-          lastLogin: Date.now(),
+    dispatch({ type: 'CHANGE_LOADING', value: true });
+
+    // Check if the username already exists
+    database
+      .ref('users')
+      .orderByChild('username')
+      .equalTo(data.username)
+      .once('value')
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const errorMessage = 'Username already exists';
+          dispatch({ type: 'CHANGE_ERROR', value: errorMessage });
+          dispatch({ type: 'CHANGE_LOADING', value: false });
+          reject(false);
+        } else {
+          // Create a new user if the username is not found
+          firebase
+            .auth()
+            .createUserWithEmailAndPassword(data.email, data.password)
+            .then((res) => {
+              console.log('success: ', res);
+              const dataUser = {
+                uid: res.user.uid,
+                username: data.username,
+                email: res.user.email,
+                lastLogin: Date.now(),
+                createdAt: Date.now(),
+              };
+              database.ref('users/' + res.user.uid).set(dataUser);
+              dispatch({ type: 'CHANGE_LOADING', value: false });
+              resolve(dataUser);
+            })
+            .catch((error) => {
+              var errorCode = error.code;
+              var errorMessage = error.message;
+              console.log(errorCode, errorMessage);
+              dispatch({ type: 'CHANGE_ERROR', value: errorMessage });
+              dispatch({ type: 'CHANGE_LOADING', value: false });
+              reject(false);
+            });
         }
-        database.ref('users/' + res.user.uid).set(dataUser);
-        dispatch({type: 'CHANGE_LOADING', value: false})
-        resolve(dataUser)
       })
       .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode, errorMessage)
-        dispatch({type: 'CHANGE_ERROR', value: errorMessage})
-        dispatch({type: 'CHANGE_LOADING', value: false})
-        reject(false)
+        // Handle any error that occurs during the database query
+        console.log('Error checking username:', error);
+        dispatch({ type: 'CHANGE_ERROR', value: error.message });
+        dispatch({ type: 'CHANGE_LOADING', value: false });
+        reject(false);
+      });
+  });
+};
+
+export const deleteAccountAPI = () => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    dispatch({ type: 'CHANGE_LOADING', value: true });
+
+    const user = firebase.auth().currentUser;
+    const uid = user.uid;
+
+    // Delete user data from the database
+    database
+      .ref('users/' + uid)
+      .remove()
+      .then(() => {
+        // Delete user authentication credentials
+        user
+          .delete()
+          .then(() => {
+            dispatch({ type: 'CHANGE_LOADING', value: false });
+            resolve(true);
+          })
+          .catch((error) => {
+            console.log('Error deleting user:', error);
+            dispatch({ type: 'CHANGE_LOADING', value: false });
+            reject(false);
+          });
       })
-  })
-}
+      .catch((error) => {
+        console.log('Error deleting user data:', error);
+        dispatch({ type: 'CHANGE_LOADING', value: false });
+        reject(false);
+      });
+  });
+};
 
 export const loginUserAPI = (data) => async (dispatch) => {
   return new Promise((resolve, reject) => {
@@ -82,8 +142,9 @@ export const addDataToAPI = (data) => async (dispatch) => {
   try {
     // Upload the image file to storage
     if (image) {
+      const identifier = Date.now();
       const storageRef = storage.ref();
-      const imageRef = storageRef.child(`images/${image.name}`);
+      const imageRef = storageRef.child(`images/${identifier}_${image.name}`);
       await imageRef.put(image);
       data.image = await imageRef.getDownloadURL();
     }
@@ -261,8 +322,9 @@ export const updateDataAPI = (data) => async (dispatch) => {
       previousImageUrl = previousData.image;
       
       // Upload the new image file to storage
+      const identifier = Date.now();
       const storageRef = storage.ref();
-      const imageRef = storageRef.child(`images/${image.name}`);
+      const imageRef = storageRef.child(`images/${identifier}_${image.name}`);
       await imageRef.put(image);
       data.image = await imageRef.getDownloadURL();
     }

@@ -25,7 +25,7 @@ const Dashboard = (props) => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     setUserData(userData);
-    console.log("userData : " + JSON.stringify(userData));
+    // console.log("userData : " + JSON.stringify(userData));
     props.getPosts(userData.uid);
   }, []);
 
@@ -88,6 +88,10 @@ const Dashboard = (props) => {
           <Text color="#263C92">
             Terakhir Login : {moment(new Date(userData.lastLogin)).locale("id").format('dddd, DD MMMM YYYY')}
           </Text>
+          <Divider my={2} borderColor="black" />
+          <Text color="#263C92">
+            Jumlah Post : {posts.length}
+          </Text>
         </Box>
           {posts.length > 0 ? (
             <VStack w="100%">
@@ -113,7 +117,21 @@ const Dashboard = (props) => {
                 </Flex>
               ))}
             </VStack>
-          ) : null}
+          ) : (
+            <Box
+              border="1px solid rgba(229, 231, 235, 1)"
+              padding="16px"
+              bg="white"
+              w="435px"
+              transition="all ease 0.35s"
+              boxShadow="0px 4px 4px rgba(0, 0, 0, 0.04)"
+              rounded="lg"
+            >
+              <Text fontSize="24px" fontWeight="bold">
+                Anda Belum Pernah Post
+              </Text>
+            </Box>
+          )}
           
           {/* Confirmation Dialog */}
           <AlertDialog isOpen={isConfirmationOpen} leastDestructiveRef={cancelRef}>
