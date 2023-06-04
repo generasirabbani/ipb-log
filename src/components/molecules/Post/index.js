@@ -26,7 +26,6 @@ export const Post = ({ post, _hover, isDetail = false }) => {
         bg="white"
         w='100%'
         minH="150px"
-        maxH="69vh"
         transition="all ease 0.35s"
         _hover={_hover}
         boxShadow="0px 4px 4px rgba(0, 0, 0, 0.04)"
@@ -34,7 +33,7 @@ export const Post = ({ post, _hover, isDetail = false }) => {
         direction='column'
         onClick={() => toDetail(post)}
       >
-        <Text fontSize="30px" fontWeight="bold">
+        <Text fontSize="25px" fontWeight="bold">
           {post.data.title}
         </Text>
         <Text fontSize="15px" color="gray.500">
@@ -42,7 +41,7 @@ export const Post = ({ post, _hover, isDetail = false }) => {
           {moment(new Date(post.data.createdAt)).locale("id").fromNow()}
         </Text>
         {post.data.image && (
-          <Flex justify="center" h="70%">
+          <Flex justify="center" h="45vh">
             <Image
               align="center"
               src={post.data.image}

@@ -57,7 +57,7 @@ const Detail = (props) => {
           </Text>
         </Box>
         {post.data ? (
-        <Flex key={post.id} ml='30%'>
+        <Flex key={post.id} ml='28%'>
           <VoteButtons post={post} />
           <Flex direction="column" w='100%' >
             <Post post={post} key={post.id} isDetail={true} />

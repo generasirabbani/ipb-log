@@ -39,7 +39,7 @@ const CommentInput = (props) => {
               {userData?.username}
             </span>
           </Text>
-          <Input
+          <Textarea
             value={comment}
             onChange={(event) => setComment(event.target.value)}
             placeholder="Silahkan komen disini"
