@@ -139,10 +139,11 @@ export const loginUserAPI = (data) => async (dispatch) => {
 export const addDataToAPI = (data) => async (dispatch) => {
   const { image } = data;
   const userDataAPI = await database.ref('users/' + data.userId).once('value');
+  const newPostRef = database.ref('posts/' + data.userId).push();
   try {
     // Upload the image file to storage
     if (image) {
-      const identifier = Date.now();
+      const identifier = newPostRef.key;
       const storageRef = storage.ref();
       const imageRef = storageRef.child(`images/${identifier}_${image.name}`);
       await imageRef.put(image);
@@ -161,8 +162,6 @@ export const addDataToAPI = (data) => async (dispatch) => {
       commentCount: data.commentCount,
       creatorName: userDataAPI.val().username,
     };
-
-    const newPostRef = database.ref('posts/' + data.userId).push();
     await newPostRef.set(postData);
 
   } catch (error) {
@@ -174,7 +173,7 @@ export const getDataFromAPI = (userId) => (dispatch) => {
   const urlPosts = database.ref(`posts/${userId}`);
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
-      console.log('get Data: ', snapshot.val());
+      // console.log('get Data: ', snapshot.val());
       const data = [];
       if (snapshot.val()) {
         Object.keys(snapshot.val()).map((key) => {
@@ -267,7 +266,7 @@ export const searchPostsFromAPI = (query, userId) => (dispatch) => {
     urlPosts = database.ref('posts');
   }
 
-  console.log("query : " + query + " userId : " + userId);
+  // console.log("query : " + query + " userId : " + userId);
   return new Promise((resolve, reject) => {
     urlPosts.on('value', (snapshot) => {
       const data = [];
@@ -322,7 +321,7 @@ export const updateDataAPI = (data) => async (dispatch) => {
       previousImageUrl = previousData.image;
       
       // Upload the new image file to storage
-      const identifier = Date.now();
+      const identifier = data.postId;
       const storageRef = storage.ref();
       const imageRef = storageRef.child(`images/${identifier}_${image.name}`);
       await imageRef.put(image);

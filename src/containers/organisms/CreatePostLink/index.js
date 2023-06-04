@@ -24,7 +24,7 @@ const CreatePostLink = (props) => {
         align="center"
         bg="white"
         height="56px"
-        w='475px'
+        w='100%'
         borderRadius={4}
         border="1px solid"
         borderColor="gray.300"

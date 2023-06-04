@@ -54,12 +54,39 @@ const NewPostForm = (props) => {
 
     if (isUpdating && props.post) {
       const { post } = props;
-
       setTextInputs({
         title: post.data.title,
         body: post.data.content,
       });
-      setImageShown(post.data.image);
+      const imageUrl = post.data.image;
+      setImageShown(imageUrl);
+      console.log("cek url : " + imageUrl); 
+      fetch(imageUrl, { mode: 'no-cors' })
+        .then((response) => {
+          console.log("response check : ", response);
+          return response.blob();
+        })
+        .then((blob) => {
+          // Extract file name
+          const fileNameStartIndex = imageUrl.lastIndexOf('%2F') + 3;
+          const fileNameEndIndex = imageUrl.lastIndexOf('?');
+          const fileName = imageUrl.substring(fileNameStartIndex, fileNameEndIndex);
+          console.log("file name check : " + fileName);
+          
+          // Extract file type
+          const fileTypeStartIndex = fileName.lastIndexOf('.') + 1;
+          const fileExtension = fileName.substring(fileTypeStartIndex);
+          const fileType = `image/${fileExtension}`;
+          console.log("file type check : " + fileType);
+
+          const file = new File([blob], fileName, { type: fileType });
+          setSelectedFile(file);
+          console.log('File object set:', file);
+        })
+        .catch((error) => {
+          console.log('Error creating File object:', error);
+          setSelectedFile(null);
+        });
     }
   }, [location.pathname, isUpdating, props.post]);
 
@@ -143,6 +170,7 @@ const NewPostForm = (props) => {
   const onSelectImage = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
+    console.log('File object check : ', file);
     const reader = new FileReader();
 
     if (event.target.files?.[0]) {
@@ -169,6 +197,7 @@ const NewPostForm = (props) => {
       title: '',
       body: '',
     });
+    setImageShown(null);
     navigate('/post/' + props.post.userId + '/' + props.post.id);
   };
 

@@ -98,7 +98,7 @@ const Comments = (props) => {
 
   return (
     <Box 
-      maxW='435px'
+      maxW='100%'
       bg="white" 
       p={2} 
       borderRadius="0px 0px 4px 4px" 

@@ -28,7 +28,7 @@ const Detail = (props) => {
   return (
     <>
       <NavBar />
-      <Flex minW="900px" p={8} pt={74}>
+      <Flex p={8} pt={74}>
         <Box
           userSelect='none'
           bg="white"
@@ -57,16 +57,14 @@ const Detail = (props) => {
           </Text>
         </Box>
         {post.data ? (
-        <HStack key={post.id} w="100%" alignItems="flex-start" ml='30%'>
+        <Flex key={post.id} w="100%" alignItems="flex-start" ml='30%'>
           <VoteButtons post={post} />
-          <Flex direction="column" >
-            <Flex>
-              <Post post={post} key={post.id} isDetail={true} />
-            </Flex>
+          <Flex direction="column" w='80%' >
+            <Post post={post} key={post.id} isDetail={true} />
             <PostIcons post={post} />
             <Comments post={post} />
           </Flex>
-        </HStack>
+        </Flex>
         ) : (
           <Text>Loading...</Text>
         )}

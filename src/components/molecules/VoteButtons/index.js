@@ -79,8 +79,8 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
   };  
 
   return (
-    <Flex direction='column'>
-      <VStack>
+    <Flex direction='column' mr={2}>
+      <Flex>
         <IconButton
           size='sm'
           bg='none'
@@ -96,7 +96,7 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
           _focus={{ boxShadow: "none" }}
           _disabled={{ opacity: 0.25 }}
         />
-      </VStack>
+      </Flex>
       <Text
         userSelect='none'
         bg="none"
@@ -106,7 +106,7 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
       >
         {post.data.voteCount || 0}
       </Text>
-      <VStack>
+      <Flex>
         <IconButton
           size='sm'
           bg='none'
@@ -122,7 +122,7 @@ const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
           _focus={{ boxShadow: "none" }}
           _disabled={{ opacity: 0.25 }}
         />
-      </VStack>
+      </Flex>
     </Flex>
   );
 };

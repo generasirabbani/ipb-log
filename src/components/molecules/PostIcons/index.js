@@ -31,6 +31,7 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
       border="1px solid rgba(0, 0, 0, 0.1)"
       bg="white"
       rounded='lg'
+      w='100%'
       my={2}
     >
       <Flex

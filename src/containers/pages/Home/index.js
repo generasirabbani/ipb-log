@@ -11,34 +11,25 @@ import PostIcons from '../../../components/molecules/PostIcons';
 
 const Home = (props) => {
   const { posts = [] } = props;
-  const navigate = useNavigate();
 
   useEffect(() => {
     props.getAllPosts(); // Fetch all posts
   }, []);
 
-  const toDetail = (post) => {
-    navigate('/post/' + post.userId + '/' + post.id)
-  }
-
   return (
     <>
       <NavBar />
       <Flex p={8} paddingTop={62}>
-        <Box
-          userSelect='none'
-          bg="none"
-          w='30%'
-        ></Box>
-        <Flex direction='column'>
+        <Box userSelect='none' bg="none" w='50%'></Box>
+        <Flex direction='column' w='100%'>
           <CreatePostLink />
           {posts.length > 0 ? (
-            <Flex direction='column'>
+            <Flex direction='column' w='100%'>
               {posts.map((post) => (
-                <HStack key={post.id} alignItems="flex-start" >
+                <Flex key={post.id} >
                   <VoteButtons post={post} />
-                  <Flex direction="column" >
-                    <Flex onClick={() => toDetail(post)} >
+                  <Flex direction="column" w='100%'>
+                    <Flex w='100%' >
                       <Post
                         post={post}
                         key={post.id}
@@ -49,25 +40,19 @@ const Home = (props) => {
                         }}
                       />
                     </Flex>
-                    {/* <IconButton
-                      isDisabled={userData === null || props.userData === null}
-                      aria-label="Comment here"
-                      icon={<AiOutlineComment />}
-                      onClick={() => toDetail(post)}
-                    /> */}
                     <PostIcons
                       post={post}
-                      toDetail={toDetail}
                       isDashboard={false}
                     />
                   </Flex>
-                </HStack>
+                </Flex>
               ))}
             </Flex>
           ) : (
             <p>No posts available.</p>
           )}
         </Flex>
+        <Box userSelect='none' bg="none" w='50%'></Box>
       </Flex>
     </>
   );

@@ -89,10 +89,6 @@ const Dashboard = (props) => {
     setIsConfirmationOpen(false);
   };
 
-  const toDetail = (post) => {
-    navigate('/post/' + post.userId + '/' + post.id)
-  }
-
   return (
     <>
       <NavBar />
@@ -102,8 +98,8 @@ const Dashboard = (props) => {
               {posts.map((post) => (
                 <Flex
                   key={post.id}
-                  onClick={() => toDetail(post)}
                   direction='column'
+                  w="100%"
                 >
                 <Post
                   post={post}
@@ -115,7 +111,6 @@ const Dashboard = (props) => {
                 />
                 <PostIcons
                   post={post}
-                  toDetail={toDetail}
                   showConfirmationDialog={showConfirmationDialog}
                 />
                 </Flex>
@@ -206,6 +201,7 @@ const Dashboard = (props) => {
             cancelDelete={cancelDeleteAccount}
             confirmDelete={confirmDeleteAccount}
           />
+          <Box userSelect='none' bg="none" w='45%'></Box>
       </Flex>
     </>
   );
