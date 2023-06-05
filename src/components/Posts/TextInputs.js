@@ -1,5 +1,6 @@
 import React from "react";
-import { Stack, Input, Textarea, Flex, Button } from "@chakra-ui/react";
+import { useState } from "react";
+import { Stack, Input, Textarea, Flex, Button, Text, InputLeftElement, InputGroup, InputRightElement } from "@chakra-ui/react";
 
 const TextInputs = ({
   textInputs,
@@ -10,23 +11,40 @@ const TextInputs = ({
   isUpdating,
   cancelUpdate
 }) => {
+  const [titleCharCount, setTitleCharCount] = useState(textInputs.title.length);
+
+  const handleTitleChange = (event) => {
+    const value = event.target.value;
+    if (value.length <= 50) {
+      onChange(event);
+      setTitleCharCount(value.length);
+    }
+  };
+
   return (
     <Stack spacing={3} width="100%">
-      <Input
-        name="title"
-        value={textInputs.title}
-        onChange={onChange}
-        _placeholder={{ color: "gray.500" }}
-        _focus={{
-          outline: "none",
-          bg: "white",
-          border: "1px solid",
-          borderColor: "black",
-        }}
-        fontSize="10pt"
-        borderRadius={4}
-        placeholder="Title"
-      />
+      <Flex justify="space-between">
+        <InputGroup>
+          <Input
+            name="title"
+            value={textInputs.title}
+            onChange={handleTitleChange}
+            _placeholder={{ color: "gray.500" }}
+            _focus={{
+              outline: "none",
+              bg: "white",
+              border: "1px solid",
+              borderColor: "black",
+            }}
+            fontSize="10pt"
+            borderRadius={4}
+            placeholder="Title"
+          />
+          <InputRightElement fontSize="10pt" color={titleCharCount > 50 ? "red" : "gray.500"}>
+            {titleCharCount}/50
+          </InputRightElement>
+        </InputGroup>
+      </Flex>
       <Textarea
         name="body"
         value={textInputs.body}
