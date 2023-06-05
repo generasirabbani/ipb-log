@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import 'moment/locale/id'
 import DeleteAlert from '../../../components/molecules/DeleteAlert';
+// import firebase from '../../../config/firebase'
 
 const Dashboard = (props) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -20,11 +21,16 @@ const Dashboard = (props) => {
   const navigate = useNavigate();
   const { posts } = props;
   const [userData, setUserData] = useState({});
+  // const [userAuth, setUserAuth] = useState({});
  
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     setUserData(userData);
+    // const userAuth = firebase.auth().currentUser;
+    // setUserAuth(userAuth);
+    // console.log("cek user auth : ", userAuth);
     // console.log("userData : " + JSON.stringify(userData));
+    // console.log("cek tanggal : ", userAuth.metadata.createdAt);
     props.getPosts(userData.uid);
   }, []);
 
@@ -151,7 +157,10 @@ const Dashboard = (props) => {
               border='1px solid rgba(0, 0, 0, 0.3)'
             >
               <Heading as="h2" size="lg" color="#263C92">
-                Halaman User{"\n"}{userData.username}
+                Halaman User
+              </Heading>
+              <Heading as="h3" size="md" color="#263C92">
+                {userData.username}
               </Heading>
               <Divider my={2} borderColor="black" />
               <Text color="#263C92">
@@ -159,7 +168,7 @@ const Dashboard = (props) => {
               </Text>
               <Divider my={2} borderColor="black" />
               <Text color="#263C92">
-                Terakhir Login : {moment(new Date(userData.lastLogin)).locale("id").format('dddd, DD MMMM YYYY')}
+                Akun dibuat tanggal {moment(new Date(userData.creationTime)).locale("id").format('dddd, DD MMMM YYYY')}
               </Text>
               <Divider my={2} borderColor="black" />
               <Text color="#263C92">

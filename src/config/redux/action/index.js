@@ -117,7 +117,8 @@ export const loginUserAPI = (data) => async (dispatch) => {
           username: userDataAPI.val().username,
           lastLogin: userDataAPI.val().lastLogin,
           emailVerified: res.user.emailVerified,
-          refreshToken: res.user.refreshToken
+          refreshToken: res.user.refreshToken,
+          creationTime: res.user.metadata.creationTime,
         }
         userDataRef.update({
           lastLogin: Date.now()
