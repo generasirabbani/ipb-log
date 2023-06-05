@@ -19,7 +19,7 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
     navigate('/post/' + post.userId + '/' + post.id + '/edit');
   }
 
-  const { hasCopied, onCopy } = useClipboard(window.location.href);
+  const { hasCopied, onCopy } = useClipboard();
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
@@ -29,7 +29,7 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
   const handleSharePost = (e, post) => {
     e.stopPropagation();
     const link = `${window.location.origin}/post/${post.userId}/${post.id}`;
-    console.log("copied link : ", link);
+    // console.log("copied link : ", link);
     onCopy(link);
     toast({
       title: 'Link sudah masuk ke Clipboard!',
