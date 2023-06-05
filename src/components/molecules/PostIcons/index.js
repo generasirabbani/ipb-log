@@ -11,6 +11,8 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
   const isDashboard = location.pathname === "/dashboard";
   const navigate = useNavigate();
   const toast = useToast();
+  const link = `${window.location.origin}/post/${post.userId}/${post.id}`;
+  const {hasCopied, onCopy} = useClipboard(link);
   const toDetail = (post) => {
     navigate('/post/' + post.userId + '/' + post.id)
   }
@@ -19,8 +21,6 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
     navigate('/post/' + post.userId + '/' + post.id + '/edit');
   }
 
-  const { hasCopied, onCopy } = useClipboard();
-
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
     setUserData(userData);
@@ -28,9 +28,7 @@ const PostIcons = ({ post, showConfirmationDialog }) => {
 
   const handleSharePost = (e, post) => {
     e.stopPropagation();
-    const link = `${window.location.origin}/post/${post.userId}/${post.id}`;
-    // console.log("copied link : ", link);
-    onCopy(link);
+    onCopy();
     toast({
       title: 'Link sudah masuk ke Clipboard!',
       status: 'success',
