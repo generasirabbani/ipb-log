@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import 'moment/locale/id'
 import DeleteAlert from '../../../components/molecules/DeleteAlert';
+import VoteButtons from '../../../components/molecules/VoteButtons';
 // import firebase from '../../../config/firebase'
 
 const Dashboard = (props) => {
@@ -100,8 +101,10 @@ const Dashboard = (props) => {
       <NavBar />
       <Flex p={8} paddingTop={74}>
           {posts.length > 0 ? (
-            <VStack w="100%">
+            <Flex w="100%" direction='column'>
               {posts.map((post) => (
+              <Flex>
+                <VoteButtons post={post} />
                 <Flex
                   key={post.id}
                   direction='column'
@@ -120,8 +123,9 @@ const Dashboard = (props) => {
                   showConfirmationDialog={showConfirmationDialog}
                 />
                 </Flex>
+              </Flex>
               ))}
-            </VStack>
+            </Flex>
           ) : (
             <VStack w="100%">
               <Box
