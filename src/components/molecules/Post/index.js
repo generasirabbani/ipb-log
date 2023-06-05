@@ -41,17 +41,21 @@ export const Post = ({ post, _hover, isDetail = false }) => {
           {moment(new Date(post.data.createdAt)).locale("id").fromNow()}
         </Text>
         {post.data.image && (
-          <Flex justify="center" h="45vh">
+          <Flex
+            justify="center"
+            h={!isDetail? "45vh" : "100%"}
+          >
             <Image
               align="center"
               src={post.data.image}
               alt="Post Image"
               style={{ marginTop: "20px", width: "100%" }}
-              objectFit="contain"
+              objectFit='cover'
+              overflow='hidden'
             />
           </Flex>
         )}
-        <Text mt="20px" fontSize="18px">
+        <Text mt="20px" fontSize="18px" textAlign='justify'>
           {truncateContent(post.data.content)}
         </Text>
       </Flex>
