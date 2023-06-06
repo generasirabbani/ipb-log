@@ -71,9 +71,9 @@ const Comments = (props) => {
   };
 
   const onEditComment = () => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    // const userData = JSON.parse(localStorage.getItem('userData'));
     const data = {
-      userId: userData.uid,
+      userId: post.userId,
       postId: post.id,
       commentId: selectedComment.id,
       text: comment,

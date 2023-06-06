@@ -5,7 +5,7 @@ import { Box, Flex, HStack, IconButton, VStack } from '@chakra-ui/react';
 import NavBar from '../../organisms/NavBar';
 import { Post } from '../../../components/molecules/Post';
 import VoteButtons from '../../../components/molecules/VoteButtons';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import CreatePostLink from '../../organisms/CreatePostLink';
 import PostIcons from '../../../components/molecules/PostIcons';
 
