@@ -68,6 +68,8 @@ const Comments = (props) => {
       position: "top",
       duration: 3000
     });
+    setComment('');
+    setSelectedComment(null);
   };
 
   const onEditComment = () => {
@@ -87,6 +89,7 @@ const Comments = (props) => {
       position: "top",
       duration: 3000
     });
+    setComment('');
     setSelectedComment({});
     setIsEditing(false);
   };
