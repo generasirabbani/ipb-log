@@ -51,10 +51,10 @@ const Comments = (props) => {
   }
 
   const onDeleteComment = (deletedComment) => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    // const userData = JSON.parse(localStorage.getItem('userData'));
     const commentCount = post.data.commentCount;
     const data = {
-      userId: userData.uid,
+      userId: post.userId,
       postId: post.id,
       commentId: deletedComment.id,
       commentCount: commentCount - 1,
