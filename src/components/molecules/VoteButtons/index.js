@@ -10,7 +10,7 @@ const VoteButtons = ({ post, updateVote, userDataGlobal, votedPosts, getVotes })
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
-    getVotes(userData.uid);
+    getVotes(userData?.uid);
     console.log("cek voted posts : ", votedPosts);
   }, []);
   
