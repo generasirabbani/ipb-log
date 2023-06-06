@@ -108,7 +108,7 @@ export const loginUserAPI = (data) => async (dispatch) => {
   return new Promise((resolve, reject) => {
     firebase.auth().signInWithEmailAndPassword(data.email, data.password)
       .then(async(res) => {
-        console.log("cek isi user : " + JSON.stringify(res.user));
+        // console.log("cek isi user : " + JSON.stringify(res.user));
         const userDataRef = database.ref('users/' + res.user.uid);
         const userDataAPI = await database.ref('users/' + res.user.uid).once('value');
         const dataUser = {
@@ -402,7 +402,7 @@ export const resetPasswordByEmail = (data) => (dispatch) => {
 
 export const updateVoteAPI = (data) => (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
-  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/votedUsers/${data.votedUserId}`)
+  const votedUrl = database.ref(`votes/${data.votedUserId}/${data.postId}`);
   return new Promise((resolve, reject) => {
     urlPosts.update({
       voteCount: data.voteCount,
@@ -414,14 +414,30 @@ export const updateVoteAPI = (data) => (dispatch) => {
   })
 };
 
+export const getVotesAPI = (userId) => (dispatch) => {
+  const votedUrl = database.ref(`votes/${userId}`);
+  votedUrl.on('value', (snapshot) => {
+    const votedPosts = [];
+    snapshot.forEach((childSnapshot) => {
+        const votedPost = {
+          postId: childSnapshot.key,
+          data: childSnapshot.val(),
+        };
+        votedPosts.push(votedPost);
+    });
+    
+    dispatch({ type: 'SET_VOTED_POST', value: votedPosts });
+  });
+}
+
 export const addCommentAPI = (data) => (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
-  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/comments`)
+  const commentUrl = database.ref(`comments/${data.postId}`);
   return new Promise((resolve, reject) => {
     urlPosts.update({
       commentCount: data.commentCount,
     })
-    votedUrl.push({
+    commentUrl.push({
       commenterName: data.commenterName,
       commenterId: data.commenterId,
       createdAt: data.createdAt,
@@ -432,9 +448,9 @@ export const addCommentAPI = (data) => (dispatch) => {
 };
 
 export const updateCommentAPI = (data) => (dispatch) => {
-  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/comments/${data.commentId}`)
+  const commentUrl = database.ref(`comments/${data.postId}/${data.commentId}`);
   return new Promise((resolve, reject) => {
-    votedUrl.update({
+    commentUrl.update({
       text: data.text,
       updatedAt: new Date().getTime(),
     });
@@ -443,19 +459,19 @@ export const updateCommentAPI = (data) => (dispatch) => {
 
 export const deleteCommentAPI = (data) => (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
-  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/comments/${data.commentId}`)
+  const commentUrl = database.ref(`comments/${data.postId}/${data.commentId}`);
   return new Promise((resolve, reject) => {
     urlPosts.update({
       commentCount: data.commentCount,
     })
-    votedUrl.remove();
+    commentUrl.remove();
   })
 };
 
 export const getCommentsAPI = (userId, postId) => (dispatch) => {
-  const urlComments = database.ref(`posts/${userId}/${postId}/comments`);
+  const commentUrl = database.ref(`comments/${postId}`)
   
-  urlComments.on('value', (snapshot) => {
+  commentUrl.on('value', (snapshot) => {
     const comments = [];
     
     snapshot.forEach((childSnapshot) => {

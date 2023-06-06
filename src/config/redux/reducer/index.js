@@ -8,6 +8,7 @@ const initialState = {
   post: {},
   postComments: [],
   error: '',
+  votedPosts: [],
 }
 
 const reducer = (state=initialState, action) => {
@@ -63,6 +64,12 @@ const reducer = (state=initialState, action) => {
     return {
       ...state,
       error: action.value
+    }
+  }
+  if(action.type === 'SET_VOTED_POST'){
+    return {
+      ...state,
+      votedPosts: action.value
     }
   }
   return state
