@@ -402,7 +402,7 @@ export const resetPasswordByEmail = (data) => (dispatch) => {
 
 export const updateVoteAPI = (data) => (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
-  const votedUrl = database.ref(`votes/${data.votedUserId}/${data.postId}`);
+  const votedUrl = database.ref(`posts/${data.userId}/${data.postId}/votedUsers/${data.votedUserId}`)
   return new Promise((resolve, reject) => {
     urlPosts.update({
       voteCount: data.voteCount,
@@ -419,16 +419,15 @@ export const getVotesAPI = (userId) => (dispatch) => {
   votedUrl.on('value', (snapshot) => {
     const votedPosts = [];
     snapshot.forEach((childSnapshot) => {
-        const votedPost = {
-          postId: childSnapshot.key,
-          data: childSnapshot.val(),
-        };
-        votedPosts.push(votedPost);
+      const votedPost = {
+        postId: childSnapshot.key,
+        data: childSnapshot.val(),
+      };
+      votedPosts.push(votedPost);
     });
-    
     dispatch({ type: 'SET_VOTED_POST', value: votedPosts });
   });
-}
+};
 
 export const addCommentAPI = (data) => (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);

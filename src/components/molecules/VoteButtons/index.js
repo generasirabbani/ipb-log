@@ -1,28 +1,22 @@
 import { Flex, IconButton, Text, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { TbArrowBigUpFilled, TbArrowBigUp, TbArrowBigDown, TbArrowBigDownFilled } from "react-icons/tb";
-import { updateVoteAPI, getVotesAPI } from "../../../config/redux/action";
+import { updateVoteAPI, unvoteAPI } from "../../../config/redux/action";
 import { connect } from "react-redux";
 
-const VoteButtons = ({ post, updateVote, userDataGlobal, votedPosts, getVotes }) => {
+const VoteButtons = ({ post, updateVote, userDataGlobal }) => {
   const [isVoting, setVoting] = useState(false);
   const userData = JSON.parse(localStorage.getItem('userData'));
 
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    getVotes(userData?.uid);
-    console.log("cek voted posts : ", votedPosts);
-  }, []);
-  
   const handleClick = async (type) => {
     setVoting(true);
     const voteCount = post.data.voteCount || 0;
+    const votedUsers = post.data.votedUsers || {};
     const userId = userData?.uid;
+    console.log("userId:" + userId);
   
     if (type === "upvote") {
-      const upvotedPost = votedPosts.find((votedPost) => votedPost.postId === post.id && votedPost.data.voteType === "upvote");
-  
-      if (upvotedPost) {
+      if (votedUsers[userId] && votedUsers[userId].voted && votedUsers[userId].voteType === "upvote") {
         // User has already upvoted, perform unvote
         updateVote({
           userId: post.userId,
@@ -44,9 +38,7 @@ const VoteButtons = ({ post, updateVote, userDataGlobal, votedPosts, getVotes })
         });
       }
     } else {
-      const downvotedPost = votedPosts.find((votedPost) => votedPost.postId === post.id && votedPost.data.voteType === "downvote");
-  
-      if (downvotedPost) {
+      if (votedUsers[userId] && votedUsers[userId].voted) {
         // User has already downvoted, perform unvote
         updateVote({
           userId: post.userId,
@@ -71,17 +63,20 @@ const VoteButtons = ({ post, updateVote, userDataGlobal, votedPosts, getVotes })
   
     setVoting(false);
   };
-  
+
   const checkIfPostIsAlreadyVoted = () => {
-    const voteType = votedPosts.find((votedPost) => votedPost.data.voteType);
+    const votedUsers = post.data.votedUsers || {};
+    const userId = userData?.uid;
+    const voteType = votedUsers[userId] ? votedUsers[userId].voteType : null;
   
-    if (voteType) {
-      return voteType.data.voteType;
+    if (voteType === "upvote") {
+      return "upvote";
+    } else if (voteType === "downvote") {
+      return "downvote";
     } else {
       return null;
     }
-  };
-  
+  };  
 
   return (
     <Flex direction='column' mr={2}>
@@ -134,12 +129,11 @@ const VoteButtons = ({ post, updateVote, userDataGlobal, votedPosts, getVotes })
 
 const reduxState = (state) => ({
   userDataGlobal: state.user,
-  votedPosts: state.votedPosts,
+  isLogin: state.isLogin,
 });
 
 const reduxDispatch = (dispatch) => ({
   updateVote: (data) => dispatch(updateVoteAPI(data)),
-  getVotes: (data) => dispatch(getVotesAPI(data)),
 });
 
 export default connect(reduxState, reduxDispatch)(VoteButtons);
