@@ -19,7 +19,6 @@ const CommentInput = (props) => {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
-    // console.log("from commentinput : " + JSON.stringify(userData));
     setUserData(userData);
   }, []);
 
@@ -27,7 +26,23 @@ const CommentInput = (props) => {
     setComment("");
     setIsEditing(false);
     setSelectedComment({});
-  }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (!isEditing) {
+        if (comment.trim().length > 0) {
+          handleAddComment();
+        }
+      } else {
+        if (comment.trim().length > 0) {
+          onEditComment();
+        }
+      }
+      e.target.blur();
+    }
+  };
 
   return (
     <Flex direction="column" position="relative" alignContent='center'>
@@ -53,11 +68,7 @@ const CommentInput = (props) => {
               bg: "white",
               border: "1px solid black",
             }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                !isEditing ? handleAddComment() : onEditComment()
-              }
-            }}
+            onKeyDown={handleKeyDown}
           />
           <Flex
             position="absolute"
@@ -71,24 +82,21 @@ const CommentInput = (props) => {
           >
             <Button
               height="20px"
-              // disabled={!comment.length}
               isLoading={loading}
-              onClick={
-                !isEditing ? handleAddComment : onEditComment
-              }
+              onClick={!isEditing ? handleAddComment : onEditComment}
+              isDisabled={comment.trim().length === 0}
             >
               {!isEditing ? "Comment" : "Update"}
             </Button>
             {isEditing ? (
               <Button
-                  height="20px"
-                  bg="red.100"
-                  // disabled={!comment.length}
-                  isLoading={loading}
-                  onClick={cancelEdit}
-                >
-                  Cancel
-                </Button>
+                height="20px"
+                bg="red.100"
+                isLoading={loading}
+                onClick={cancelEdit}
+              >
+                Cancel
+              </Button>
             ) : null}
           </Flex>
         </>
@@ -111,7 +119,6 @@ const CommentInput = (props) => {
 };
 
 const reduxState = (state) => ({
-  // userData: state.user,
   isLogin: state.isLogin,
 });
 
