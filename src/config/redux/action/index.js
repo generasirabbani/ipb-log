@@ -360,6 +360,7 @@ export const updateDataAPI = (data) => async (dispatch) => {
 
 export const deleteDataAPI = (data) => async (dispatch) => {
   const urlPosts = database.ref(`posts/${data.userId}/${data.postId}`);
+  const commentsUrl = database.ref(`comments/${data.postId}`);
   let imageUrl = null;
 
   try {
@@ -370,6 +371,7 @@ export const deleteDataAPI = (data) => async (dispatch) => {
 
     // Remove the data from the database
     await urlPosts.remove();
+    await commentsUrl.remove();
 
     // Delete the image from storage if it exists
     if (imageUrl) {
